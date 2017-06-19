@@ -1,8 +1,12 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+group = 'com.github.berkesa'
+archivesBaseName = 'datatree'
 version =  '1.0.0'
 
 jar {
@@ -26,4 +30,18 @@ dependencies {
     // https://mvnrepository.com/artifact/org.mongodb/bson
     compile group: 'org.mongodb', name: 'bson', version: '3.4.2'
 	    
+}
+
+task sourcesJar(type: Jar) {
+    baseName = 'datatree-core'
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+signing {
+    // sign configurations.archives
 }
