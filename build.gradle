@@ -43,5 +43,5 @@ artifacts {
 }
 
 signing {
-    // sign configurations.archives
+    sign configurations.archives
 }
