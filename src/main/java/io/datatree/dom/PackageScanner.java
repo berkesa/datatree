@@ -171,7 +171,7 @@ final class PackageScanner {
 				while (jarEntries.hasMoreElements()) {
 					String entryName = jarEntries.nextElement().getName();
 					if (entryName.startsWith(packageName) && entryName.endsWith(".class")) {
-						entryName = entryName.substring(packageName.length(), entryName.lastIndexOf('.'));
+						entryName = entryName.substring(packageName.length() + 1, entryName.lastIndexOf('.'));
 						names.add(entryName);
 					}
 				}
