@@ -76,7 +76,7 @@ public class DeepCloner {
 	 * Removes mutable classes from internal Set. This method is not
 	 * thread-safe!
 	 * 
-	 * @param immutableClass
+	 * @param mutableClass
 	 *            classes
 	 */
 	public static final void removeImmutableClass(Class<?>... mutableClass) {

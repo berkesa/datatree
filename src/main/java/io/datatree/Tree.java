@@ -176,7 +176,8 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 *            source
 	 * @param format
 	 *            name of the format (eg. "json", "xml", "csv", "yaml",
-	 *            "properties", "toml", etc.)
+	 *            "properties", "toml", or the name of the reader's class, for
+	 *            example "JsonJackson")
 	 * 
 	 * @throws Exception
 	 *             any data format exception
@@ -220,10 +221,12 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * byte[] bytes = // loaded from file<br>
 	 * Tree node = new Tree(bytes, "msgpack");<br>
 	 * 
-	 * @param bytes
+	 * @param source
 	 *            data structure in binary format
 	 * @param format
-	 *            name of the format (eg. "java", "smile", "cbor", etc.)
+	 *            name of the format (eg. "java", "smile", "cbor", "ion",
+	 *            "bson", or the name of the reader's class, for example
+	 *            "BsonJackson")
 	 * 
 	 * @throws Exception
 	 *             any format exception
@@ -352,7 +355,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * This code above prints "a.b[2]".
 	 * 
 	 * @param startIndex
-	 *            first index within array (startIndex = 0 -> zero based
+	 *            first index within array (startIndex = 0 -&gt; zero based
 	 *            array-indexing)
 	 * 
 	 * @return path of this node
@@ -367,7 +370,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @param path
 	 *            path builder
 	 * @param startIndex
-	 *            first index within array (startIndex = 0 -> zero based
+	 *            first index within array (startIndex = 0 -&gt; zero based
 	 *            array-indexing)
 	 * @param addPoint
 	 *            a point is insertable into the path
@@ -1223,9 +1226,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Tree map1 = array.addMap().put("a", 1).put("b", 2);<br>
 	 * Tree map2 = array.addMap().put("c", 3).put("d", 4);
 	 * 
-	 * @param value
-	 *            new value to be added to this list (or set)
-	 * 
 	 * @return this (the List or Set) node
 	 */
 	public Tree addMap() {
@@ -1241,9 +1241,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Tree map1 = array.addList().add(1).add(2);<br>
 	 * Tree map2 = array.addList().add("a").add("b");
 	 * 
-	 * @param value
-	 *            new value to be added to this list (or set)
-	 * 
 	 * @return this (the List or Set) node
 	 */
 	public Tree addList() {
@@ -1258,9 +1255,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Tree array = node.putList("path.to.array");<br>
 	 * Tree map1 = array.addSet().add(1).add(2);<br>
 	 * Tree map2 = array.addSet().add("a").add("b");
-	 * 
-	 * @param value
-	 *            new value to be added to this list (or set)
 	 * 
 	 * @return this (the List or Set) node
 	 */
@@ -1581,8 +1575,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * 
 	 * @param index
 	 *            index at which the specified element is to be inserted
-	 * @param value
-	 *            value to be inserted
 	 * 
 	 * @return the new newly inserted Map node
 	 * 
@@ -1599,8 +1591,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * 
 	 * @param index
 	 *            index at which the specified element is to be inserted
-	 * @param value
-	 *            value to be inserted
 	 * 
 	 * @return the new newly inserted List node
 	 * 
@@ -1616,8 +1606,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * 
 	 * @param index
 	 *            index at which the specified element is to be inserted
-	 * @param value
-	 *            value to be inserted
 	 * 
 	 * @return the new newly inserted Set node
 	 * 
@@ -1994,8 +1982,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * 
 	 * @param path
 	 *            path with which the specified Map is to be associated
-	 * @param value
-	 *            value to be associated with the specified path
 	 * 
 	 * @return Tree of the new Map
 	 */
@@ -2014,8 +2000,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * 
 	 * @param path
 	 *            path with which the specified List is to be associated
-	 * @param value
-	 *            value to be associated with the specified path
 	 * 
 	 * @return Tree of the new List
 	 */
@@ -2035,8 +2019,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * 
 	 * @param path
 	 *            path with which the specified Set is to be associated
-	 * @param value
-	 *            value to be associated with the specified path
 	 * 
 	 * @return Tree of the new Set
 	 */
@@ -2798,10 +2780,10 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * performs automatic type conversion if needed (eg. IP String to
 	 * InetAddress, etc.). Sample code:<br>
 	 * 
+	 * @param <TO>
+	 *            output's type of this method
 	 * @param path
 	 *            path (e.g. "path.to.node[0]")
-	 * @param to
-	 *            data type to convert
 	 * @param defaultValue
 	 *            default value (if the node is not exists)
 	 * 
@@ -2946,7 +2928,8 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return the sub-node at the specified position
 	 * 
 	 * @throws IndexOutOfBoundsException
-	 *             if the index is out of range (index < 0 || index >= size())
+	 *             if the index is out of range (index &lt; 0 || index &gt;=
+	 *             size())
 	 */
 	@SuppressWarnings("unchecked")
 	public Tree get(int index) {
@@ -2966,6 +2949,8 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * 
 	 * @param path
 	 *            path of the sub-node
+	 * 
+	 * @return the empty sub-node at the specified position
 	 */
 	public Tree clear(String path) {
 		Tree child = getChild(path, false);
@@ -3035,7 +3020,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Removes the first sub-node that satisfy the given predicate. Sample code:
 	 * <br>
 	 * <br>
-	 * boolean found = node.remove((child) -> {<br>
+	 * boolean found = node.remove((child) -&gt; {<br>
 	 * return child.getName().startsWith("a");<br>
 	 * });
 	 * 
@@ -3052,7 +3037,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Removes all of the sub-nodes of this node that satisfy the given
 	 * predicate. Sample code:<br>
 	 * <br>
-	 * boolean found = node.remove((child) -> {<br>
+	 * boolean found = node.remove((child) -&gt; {<br>
 	 * return child.getName().startsWith("a");<br>
 	 * }, true);
 	 * 
@@ -3200,7 +3185,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * int i = node.get("path.to.value", -1);<br>
 	 * }<br>
 	 * <br>
-	 * node.forEach((child) -> {<br>
+	 * node.forEach((child) -&gt; {<br>
 	 * int i = node.get("path.to.value", -1);<br>
 	 * });<br>
 	 * 
@@ -3380,7 +3365,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Appends the sub-nodes from the source node into this node by the
 	 * specified Predicate. Sample code:<br>
 	 * <br>
-	 * target.copyFrom(another, (child) -> {<br>
+	 * target.copyFrom(another, (child) -&gt; {<br>
 	 * return child.getName().startsWith("bl");<br>
 	 * });<br>
 	 * <br>
@@ -3420,7 +3405,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * <br>
 	 * <br>
 	 * Tree node = ...<br>
-	 * int[] values = node.stream().mapToInt((child) -> {<br>
+	 * int[] values = node.stream().mapToInt((child) -&gt; {<br>
 	 * return child.get("path.to.value", -1);<br>
 	 * }).toArray();
 	 * 
@@ -3434,6 +3419,11 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 
 	/**
 	 * Returns the node's value(s) in a List.
+	 * 
+	 * @param <T>
+	 *            type of elements in the output List
+	 * @param castTo
+	 *            List type (eg. Integer, String)
 	 * 
 	 * @return value(s) as List
 	 */
@@ -3637,13 +3627,13 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		if (size() < 2) {
 			return this;
 		}
-		
-		// Lists, arrays sorted as a numeric / alphanumeric array		
+
+		// Lists, arrays sorted as a numeric / alphanumeric array
 		if (isEnumeration()) {
 
 			// Numeric array?
 			boolean numeric = true;
-			for (Tree child: this) {
+			for (Tree child : this) {
 				if (!Number.class.isAssignableFrom(child.getType())) {
 					numeric = false;
 					break;
@@ -3673,13 +3663,13 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		// Unable to sort
 		return sort(null);
 	}
-	
+
 	/**
 	 * Sorts the sub-nodes of this node by the specified Comparator. Sample
 	 * code:<br>
 	 * <br>
 	 * Tree node = new Tree().put("a",3).put("b",2).put("c",1);<br>
-	 * node.sort((node1, node2) -> {<br>
+	 * node.sort((node1, node2) -&gt; {<br>
 	 * return node1.asInteger() - node2.asInteger();<br>
 	 * });<br>
 	 * <br>
@@ -3720,8 +3710,8 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Iterates over child elements, returning the first element predicate
 	 * returns truthy for. Sample code:<br>
 	 * <br>
-	 * Tree found = node.find((child) -> {<br>
-	 * return child.get("path.to.value").asDouble() > 10;<br>
+	 * Tree found = node.find((child) -&gt; {<br>
+	 * return child.get("path.to.value").asDouble() &gt; 10;<br>
 	 * });
 	 * 
 	 * @param search
@@ -3764,7 +3754,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Returns {@code true} if the value of this node is a "primitive" value
 	 * (eg. int, String, Date), not a structure (List, Set, Map, Array).
 	 * 
-	 * @return {@code true} if the value is a scalar value
+	 * @return {@code true} if the value is a scalar (eg. Float, UUID) value
 	 */
 	public boolean isPrimitive() {
 		return value == null || !isStructure();
@@ -3774,7 +3764,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Returns {@code true} if the value of this node is a "structure" (List,
 	 * Set, Map, or Array), not a primitive value (eg. int, String, Date).
 	 * 
-	 * @return {@code true} if the value is not a scalar value
+	 * @return {@code true} if the value is not a scalar (eg. Double, Boolean) value
 	 */
 	public boolean isStructure() {
 		return isStructure(value);
@@ -3784,7 +3774,10 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Returns {@code true} if the given value is a "structure" (List, Set, Map,
 	 * or Array), not a primitive value (eg. int, String, Date).
 	 * 
-	 * @return {@code true} if the value is not a scalar value
+	 * @param value
+	 *            input value
+	 * 
+	 * @return {@code true} if the value is not a scalar (eg. String, Integer) value
 	 */
 	protected static final boolean isStructure(Object value) {
 		if (value != null && (value instanceof Map || value instanceof List || value instanceof Set

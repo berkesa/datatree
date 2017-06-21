@@ -26,7 +26,7 @@ import java.util.HashSet;
  * <br>
  * Sample - registering an "InetAddress to String" converter:<br>
  * <br>
- * DataConverterRegistry.register(String.class, InetAddress.class, (from) -> {
+ * DataConverterRegistry.register(String.class, InetAddress.class, (from) -&gt; {
  * <br>
  * return from.getCanonicalHostName();<br>
  * });<br>
@@ -95,8 +95,12 @@ public class DataConverterRegistry extends AbstractConverterSet {
 	/**
 	 * Converts "FROM" object to "TO" format / class.
 	 * 
+	 * @param <TO>
+	 *            target class to convert the source object
+	 * @param <FROM>
+	 *            source class
 	 * @param to
-	 *            target type (class)
+	 *            target type
 	 * @param from
 	 *            source object
 	 * 

@@ -48,7 +48,7 @@ public class TreeWriterRegistry  {
 	 * 
 	 * @param format
 	 *            name of the format (eg. "json", "xml", "csv", etc.)
-	 * @param reader
+	 * @param writer
 	 *            TreeWriter instance for generating the specified format
 	 */
 	public static final void setWriter(String format, TreeWriter writer) {

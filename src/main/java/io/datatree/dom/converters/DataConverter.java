@@ -18,7 +18,7 @@
 package io.datatree.dom.converters;
 
 /**
- * Functional Interface for FROM -> TO object converters.
+ * Functional Interface for FROM -&gt; TO object converters.
  *
  * @param <TO>
  *            target class

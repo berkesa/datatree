@@ -1,47 +1,77 @@
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'signing'
+apply plugin: 'com.bmuschko.nexus'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-group = 'com.github.berkesa'
-archivesBaseName = 'datatree'
-version =  '1.0.0'
-
-jar {
-    baseName = 'datatree-core'
-    manifest {
-        attributes 'Implementation-Title': 'DataTree Core API',
-                   'Implementation-Version': version
-    }    
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+    }
 }
 
 repositories {
+    mavenCentral()
     jcenter()
 }
 
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
     testCompile 'junit:junit:4.12'
-    
+
     // --- MONGODB DATA TYPES ---
 
     // https://mvnrepository.com/artifact/org.mongodb/bson
     compile group: 'org.mongodb', name: 'bson', version: '3.4.2'
-	    
+
 }
 
-task sourcesJar(type: Jar) {
-    baseName = 'datatree-core'
-    classifier = 'sources'
-    from sourceSets.main.allSource
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = 'com.github.berkesa'
+version = '1.0.0'
+
+modifyPom {
+    project {
+        artifactId 'datatree-core'
+        name 'DataTree Core API'
+        description 'Extensible Java Library for reading, manipulating and writing hierarchical data structures from/to various formats.'
+        url 'https://github.com/berkesa/datatree'
+        inceptionYear '2017'
+
+        scm {
+            url 'https://github.com/berkesa/datatree'
+            connection 'scm:https://github.com/berkesa/datatree.git'
+            developerConnection 'scm:git://github.com/berkesa/datatree.git'
+        }
+
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+        
+        dependencies {
+        }
+
+        developers {
+            developer {
+                id 'berkesa'
+                name 'Andras Berkes'
+                email 'andras.berkes@programmer.net'
+            }
+        }
+    }
 }
 
-artifacts {
-    archives sourcesJar
-}
-
-signing {
-   sign configurations.archives
+nexus {
+    sign = true
+    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+	snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
 }
