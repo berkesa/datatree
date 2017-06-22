@@ -109,16 +109,21 @@ public class DataConverterRegistry extends AbstractConverterSet {
 	@SuppressWarnings("unchecked")
 	public static final <TO, FROM> TO convert(Class<TO> to, FROM from) {
 
-		// Convert "null" value
+		// Convert null value
 		if (from == null || to == null) {
 			return null;
 		}
 
+		// Convert "null" String to null
+		if ("null".equals(from)) {
+			return null;
+		}
+		
 		// Class is same
 		if (to == Object.class || from.getClass() == to) {
 			return (TO) from;
 		}
-
+		
 		// Convert FROM -> TO
 		DataConverterKey<TO, FROM> key = new DataConverterKey<TO, FROM>(to, (Class<FROM>) from.getClass());
 		DataConverter<TO, FROM> converter = (DataConverter<TO, FROM>) converters.get(key);

@@ -109,7 +109,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			builder.append(NULL);
 			return;
 		}
-	
+
 		// Numeric or boolean values
 		if (value instanceof Number || value instanceof Boolean) {
 			builder.append(value);
@@ -128,7 +128,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			}
 			for (Object child : map.entrySet()) {
 				Map.Entry entry = (Map.Entry) child;
-				appendString(builder, entry.getKey());
+				appendString(builder, entry.getKey(), false);
 				builder.append(':');
 				toString(builder, entry.getValue(), null, newIndent);
 				if (++pos < max || meta != null) {
@@ -139,7 +139,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 				}
 			}
 			if (meta != null) {
-				appendString(builder, Tree.META);
+				appendString(builder, Tree.META, false);
 				builder.append(':');
 				toString(builder, meta, null, newIndent);
 			}
@@ -210,22 +210,24 @@ public class JsonBuiltin extends AbstractTextAdapter {
 		}
 
 		// String and other types
-		appendString(builder, value);
+		appendString(builder, value, true);
 	}
 
-	protected static final void appendString(StringBuilder builder, Object value) {
-		String txt = DataConverterRegistry.convert(String.class, value);
-		
-		if (txt == null) {
-			builder.append(NULL);
-			return;
+	protected static final void appendString(StringBuilder builder, Object value, boolean convert) {
+		String txt;
+		if (convert) {
+			txt = DataConverterRegistry.convert(String.class, value);
+			if (txt == null) {
+				builder.append(NULL);
+				return;
+			}
+			if (DataConverterRegistry.isUnquotedClass(value.getClass())) {
+				builder.append(txt);
+				return;
+			}
+		} else {
+			txt = String.valueOf(value);
 		}
-		
-		if (DataConverterRegistry.isUnquotedClass(value.getClass())) {
-			builder.append(txt);
-			return;
-		}
-
 		builder.append('"');
 		char[] chars = txt.toCharArray();
 		for (char c : chars) {
@@ -244,7 +246,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			builder.append(INDENT);
 		}
 	}
-	
+
 	// --- JSON SOURCE HOLDER ---
 
 	protected static final class Source {
@@ -271,7 +273,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 	public Queue<Source> sources = new ConcurrentLinkedQueue<>();
 
 	// --- IMPLEMENTED PARSER METHODS ---
-	
+
 	@Override
 	public Object parse(String source) throws Exception {
 		Source s = sources.poll();
@@ -557,7 +559,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 	}
 
 	// --- EXTERNAL JSON FORMATTER ---
-	
+
 	public static final String format(String json) {
 		final int len = json.length();
 		if (len < 3) {
@@ -590,5 +592,5 @@ public class JsonBuiltin extends AbstractTextAdapter {
 		}
 		return out.toString();
 	}
-	
+
 }
