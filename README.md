@@ -12,6 +12,8 @@ Tree document = new Tree();
 document.put("address.city", "Phoenix");
 String json = document.toString();
 
+Result:
+
 {
   "address": {
     "city": "Phoenix"
