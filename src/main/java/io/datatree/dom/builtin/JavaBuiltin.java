@@ -19,7 +19,6 @@ package io.datatree.dom.builtin;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -92,7 +91,7 @@ public class JavaBuiltin extends AbstractAdapter {
 				oos.writeObject(value);
 				oos.flush();
 				return baos.toByteArray();
-			} catch (IOException ignored) {
+			} catch (Throwable ignored) {
 			} finally {
 				removeMeta(map);
 			}
@@ -130,7 +129,7 @@ public class JavaBuiltin extends AbstractAdapter {
 				ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				bais.skip(1);
 				return new ObjectInputStream(bais).readObject();
-			} catch (Exception ignored) {
+			} catch (Throwable ignored) {
 			}
 		}
 

@@ -80,13 +80,13 @@ public class DataConverterRegistry extends AbstractConverterSet {
 		// Load converters for basic Java types
 		try {
 			Class.forName("io.datatree.dom.converters.BasicConverterSet");
-		} catch (Exception ignored) {
+		} catch (Throwable ignored) {
 		}
 
 		// Load converters for MongoDB / BSON object types
 		try {
 			Class.forName("io.datatree.dom.converters.BsonConverterSet");
-		} catch (Exception ignored) {
+		} catch (Throwable ignored) {
 		}
 	}
 

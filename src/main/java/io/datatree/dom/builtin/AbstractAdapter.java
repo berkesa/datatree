@@ -39,7 +39,7 @@ public abstract class AbstractAdapter implements TreeReader, TreeWriter {
 		for (T factory : factories) {
 			try {
 				((Consumer<T>) Class.forName(consumerClass).newInstance()).accept(factory);
-			} catch (Exception ignored) {
+			} catch (Throwable ignored) {
 
 				// Classes aren't available
 				allInstalled = false;
