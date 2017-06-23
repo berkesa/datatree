@@ -90,7 +90,7 @@ final class PackageScanner {
 								}
 								set.add(writer.getClass().getName());
 							}
-						} catch (Exception ignored) {
+						} catch (Throwable ignored) {
 
 							// Class not loadable (eg. protected)
 						}
@@ -145,7 +145,7 @@ final class PackageScanner {
 				for (Class<?> c: classes) {
 					set.add(c.getName());
 				}
-			} catch (Exception cause) {
+			} catch (Throwable cause) {
 				cause.printStackTrace();
 			}
 		}

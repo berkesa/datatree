@@ -133,7 +133,7 @@ public class TreeWriterRegistry  {
 			writer = (TreeWriter) Class.forName(className).newInstance();
 			writers.put(format, writer);
 			return writer;
-		} catch (Exception cause) {
+		} catch (Throwable cause) {
 			if (throwException) {
 				throw new RuntimeException("Unable to create writer for format \"" + format + "\"! Set the -D"
 						+ propertyName + "=package.WriterClass initial parameter to specify the proper writer class.",

@@ -133,7 +133,7 @@ public class TreeReaderRegistry {
 			reader = (TreeReader) Class.forName(className).newInstance();
 			readers.put(format, reader);
 			return reader;
-		} catch (Exception cause) {
+		} catch (Throwable cause) {
 			if (throwException) {
 				throw new RuntimeException("Unable to create reader for format \"" + format + "\"! Set the -D"
 						+ propertyName + "=package.ReaderClass initial parameter to specify the proper reader class.",
