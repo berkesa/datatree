@@ -132,7 +132,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 */
 	private transient Object value;
 
-	// --- PUBLIC CONSTRUCTOR ---
+	// --- PUBLIC CONSTRUCTORS ---
 
 	/**
 	 * Creates an empty root structure. Sample code:<br>
@@ -145,7 +145,22 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		createEmptyNode();
 	}
 
-	// --- PUBLIC CONSTRUCTORS / TEXT INPUT ---
+	/**
+	 * Constructs a Tree containing the elements of the specified map.
+	 * 
+	 * @param value
+	 *            the map whose elements are to be placed into this Tree
+	 */
+	public Tree(Map<String, Object> value) {
+		if (value == null) {
+			createEmptyNode();
+		} else {
+			this.value = value;
+			moveMeta();
+		}
+	}
+
+	// --- PUBLIC CONSTRUCTORS / TEXT SOURCE ---
 
 	/**
 	 * Creates a hierarchial structure by a JSON String. Sample:<br>
@@ -191,7 +206,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		}
 	}
 
-	// --- PUBLIC CONSTRUCTORS / BINARY INPUT ---
+	// --- PUBLIC CONSTRUCTORS / BINARY SOURCE ---
 
 	/**
 	 * Creates a hierarchial structure by a JSON byte array. Sample:<br>
@@ -3764,7 +3779,8 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Returns {@code true} if the value of this node is a "structure" (List,
 	 * Set, Map, or Array), not a primitive value (eg. int, String, Date).
 	 * 
-	 * @return {@code true} if the value is not a scalar (eg. Double, Boolean) value
+	 * @return {@code true} if the value is not a scalar (eg. Double, Boolean)
+	 *         value
 	 */
 	public boolean isStructure() {
 		return isStructure(value);
@@ -3777,7 +3793,8 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @param value
 	 *            input value
 	 * 
-	 * @return {@code true} if the value is not a scalar (eg. String, Integer) value
+	 * @return {@code true} if the value is not a scalar (eg. String, Integer)
+	 *         value
 	 */
 	protected static final boolean isStructure(Object value) {
 		if (value != null && (value instanceof Map || value instanceof List || value instanceof Set
