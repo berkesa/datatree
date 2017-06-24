@@ -11,7 +11,7 @@ to manipulate (put, get, remove, insert, sort, find, stream, etc.) the content o
 
 ## Usage
 
-```java
+```javascript
 import io.datatree.Tree;
 
 Tree document = new Tree();
@@ -29,7 +29,7 @@ Result:
 
 ## Download
 
-The DataTree Core API contains the complete Tree toolkit, and one built-in JSON reader/writer. If you use maven, add the following dependency to your pom.xml:
+The DataTree Core API contains the complete Tree toolkit, and one built-in JSON reader/writer. If you use Maven, add the following dependency to your pom.xml:
 
 ```xml
 <dependency>
@@ -48,6 +48,8 @@ The [datatree-adapters](https://github.com/berkesa/datatree-adapters) artifact c
     <version>1.0.0</version>
 </dependency>
 ```
+
+[Download the JARs directly from Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.berkesa%22)
 
 ## Features:
 
