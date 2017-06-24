@@ -49,7 +49,7 @@ The [datatree-adapters](https://github.com/berkesa/datatree-adapters) artifact c
 </dependency>
 ```
 
-[Download the JARs directly from Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.berkesa%22)
+[...or download the JARs directly from the Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.berkesa%22)
 
 ## Features:
 
