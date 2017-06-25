@@ -65,7 +65,7 @@ The [datatree-adapters](https://github.com/berkesa/datatree-adapters) artifact c
 * Methods for type-check (`Class valueClass = tree.getType()`)
 * Methods for modify the type of the underlying Java value (`tree.setType(String.class)`)
 * Method chaining (`tree.put("name1", "value1").put("name2", "value2")`);
-* Documents have metadata container (`tree.getMeta().put("name", "value")`)
+* Documents have an optional metadata container (`tree.getMeta().put("name", "value")`)
 * Pretty printing (`String json = tree.toString(true / false)`)
 
 ## Requirements:
