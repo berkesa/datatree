@@ -61,7 +61,7 @@ The [datatree-adapters](https://github.com/berkesa/datatree-adapters) artifact c
 * Recursive deep cloning (`Tree copy = tree.clone()`)
 * Support for all Java types of Appache Cassandra (BigInteger, BigDecimal, UUID, InetAddress, etc.)
 * Support for all Java types of MongoDB (BsonNumber, BsonNull, BsonString, BsonBoolean, etc.)
-* Parent pointers, getPreviousSibling/getNextSibling methods to traverse the data structure
+* Root and parent pointers, methods to traverse the data structure
 * Methods for type-check (`Class valueClass = tree.getType()`)
 * Methods for modify the type of the underlying Java value (`tree.setType(String.class)`)
 * Method chaining (`tree.put("name1", "value1").put("name2", "value2")`);
