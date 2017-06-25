@@ -65,7 +65,8 @@ The [datatree-adapters](https://github.com/berkesa/datatree-adapters) artifact c
 * Methods for type-check (`Class valueClass = tree.getType()`)
 * Methods for modify the type of the underlying Java value (`tree.setType(String.class)`)
 * Method chaining (`tree.put("name1", "value1").put("name2", "value2")`);
-* All Tree "nodes" are serializable, iterable and cloneable
+* Documents have metadata container (`tree.getMeta().put("name", "value")`)
+* Pretty printing (`String json = tree.toString(true / false)`)
 
 ## Requirements:
 
@@ -73,4 +74,4 @@ The DataTree API requires Java 8.
 
 ## License:
 
-DataTree is licensed under the Apache License V2 (you can use it in your commercial products for free).
+DataTree is licensed under the Apache License V2, you can use it in your commercial products for free.
