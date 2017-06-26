@@ -53,8 +53,8 @@ The [datatree-adapters](https://github.com/berkesa/datatree-adapters) artifact c
 
 ## Features:
 
-* DataTree API supports 18 popular JSON implementations (Jackson, Gson, Boon, Jodd, FastJson, etc.)
-* DataTree API supports 10 other (non-JSON) formats (YAML, ION, BSON, MessagePack, etc.)
+* DataTree API supports 18 popular [JSON implementations](https://github.com/berkesa/datatree-adapters) (Jackson, Gson, Boon, Jodd, FastJson, etc.)
+* DataTree API supports 10 other (non-JSON) [formats](https://github.com/berkesa/datatree-adapters) (YAML, ION, BSON, MessagePack, etc.)
 * Single universal type (no type casting, everything is a `Tree`)
 * JSON path functions (`Tree location = tree.get("cities[2].location")`)
 * Easy iteration over Java Collections, Maps, arrays or scalar values (`for (Tree child: parent)`)
