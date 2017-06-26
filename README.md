@@ -39,7 +39,7 @@ The DataTree Core API contains the complete Tree toolkit, and one built-in JSON 
 </dependency>
 ```
 
-The [datatree-adapters](https://github.com/berkesa/datatree-adapters) artifact contains lot of text (JSON, XML, YAML, TOML, CSV, TSV, Properties) and binary (BSON, ION, CBOR, SMILE) adapters. If you'd like to use these formats, add the following dependency instead of the "datatree-core":
+The [datatree-adapters](https://github.com/berkesa/datatree-adapters) artifact contains lot of text (JSON, XML, YAML, TOML, CSV, TSV, Properties) and binary (BSON, ION, CBOR, SMILE, MessagePack) adapters. If you'd like to use these formats, add the following dependency instead of the "datatree-core":
 
 ```xml
 <dependency>
