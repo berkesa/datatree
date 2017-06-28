@@ -1,3 +1,7 @@
+[![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/berkesa/datatree/master/LICENSE)
+[![Javadocs](https://www.javadoc.io/badge/com.github.berkesa/datatree-core.svg)](https://www.javadoc.io/doc/com.github.berkesa/datatree-core)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/berkesa/datatree.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
+
 # DataTree Core API
 
 Extensible Java Library for reading, manipulating and writing hierarchical data structures from/to various formats.
@@ -11,7 +15,6 @@ to manipulate (put, get, remove, insert, sort, find, stream, etc.) the content o
 ![architecture](https://raw.githubusercontent.com/berkesa/datatree/master/docs/images/architecture.png)
 
 ## Usage
-[![Javadocs](https://www.javadoc.io/badge/com.github.berkesa/datatree-core.svg)](https://www.javadoc.io/doc/com.github.berkesa/datatree-core)
 
 ```javascript
 import io.datatree.Tree;
