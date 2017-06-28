@@ -1,4 +1,5 @@
 # DataTree Core API
+
 Extensible Java Library for reading, manipulating and writing hierarchical data structures from/to various formats.
 DataTree is NOT an another JSON parser. It's a top-level API layer that uses existing JSON implementations.
 Even though the JSON format is the default, DataTree supports other formats, such as XML, YAML, TOML, etc.
@@ -10,6 +11,7 @@ to manipulate (put, get, remove, insert, sort, find, stream, etc.) the content o
 ![architecture](https://raw.githubusercontent.com/berkesa/datatree/master/docs/images/architecture.png)
 
 ## Usage
+[![Javadocs](https://www.javadoc.io/badge/com.github.berkesa/datatree-core.svg)](https://www.javadoc.io/doc/com.github.berkesa/datatree-core)
 
 ```javascript
 import io.datatree.Tree;
