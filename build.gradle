@@ -42,11 +42,11 @@ modifyPom {
         artifactId 'datatree-core'
         name 'DataTree Core API'
         description 'Extensible Java Library for reading, manipulating and writing hierarchical data structures from/to various formats.'
-        url 'https://github.com/berkesa/datatree'
+        url 'https://berkesa.github.io/datatree/'
         inceptionYear '2017'
 
         scm {
-            url 'https://github.com/berkesa/datatree'
+            url 'https://berkesa.github.io/datatree/'
             connection 'scm:https://github.com/berkesa/datatree.git'
             developerConnection 'scm:git://github.com/berkesa/datatree.git'
         }
