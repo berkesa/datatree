@@ -19,6 +19,8 @@ package io.datatree.dom.builtin;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -535,11 +537,73 @@ public class JsonBuiltin extends AbstractTextAdapter {
 				dot = true;
 			}
 		}
+
+		// Double / BigDecimal
 		final int len = src.idx - from;
+		final String txt = new String(src.chars, from, len);
 		if (dot) {
-			return Double.parseDouble(new String(src.chars, from, len));
+			if (len > 18) {
+				return new BigDecimal(txt);
+			}
+			return Double.parseDouble(txt);
 		}
-		return Long.parseLong(new String(src.chars, from, len));
+
+		// Integer / Long / BigInteger
+		int p = 0;
+		int max = 19;
+		boolean negative;
+		if (txt.charAt(0) == '-') {
+			p++;
+			max++;
+			negative = true;
+		} else {
+			negative = false;
+		}
+
+		boolean check;
+		if (len < max) {
+			max = len;
+			check = false;
+		} else if (len > max) {
+			return new BigInteger(txt, 10);
+		} else {
+			max = len - 1;
+			check = true;
+		}
+
+		long value = 0;
+		while (p < max) {
+			value = (value * 10L) + ('0' - txt.charAt(p++));
+		}
+		if (check) {
+			boolean isBig;
+			if (value > -922337203685477580L) {
+				isBig = false;
+			} else if (value < -922337203685477580L) {
+				isBig = true;
+			} else {
+				if (negative) {
+					isBig = (txt.charAt(p) > '8');
+				} else {
+					isBig = (txt.charAt(p) > '7');
+				}
+			}
+			if (isBig) {
+				return new BigInteger(txt, 10);
+			}
+			value = (value * 10L) + ('0' - txt.charAt(p));
+		}
+		if (negative) {
+			if (value >= Integer.MIN_VALUE) {
+				return (int) value;
+			}
+			return value;
+		}
+		value = -value;
+		if (value <= Integer.MAX_VALUE) {
+			return (int) value;
+		}
+		return value;
 	}
 
 	// --- SKIP WHITESPACE CHARACTERS ---
