@@ -17,6 +17,8 @@
  */
 package io.datatree.dom;
 
+import java.util.Base64;
+
 /**
  * BASE64 encoder / decoder. To use custom / faster implementation, set the
  * "datatree.base64.codec" System Property:<br>
@@ -40,7 +42,22 @@ public class BASE64 {
 			cause.printStackTrace();
 		} finally {
 			if (codec == null) {
-				codec = new BASE64DefaultCodec();
+				codec = new BASE64Codec() {
+					
+					private final Base64.Encoder encoder = Base64.getEncoder();
+					private final Base64.Decoder decoder = Base64.getDecoder();
+
+					@Override
+					public String encode(byte[] src) {
+						return encoder.encodeToString(src);
+					}
+
+					@Override
+					public byte[] decode(String src) {
+						return decoder.decode(src);
+					}
+					
+				};
 			}
 		}
 	}
