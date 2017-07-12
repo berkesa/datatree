@@ -162,7 +162,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			Collection array = (Collection) value;
 			int max = array.size();
 			int pos = 0;
-			int newIndent = indent == -1 ? -1 : indent + 1;
+			int newIndent = indent == 0 ? 0 : indent + 1;
 			for (Object child : array) {
 				toString(builder, child, null, newIndent);
 				if (++pos < max) {
@@ -194,7 +194,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 				appendIndent(builder, indent);
 			}
 			int max = Array.getLength(value);
-			int newIndent = indent == -1 ? -1 : indent + 1;
+			int newIndent = indent == 0 ? 0 : indent + 1;
 			for (int i = 0; i < max; i++) {
 				toString(builder, Array.get(value, i), null, newIndent);
 				if (i < max - 1) {
