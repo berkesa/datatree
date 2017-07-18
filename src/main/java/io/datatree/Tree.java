@@ -2653,6 +2653,9 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return the value in this node structure on the specified path
 	 */
 	public byte[] get(String path, byte[] defaultValue) {
+		if (defaultValue == null) {
+			return getObject(path, byte[].class);
+		}
 		return getObject(path, defaultValue);
 	}
 
@@ -2691,6 +2694,9 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return the value in this node structure on the specified path
 	 */
 	public String get(String path, String defaultValue) {
+		if (defaultValue == null) {
+			return getObject(path, String.class);
+		}
 		return getObject(path, defaultValue);
 	}
 
@@ -2710,6 +2716,9 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return the value in this node structure on the specified path
 	 */
 	public UUID get(String path, UUID defaultValue) {
+		if (defaultValue == null) {
+			return getObject(path, UUID.class);
+		}
 		return getObject(path, defaultValue);
 	}
 
@@ -2729,6 +2738,9 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return the value in this node structure on the specified path
 	 */
 	public Date get(String path, Date defaultValue) {
+		if (defaultValue == null) {
+			return getObject(path, Date.class);
+		}
 		return getObject(path, defaultValue);
 	}
 
@@ -2748,6 +2760,9 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return the value in this node structure on the specified path
 	 */
 	public BigDecimal get(String path, BigDecimal defaultValue) {
+		if (defaultValue == null) {
+			return getObject(path, BigDecimal.class);
+		}
 		return getObject(path, defaultValue);
 	}
 
@@ -2767,6 +2782,9 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return the value in this node structure on the specified path
 	 */
 	public BigInteger get(String path, BigInteger defaultValue) {
+		if (defaultValue == null) {
+			return getObject(path, BigInteger.class);
+		}
 		return getObject(path, defaultValue);
 	}
 
@@ -2786,6 +2804,9 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return the value in this node structure on the specified path
 	 */
 	public InetAddress get(String path, InetAddress defaultValue) {
+		if (defaultValue == null) {
+			return getObject(path, InetAddress.class);
+		}
 		return getObject(path, defaultValue);
 	}
 
@@ -2811,6 +2832,24 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 			return DataConverterRegistry.convert((Class<TO>) defaultValue.getClass(), child.value);
 		}
 		return defaultValue;
+	}
+
+	/**
+	 * Returns the Object (or null) to which the specified path is mapped.
+	 * 
+	 * @param path
+	 *            path (e.g. "path.to.node[0]")
+	 * @param to
+	 *            target type
+	 * 
+	 * @return the value of the node (or null)
+	 */
+	private <TO> TO getObject(String path, Class<TO> to) {
+		Tree child = getChild(path, false);
+		if (child == null) {
+			return null;
+		}
+		return DataConverterRegistry.convert(to, child.value);
 	}
 
 	// --- SEARCH FOR CHILD BY PATH ---
