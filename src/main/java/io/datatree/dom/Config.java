@@ -29,7 +29,8 @@ import java.util.TimeZone;
  * <li>-Ddatatree.cache.size=1024</li>
  * <li>-Ddatatree.pool.size=16</li>
  * <li>-Ddatatree.use.timestamps=true</li>
- * <li>-Ddatatree.adapter.packages=your.adapter.package1,your.adapter.package2</li>
+ * <li>-Ddatatree.adapter.packages=your.adapter.package1,your.adapter.package2
+ * </li>
  * <li>-Ddatatree.base64.codec=your.base64.Codec</li>
  * </ul>
  * 
@@ -68,7 +69,15 @@ public class Config {
 	// BASE64 implementation (class name)
 	// -Ddatatree.base64.codec=your.base64.Codec
 	public static final String BASE64_CODEC;
-	
+
+	/**
+	 * Name of the metadata node. Metadata node contains processing
+	 * instructions, similar to "head" block in HTML pages.<br>
+	 * <br>
+	 * -Ddatatree.meta.name=_meta
+	 */
+	public static final String META;
+
 	// --- INIT PROPERTIES ---
 
 	static {
@@ -107,12 +116,15 @@ public class Config {
 
 		// Use formatted timestamps (Date -> JSON)
 		USE_TIMESTAMPS = "true".equalsIgnoreCase(System.getProperty("datatree.use.timestamps", "true"));
-		
+
 		// List of Java packages to scan for adapters (readers and writers)
 		ADAPTER_PACKAGES = System.getProperty("datatree.adapter.packages");
-		
+
 		// BASE64 implementation (class name)
 		BASE64_CODEC = System.getProperty("datatree.base64.codec");
+		
+		// Name of the metadata node
+		META = System.getProperty("datatree.meta.name", "_meta");
 	}
 
 }

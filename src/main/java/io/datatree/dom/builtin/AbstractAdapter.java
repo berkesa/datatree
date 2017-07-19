@@ -20,7 +20,7 @@ package io.datatree.dom.builtin;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import io.datatree.Tree;
+import io.datatree.dom.Config;
 import io.datatree.dom.TreeReader;
 import io.datatree.dom.TreeWriter;
 import io.datatree.dom.WriterFunction;
@@ -86,13 +86,13 @@ public abstract class AbstractAdapter implements TreeReader, TreeWriter {
 			return null;
 		}
 		Map<Object, Object> map = (Map<Object, Object>) value;
-		map.put(Tree.META, meta);
+		map.put(Config.META, meta);
 		return map;
 	}
 
 	protected static final void removeMeta(Map<Object, Object> map) {
 		if (map != null) {
-			map.remove(Tree.META);
+			map.remove(Config.META);
 		}
 	}
 	

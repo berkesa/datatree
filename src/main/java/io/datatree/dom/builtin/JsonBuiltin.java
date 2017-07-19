@@ -29,7 +29,6 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import io.datatree.Tree;
 import io.datatree.dom.Config;
 import io.datatree.dom.Priority;
 import io.datatree.dom.converters.DataConverterRegistry;
@@ -141,7 +140,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 				}
 			}
 			if (meta != null) {
-				appendString(builder, Tree.META, false);
+				appendString(builder, Config.META, false);
 				builder.append(':');
 				toString(builder, meta, null, newIndent);
 			}

@@ -46,6 +46,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import io.datatree.dom.BASE64;
+import io.datatree.dom.Config;
 import io.datatree.dom.DeepCloner;
 import io.datatree.dom.TreeReaderRegistry;
 import io.datatree.dom.TreeWriterRegistry;
@@ -99,15 +100,6 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	// --- SERIAL VERSION UID ---
 
 	private static final long serialVersionUID = 7044752881424364875L;
-
-	// --- OTHER CONSTANTS ---
-
-	/**
-	 * Name of the metadata node. Metadata node contains processing
-	 * instructions, similar to "head" block in HTML pages. Use the
-	 * {@link #getMeta() getMeta} method to access the metadata node.
-	 */
-	public static final String META = "_meta";
 
 	// --- VARIABLES OF THE CURRENT NODE ---
 
@@ -268,7 +260,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	@SuppressWarnings("rawtypes")
 	protected void moveMeta() {
 		if (isMap()) {
-			meta = ((Map) value).remove(META);
+			meta = ((Map) value).remove(Config.META);
 		}
 	}
 
@@ -510,7 +502,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 				return null;
 			}
 		}
-		return new Tree(root, META, root.meta);
+		return new Tree(root, Config.META, root.meta);
 	}
 
 	/**
@@ -2215,7 +2207,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		}
 
 		// Meta node?
-		if (META.equals(path)) {
+		if (Config.META.equals(path)) {
 			final Tree meta = getMeta(setMode);
 			if (meta == null) {
 				return null;
@@ -3129,7 +3121,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return {@code true} if this node contained the specified sub-node
 	 */
 	public boolean remove(Tree child) {
-		if (META.equals(child.key)) {
+		if (Config.META.equals(child.key)) {
 			Tree meta = getMeta();
 			if (meta != null && meta.parent != null) {
 				meta.parent.meta = null;

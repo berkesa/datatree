@@ -564,18 +564,20 @@ public class TreeTest extends TestCase {
 		assertNull(t.getMeta(false));
 		assertNotNull(t.getMeta(true));
 
+		String metaName = Config.META;
+		
 		Tree meta = t.getMeta();
-		assertEquals(meta, t.get(Tree.META));
+		assertEquals(meta, t.get(Config.META));
 
 		meta.put("test", "abc");
-		assertEquals("abc", t.get("_meta.test").asString());
+		assertEquals("abc", t.get(metaName + ".test").asString());
 
 		assertEquals(t, meta.getParent());
 		meta.remove();
 		assertNull(t.getMeta(false));
 
-		t = new Tree("{\"a\":3,\"_meta\":{\"b\":3.5},\"c\":true}");
-		assertEquals(3.5, t.get("_meta.b", 0d));
+		t = new Tree("{\"a\":3,\"" + metaName + "\":{\"b\":3.5},\"c\":true}");
+		assertEquals(3.5, t.get(metaName + ".b", 0d));
 
 		// Serialization and cloning
 		testSerializationAndCloning(t);
@@ -1958,6 +1960,29 @@ public class TreeTest extends TestCase {
 		testSerializationAndCloning(t);
 	}
 
+	// --- TEST NULL DEFAULTS ---
+
+	@Test
+	public void testNullDefaults() throws Exception {	
+		Tree t = new Tree();
+		UUID uuid = UUID.randomUUID();
+		InetAddress inet = InetAddress.getLocalHost();
+		
+		t.put("array", "value1".getBytes());
+		t.put("string", "value2");
+		t.put("uuid", uuid);
+		t.put("inet", inet);
+		t.put("bi", BigDecimal.TEN);
+		t.put("bd", BigInteger.TEN);
+		
+		assertEquals("value1", new String(t.get("array", (byte[]) null)));
+		assertEquals("value2", t.get("string", (String) null));
+		assertEquals(uuid, t.get("uuid", (UUID) null));
+		assertEquals(inet, t.get("inet", (InetAddress) null));
+		assertEquals(BigDecimal.TEN, t.get("bi", (BigDecimal) null));
+		assertEquals(BigInteger.TEN, t.get("bd", (BigInteger) null));
+	}
+	
 	// --- TEST MONGO TYPES ---
 
 	@Test
