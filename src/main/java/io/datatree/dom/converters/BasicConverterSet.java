@@ -596,5 +596,5 @@ final class BasicConverterSet extends AbstractConverterSet {
 			DataConverterRegistry.addUnquotedClass(Date.class);
 		}
 	}
-
+		
 }

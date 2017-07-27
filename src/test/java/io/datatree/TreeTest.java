@@ -1983,6 +1983,109 @@ public class TreeTest extends TestCase {
 		assertEquals(BigInteger.TEN, t.get("bd", (BigInteger) null));
 	}
 	
+	// --- TEST "PUT IF ABSENT" MODIFIER ---
+
+	@Test
+	public void testPutIfAbsent() throws Exception {			
+		Tree rsp = new Tree();
+		
+		// Map
+		
+		Tree meta = rsp.getMeta();
+		Tree headers = meta.putMap("headers", true);
+		headers.put("a", 1);
+		headers.put("b", 2);
+		headers.put("c", 3);
+		
+		int size = rsp.getMeta().get("headers").size();
+		assertEquals(3, size);
+		assertEquals(2, rsp.getMeta().get("headers.b", -1));
+		
+		meta = rsp.getMeta();
+		headers = meta.putMap("headers", true);
+		headers.put("d", 4);
+
+		size = rsp.getMeta().get("headers").size();
+		assertEquals(4, size);
+		assertEquals(2, rsp.getMeta().get("headers.b", -1));
+		assertEquals(4, rsp.getMeta().get("headers.d", -1));
+		
+		meta = rsp.getMeta();
+		headers = meta.putMap("headers", false);
+		headers.put("d", 4);
+
+		size = rsp.getMeta().get("headers").size();
+		assertEquals(1, size);
+		assertEquals(-1, rsp.getMeta().get("headers.b", -1));
+		assertEquals(4, rsp.getMeta().get("headers.d", -1));
+		
+		// List
+		
+		Tree node = new Tree();
+
+		Tree list1 = node.putList("a.b.c");
+		list1.add(1).add(2).add(3);
+		
+		Tree list2 = node.putList("a.b.c", true);
+		list2.add(4).add(5).add(6);
+		
+		// The "list2" contains 1, 2, 3, 4, 5 and 6.
+		assertEquals(6, list2.size());
+		assertJsonEquals("[1,2,3,4,5,6]", list2.toString(false));
+		
+		Tree list3 = node.putList("a.b.c", false);
+		list3.add(7).add(8).add(9);
+		
+		assertEquals(3, list3.size());
+		assertJsonEquals("[7,8,9]", list3.toString(false));
+		
+		// Set
+		
+		node = new Tree();
+
+		Tree set1 = node.putSet("a.b.c");
+		set1.add(1).add(2).add(3);
+		
+		Tree set2 = node.putSet("a.b.c", true);
+		set2.add(4).add(5).add(6);
+		
+		// The "list2" contains 1, 2, 3, 4, 5 and 6.
+		assertEquals(6, set2.size());
+		assertJsonEquals("[1,2,3,4,5,6]", set2.toString(false));
+		
+		Tree set3 = node.putSet("a.b.c", false);
+		set3.add(7).add(8).add(9);
+		
+		assertEquals(3, set3.size());
+		assertJsonEquals("[7,8,9]", set3.toString(false));
+	}
+	
+	// --- TEST GETTING DATA FROM "EXTENDED JSON" ---
+
+	@Test
+	public void testExtendedJSON() throws Exception {
+		Tree t = new Tree();
+		
+		long now = System.currentTimeMillis(); 
+		
+		t.putMap("a").put("$date", now);	
+		t.putMap("b").put("$regex", "abc");
+		t.putMap("c").put("$oid", "5926c396121e2710341361da");
+		t.putMap("d").put("$numberLong", 123L);
+		t.putMap("e").put("$binary", "teszt".getBytes(), true);
+		t.putMap("f").put("$symbol", "X");
+		t.putMap("g").put("$code", "var a=3;");
+		
+		assertEquals(now, t.get("a", 1L));	
+		assertEquals("abc", t.get("b", "-"));
+		assertEquals("5926c396121e2710341361da", t.get("c", "x"));
+		assertEquals(123L, t.get("d", 1L));
+		assertEquals("teszt", new String(t.get("e").asBytes()));
+		assertEquals("X", t.get("f", "x"));
+		assertEquals("var a=3;", t.get("g", "-"));
+
+	}
+	
 	// --- TEST MONGO TYPES ---
 
 	@Test

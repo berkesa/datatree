@@ -20,14 +20,15 @@ package io.datatree.dom.converters;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Common Java object converter.<br>
  * <br>
  * Sample - registering an "InetAddress to String" converter:<br>
  * <br>
- * DataConverterRegistry.register(String.class, InetAddress.class, (from) -&gt; {
- * <br>
+ * DataConverterRegistry.register(String.class, InetAddress.class, (from) -&gt;
+ * { <br>
  * return from.getCanonicalHostName();<br>
  * });<br>
  * <br>
@@ -60,19 +61,19 @@ public class DataConverterRegistry extends AbstractConverterSet {
 	public static final <TO, FROM> void register(Class<TO> to, DataConverter<TO, ?> converter) {
 		defaultConverters.put(to, converter);
 	}
-	
+
 	// --- UNQUOTED TYPES ---
-	
+
 	private static HashSet<Class<?>> unquotedClasses = new HashSet<>(64);
 
 	public static final void addUnquotedClass(Class<?>... objectClass) {
 		unquotedClasses.addAll(Arrays.asList(objectClass));
 	}
-	
+
 	public static final boolean isUnquotedClass(Class<?> objectClass) {
 		return unquotedClasses.contains(objectClass);
 	}
-	
+
 	// --- LOAD CONVERTER SETS ---
 
 	static {
@@ -106,7 +107,7 @@ public class DataConverterRegistry extends AbstractConverterSet {
 	 * 
 	 * @return converted value in "TO" format / class
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static final <TO, FROM> TO convert(Class<TO> to, FROM from) {
 
 		// Convert null value
@@ -118,12 +119,21 @@ public class DataConverterRegistry extends AbstractConverterSet {
 		if ("null".equals(from)) {
 			return null;
 		}
-		
+
 		// Class is same
 		if (to == Object.class || from.getClass() == to) {
 			return (TO) from;
 		}
-		
+
+		// BSON conversion
+		boolean isFromMap = from != null && from instanceof Map;
+		if (isFromMap) {
+			Object subValue = getSubValue((Map) from);
+			if (subValue != null) {
+				return convert(to, subValue);
+			}
+		}
+
 		// Convert FROM -> TO
 		DataConverterKey<TO, FROM> key = new DataConverterKey<TO, FROM>(to, (Class<FROM>) from.getClass());
 		DataConverter<TO, FROM> converter = (DataConverter<TO, FROM>) converters.get(key);
@@ -140,6 +150,18 @@ public class DataConverterRegistry extends AbstractConverterSet {
 		// Converter not found
 		throw new IllegalArgumentException("Unable to convert " + from.getClass() + " to " + to
 				+ ", converter not found in DataConverterRegistry!");
+	}
+
+	@SuppressWarnings("rawtypes")
+	private static final Object getSubValue(Map map) {
+		Map.Entry entry;
+		for (Object o : map.entrySet()) {
+			entry = (Map.Entry) o;
+			if (String.valueOf(entry.getKey()).startsWith("$")) {
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 }

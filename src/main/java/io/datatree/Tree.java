@@ -138,7 +138,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	}
 
 	/**
-	 * Constructs a Tree containing the elements of the specified map.
+	 * Constructs a Tree containing the elements of the specified Map.
 	 * 
 	 * @param value
 	 *            the map whose elements are to be placed into this Tree
@@ -151,6 +151,20 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 			moveMeta();
 		}
 	}
+	
+	/**
+	 * Constructs a Tree containing the elements of the specified Collection (eg. List or Set).
+	 * 
+	 * @param value
+	 *            the map whose elements are to be placed into this Collection.
+	 */
+	public Tree(Collection<Object> value) {
+		if (value == null) {
+			createEmptyNode();
+		} else {
+			this.value = value;
+		}
+	}	
 
 	// --- PUBLIC CONSTRUCTORS / TEXT SOURCE ---
 
@@ -331,7 +345,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		}
 		parent.remove((String) key);
 		key = name;
-		parent.putObjectInternal(name, value);
+		parent.putObjectInternal(name, value, false);
 		return this;
 	}
 
@@ -435,7 +449,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		value = DataConverterRegistry.convert(type, value);
 		if (parent != null && key != null) {
 			if (key instanceof String) {
-				parent.putObjectInternal((String) key, value);
+				parent.putObjectInternal((String) key, value, false);
 			} else {
 				parent.remove((int) key);
 				parent.insertObjectInternal((int) key, value);
@@ -1704,7 +1718,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, String value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1723,7 +1737,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, int value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1742,7 +1756,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, double value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1761,7 +1775,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, byte value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1780,7 +1794,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, float value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1799,7 +1813,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, long value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1818,7 +1832,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, boolean value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1837,7 +1851,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, byte[] value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1859,9 +1873,9 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 */
 	public Tree put(String path, byte[] value, boolean asBase64String) {
 		if (asBase64String) {
-			return putObjectInternal(path, BASE64.encode(value));
+			return putObjectInternal(path, BASE64.encode(value), false);
 		}
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1880,7 +1894,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, short value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1899,7 +1913,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, UUID value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1918,7 +1932,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, Date value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1937,7 +1951,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, InetAddress value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1956,7 +1970,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, BigInteger value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1975,7 +1989,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree put(String path, BigDecimal value) {
-		return putObjectInternal(path, value);
+		return putObjectInternal(path, value, false);
 	}
 
 	/**
@@ -1993,7 +2007,29 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return Tree of the new Map
 	 */
 	public Tree putMap(String path) {
-		return putObjectInternal(path, new LinkedHashMap<String, Object>());
+		return putObjectInternal(path, new LinkedHashMap<String, Object>(), false);
+	}
+
+	/**
+	 * Associates the specified Map (~= JSON object) container with the
+	 * specified path. If the structure previously contained a mapping for the
+	 * path, the old value is replaced. Sample code:<br>
+	 * <br>
+	 * Tree response = ...<br>
+	 * Tree headers = response.getMeta().putMap("headers", true);<br>
+	 * headers.put("Content-Type", "text/html");
+	 * 
+	 * @param path
+	 *            path with which the specified Map is to be associated
+	 * @param putIfAbsent
+	 *            if true and the specified key is not already associated with a
+	 *            value associates it with the given value and returns the new
+	 *            Map, else returns the previous Map
+	 * 
+	 * @return Tree of the new Map
+	 */
+	public Tree putMap(String path, boolean putIfAbsent) {
+		return putObjectInternal(path, new LinkedHashMap<String, Object>(), putIfAbsent);
 	}
 
 	/**
@@ -2011,9 +2047,37 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return Tree of the new List
 	 */
 	public Tree putList(String path) {
-		return putObjectInternal(path, new LinkedList<Object>());
+		return putObjectInternal(path, new LinkedList<Object>(), false);
 	}
-
+	
+	/**
+	 * Associates the specified List (~= JSON array) container with the
+	 * specified path. If the structure previously contained a mapping for the
+	 * path, the old value is replaced. Sample code:<br>
+	 * <br>
+	 * Tree node = new Tree();<br>
+	 * <br>
+	 * Tree list1 = node.putList("a.b.c");<br>
+	 * list1.add(1).add(2).add(3);<br>
+	 * <br>
+	 * Tree list2 = node.putList("a.b.c", true);<br>
+	 * list2.add(4).add(5).add(6);<br>
+	 * <br>
+	 * The "list2" contains 1, 2, 3, 4, 5 and 6.
+	 * 
+	 * @param path
+	 *            path with which the specified List is to be associated
+	 * @param putIfAbsent
+	 *            if true and the specified key is not already associated with a
+	 *            value associates it with the given value and returns the new
+	 *            List, else returns the previous List
+	 * 
+	 * @return Tree of the new List
+	 */
+	public Tree putList(String path, boolean putIfAbsent) {
+		return putObjectInternal(path, new LinkedList<Object>(), putIfAbsent);
+	}
+	
 	/**
 	 * Associates the specified Set container with the specified path. If the
 	 * structure previously contained a mapping for the path, the old value is
@@ -2030,9 +2094,38 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return Tree of the new Set
 	 */
 	public Tree putSet(String path) {
-		return putObjectInternal(path, new LinkedHashSet<Object>());
+		return putObjectInternal(path, new LinkedHashSet<Object>(), false);
 	}
 
+	/**
+	 * Associates the specified Set container with the specified path. If the
+	 * structure previously contained a mapping for the path, the old value is
+	 * replaced. Set similar to List, but contains no duplicate elements. Sample
+	 * code:<br>
+	 * <br>
+	 * Tree node = new Tree();<br>
+	 * <br>
+	 * Tree set1 = node.putSet("a.b.c");<br>
+	 * set1.add(1).add(2).add(3);<br>
+	 * <br>
+	 * Tree set2 = node.putSet("a.b.c", true);<br>
+	 * set2.add(4).add(5).add(6);<br>
+	 * <br>
+	 * The "set2" contains 1, 2, 3, 4, 5 and 6.
+	 * 
+	 * @param path
+	 *            path with which the specified Set is to be associated
+	 * @param putIfAbsent
+	 *            if true and the specified key is not already associated with a
+	 *            value associates it with the given value and returns the new
+	 *            Set, else returns the previous Set
+	 *            
+	 * @return Tree of the new Set
+	 */
+	public Tree putSet(String path, boolean putIfAbsent) {
+		return putObjectInternal(path, new LinkedHashSet<Object>(), putIfAbsent);
+	}
+	
 	/**
 	 * Puts a node with the specified value into the specified path.
 	 * 
@@ -2044,11 +2137,29 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return container node
 	 */
 	public Tree putObject(String path, Object value) {
-		return putObjectInternal(path, getNodeValue(value));
+		return putObjectInternal(path, getNodeValue(value), false);
 	}
 
+	/**
+	 * Puts a node with the specified value into the specified path.
+	 * 
+	 * @param path
+	 *            path (e.g. "path.to.node")
+	 * @param value
+	 *            the new value
+	 * @param putIfAbsent
+	 *            if true and the specified key is not already associated with a
+	 *            value associates it with the given value and returns the new
+	 *            container, else returns the previous container
+	 * 
+	 * @return container node
+	 */
+	public Tree putObject(String path, Object value, boolean putIfAbsent) {
+		return putObjectInternal(path, getNodeValue(value), false);
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Tree putObjectInternal(String path, Object value) {
+	protected Tree putObjectInternal(String path, Object value, boolean putIfAbsent) {
 		Tree parent = getChild(path, true);
 		String name;
 		int i = path.replace(']', '.').lastIndexOf('.');
@@ -2058,13 +2169,20 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 			name = path;
 			if (parent.isEnumeration()) {
 				parent.setType(Map.class);
-				return parent.putObjectInternal(name, value);
+				return parent.putObjectInternal(name, value, putIfAbsent);
 			}
 		}
 		if (parent.isMap()) {
 
 			Map map = (Map) parent.value;
-			map.put(name, value);
+			if (putIfAbsent) {
+				Object previous = map.putIfAbsent(name, value);
+				if (previous != null) {
+					value = previous;
+				}
+			} else {
+				map.put(name, value);
+			}
 
 		} else if (parent.isList()) {
 
@@ -2074,7 +2192,20 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 				int start = path.lastIndexOf('[');
 				index = Integer.parseInt(path.substring(start + 1, end));
 			}
-			parent.resizeAndGetList(index, true, false).set(index, value);
+			if (putIfAbsent) {
+				if (index < parent.size()) {
+					Tree previous = parent.get(index);
+					if (previous.isNull()) {
+						parent.resizeAndGetList(index, true, false).set(index, value);
+					} else {
+						value = previous.value;
+					}
+				} else {
+					parent.resizeAndGetList(index, true, false).set(index, value);
+				}
+			} else {
+				parent.resizeAndGetList(index, true, false).set(index, value);
+			}
 
 		} else if (parent.isArray()) {
 
@@ -2085,7 +2216,20 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 				index = Integer.parseInt(path.substring(start + 1, end));
 			}
 			parent.setType(List.class);
-			parent.resizeAndGetList(index, true, true).set(index, value);
+			if (putIfAbsent) {
+				if (index < parent.size()) {
+					Tree previous = parent.get(index);
+					if (previous.isNull()) {
+						parent.resizeAndGetList(index, true, false).set(index, value);
+					} else {
+						value = previous.value;
+					}
+				} else {
+					parent.resizeAndGetList(index, true, false).set(index, value);
+				}
+			} else {
+				parent.resizeAndGetList(index, true, false).set(index, value);
+			}
 
 		} else if (parent.isSet()) {
 
@@ -3430,7 +3574,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 			if (isMap()) {
 				for (Tree child : source) {
 					if (filter.test(child)) {
-						putObjectInternal(child.getName(), child.clone().value);
+						putObjectInternal(child.getName(), child.clone().value, false);
 					}
 				}
 			} else {
@@ -3740,7 +3884,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		clear();
 		if (isMap()) {
 			for (Tree child : array) {
-				putObjectInternal(child.getName(), child.value);
+				putObjectInternal(child.getName(), child.value, false);
 			}
 		} else {
 			for (Tree child : array) {
