@@ -100,7 +100,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 		return json;
 	}
 
-	// --- protected UTILITIES ---
+	// --- PROTECTED UTILITIES ---
 
 	@SuppressWarnings("rawtypes")
 	protected static final void toString(StringBuilder builder, Object value, Object meta, int indent) {
