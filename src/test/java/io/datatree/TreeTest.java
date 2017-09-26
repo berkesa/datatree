@@ -2086,6 +2086,21 @@ public class TreeTest extends TestCase {
 
 	}
 	
+	// --- NULLPOINTER (NUMBER/BOOLEAN) TEST ---
+	
+	@Test
+	public void testNullPointerNumbers() throws Exception {
+		Tree t = new Tree();
+		t.put("a", (String) null);
+		t.put("b", (String) null);
+		t.put("c", (String) null);
+		t.put("d", (String) null);
+		assertEquals(3, t.get("a", 3));
+		assertTrue(t.get("b", true));
+		assertFalse(t.get("c", false));
+		assertNull(t.get("d", "X"));
+	}
+	
 	// --- TEST MONGO TYPES ---
 
 	@Test
