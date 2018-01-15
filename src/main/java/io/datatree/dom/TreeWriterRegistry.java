@@ -176,11 +176,10 @@ public class TreeWriterRegistry {
 		addSample("bson", "de.undercouch", "bson4jackson", "2.9.0");
 		addSample("msgpack", "org.msgpack", "msgpack", "0.6.12");
 		addSample("ion", "software.amazon.ion", "ion-java", "1.0.3");
+		addSample("kryo", "com.esotericsoftware", "kryo", "4.0.1");
 	}
 
 	private static final void addSample(String format, String group, String name, String version) {
-
-		// https://mvnrepository.com/artifact/{group}/{name}
 		dependencySamples.put(format, new String[] { group, name, version });
 	}
 
@@ -208,6 +207,8 @@ public class TreeWriterRegistry {
 		System.err.println();
 		System.err.println(
 				"compile group: '" + samples[0] + "', name: '" + samples[1] + "', version: '" + samples[2] + "'");
+		System.err.println();
+		System.out.println("...or download the JAR from https://mvnrepository.com/artifact/" + samples[0] + "/" + samples[2]);
 		System.err.println();
 	}
 
