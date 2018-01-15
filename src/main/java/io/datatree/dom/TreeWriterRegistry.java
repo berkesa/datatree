@@ -17,7 +17,9 @@
  */
 package io.datatree.dom;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.datatree.dom.builtin.JsonBuiltin;
@@ -94,6 +96,8 @@ public class TreeWriterRegistry {
 		return getWriter(format, true);
 	}
 
+	// --- FORMAT INFO ---
+	
 	/**
 	 * Check the availability of the specified format.
 	 * 
@@ -103,9 +107,18 @@ public class TreeWriterRegistry {
 	 * @return returns true, if the proper writer is installed
 	 */
 	public static final boolean isAvailable(String format) {
-		return getWriter(format, false) != null;
+		return getWriter(format, false).getFormat().equalsIgnoreCase(format);
 	}
 
+	/**
+	 * Returns the supported format names.
+	 * 
+	 * @return Set of format names (eg. "json", "xml", etc.)
+	 */
+	public static final Set<String> getSupportedFormats() {
+		return Collections.unmodifiableSet(writers.keySet());
+	}
+	
 	// --- FACTORY FINDER METHOD ---
 
 	private static final TreeWriter getWriter(String format, boolean throwException) {
@@ -208,7 +221,7 @@ public class TreeWriterRegistry {
 		System.err.println(
 				"compile group: '" + samples[0] + "', name: '" + samples[1] + "', version: '" + samples[2] + "'");
 		System.err.println();
-		System.err.println("...or download the JAR from https://mvnrepository.com/artifact/" + samples[0] + "/" + samples[2]);
+		System.err.println("...or download the JAR from https://mvnrepository.com/artifact/" + samples[0] + "/" + samples[1]);
 		System.err.println();
 	}
 

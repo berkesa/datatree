@@ -19,6 +19,8 @@ package io.datatree.dom;
 
 import static io.datatree.dom.TreeWriterRegistry.suggestDependency;
 
+import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.datatree.dom.builtin.JsonBuiltin;
@@ -95,6 +97,8 @@ public class TreeReaderRegistry {
 		return getReader(format, true);
 	}
 
+	// --- FORMAT INFO ---
+	
 	/**
 	 * Check the availability of the specified format.
 	 * 
@@ -104,9 +108,18 @@ public class TreeReaderRegistry {
 	 * @return returns true, if the proper writer is installed
 	 */
 	public static final boolean isAvailable(String format) {
-		return getReader(format, false) != null;
+		return getReader(format, false).getFormat().equalsIgnoreCase(format);
 	}
 
+	/**
+	 * Returns the supported format names.
+	 * 
+	 * @return Set of format names (eg. "json", "xml", etc.)
+	 */
+	public static final Set<String> getSupportedFormats() {
+		return Collections.unmodifiableSet(readers.keySet());
+	}
+	
 	// --- FACTORY FINDER METHOD ---
 
 	private static final TreeReader getReader(String format, boolean throwException) {
