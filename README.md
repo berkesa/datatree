@@ -40,7 +40,7 @@ The DataTree Core API contains the complete Tree toolkit, and one built-in JSON 
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-core</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
@@ -50,7 +50,7 @@ The [datatree-adapters](https://berkesa.github.io/datatree-adapters/) artifact c
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 

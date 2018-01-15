@@ -17,6 +17,7 @@
  */
 package io.datatree.dom;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.datatree.dom.builtin.JsonBuiltin;
@@ -26,10 +27,10 @@ import io.datatree.dom.builtin.JsonBuiltin;
  * 
  * @author Andras Berkes [andras.berkes@programmer.net]
  */
-public class TreeWriterRegistry  {
+public class TreeWriterRegistry {
 
 	// --- DEFAULT OUTPUT FORMAT ---
-	
+
 	public static final String JSON = "json";
 
 	// --- PRIVATE CONSTRUCTOR ---
@@ -58,9 +59,9 @@ public class TreeWriterRegistry  {
 			cachedJsonWriter = writer;
 		}
 	}
-	
+
 	// --- DEREGISTER WRITER ---
-	
+
 	/**
 	 * Deregisters the given format from the registry.
 	 * 
@@ -72,7 +73,7 @@ public class TreeWriterRegistry  {
 		if (format.equals(JSON)) {
 			throw new IllegalArgumentException("Unable to delete the default JSON writer!");
 		}
-		writers.remove(format);		
+		writers.remove(format);
 	}
 
 	// --- DEFAULT JSON WRITER ---
@@ -91,6 +92,18 @@ public class TreeWriterRegistry  {
 	 */
 	public static final TreeWriter getWriter(String format) {
 		return getWriter(format, true);
+	}
+
+	/**
+	 * Check the availability of the specified format.
+	 * 
+	 * @param format
+	 *            name of the format (eg. "json", "xml", etc.)
+	 * 
+	 * @return returns true, if the proper writer is installed
+	 */
+	public static final boolean isAvailable(String format) {
+		return getWriter(format, false) != null;
 	}
 
 	// --- FACTORY FINDER METHOD ---
@@ -128,20 +141,74 @@ public class TreeWriterRegistry  {
 		try {
 			String className = System.getProperty(propertyName);
 			if (className == null || className.isEmpty()) {
-				className = PackageScanner.findByFormat(format, false);				
+				className = PackageScanner.findByFormat(format, false);
+			}
+			if (className == null || className.isEmpty()) {
+				throw new IllegalArgumentException("System Property \"" + propertyName + "\" not found! "
+						+ "This property defines a custom writer class for the \"" + format + "\" format.");
 			}
 			writer = (TreeWriter) Class.forName(className).newInstance();
 			writers.put(format, writer);
 			return writer;
 		} catch (Throwable cause) {
 			if (throwException) {
+				suggestDependency(format);
+				cause.printStackTrace();
 				throw new RuntimeException("Unable to create writer for format \"" + format + "\"! Set the -D"
 						+ propertyName + "=package.WriterClass initial parameter to specify the proper writer class.",
 						cause);
 			}
-			cause.printStackTrace();
 		}
 		return new JsonBuiltin();
+	}
+
+	// --- DEPENDENCY HELPER ---
+
+	private static final HashMap<String, String[]> dependencySamples = new HashMap<>();
+
+	static {
+		addSample("yaml", "org.yaml", "snakeyaml", "1.19");
+		addSample("csv", "net.sf.opencsv", "opencsv", "2.3");
+		addSample("xstream", "xstream", "xstream", "1.2.2");
+		addSample("toml", "com.moandjiezana.toml", "toml4j", "0.7.2");
+		addSample("smile", "com.fasterxml.jackson.dataformat", "jackson-dataformat-smile", "2.9.3");
+		addSample("cbor", "com.fasterxml.jackson.dataformat", "jackson-dataformat-cbor", "2.9.3");
+		addSample("bson", "de.undercouch", "bson4jackson", "2.9.0");
+		addSample("msgpack", "org.msgpack", "msgpack", "0.6.12");
+		addSample("ion", "software.amazon.ion", "ion-java", "1.0.3");
+	}
+
+	private static final void addSample(String format, String group, String name, String version) {
+
+		// https://mvnrepository.com/artifact/{group}/{name}
+		dependencySamples.put(format, new String[] { group, name, version });
+	}
+
+	static final void suggestDependency(String format) {
+		if (format == null || format.isEmpty()) {
+			return;
+		}
+		if (format.contains("pack")) {
+			format = "msgpack";
+		}
+		String[] samples = dependencySamples.get(format);
+		if (samples == null) {
+			return;
+		}
+		System.err.println("It looks like you are missing some dependencies!");
+		System.err.println("Sample Maven dependency:");
+		System.err.println();
+		System.err.println("<dependency>");
+		System.err.println("    <groupId>" + samples[0] + "</groupId>");
+		System.err.println("    <artifactId>" + samples[1] + "</artifactId>");
+		System.err.println("    <version>" + samples[2] + "</version>");
+		System.err.println("</dependency>");
+		System.err.println();
+		System.err.println("Sample Gradle dependency:");
+		System.err.println();
+		System.err.println(
+				"compile group: '" + samples[0] + "', name: '" + samples[1] + "', version: '" + samples[2] + "'");
+		System.err.println();
 	}
 
 }

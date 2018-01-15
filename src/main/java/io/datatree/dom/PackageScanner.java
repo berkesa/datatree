@@ -151,7 +151,7 @@ final class PackageScanner {
 		}
 	}
 
-	private static final LinkedList<String> scan(String packageName) throws Exception {
+	public static final LinkedList<String> scan(String packageName) throws Exception {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		LinkedList<String> names = new LinkedList<>();
 		packageName = packageName.replace('.', '/');

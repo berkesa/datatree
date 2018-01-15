@@ -17,6 +17,8 @@
  */
 package io.datatree.dom;
 
+import static io.datatree.dom.TreeWriterRegistry.suggestDependency;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.datatree.dom.builtin.JsonBuiltin;
@@ -29,9 +31,9 @@ import io.datatree.dom.builtin.JsonBuiltin;
 public class TreeReaderRegistry {
 
 	// --- DEFAULT INPUT FORMAT ---
-	
+
 	public static final String JSON = "json";
-	
+
 	// --- PRIVATE CONSTRUCTOR ---
 
 	private TreeReaderRegistry() {
@@ -93,6 +95,18 @@ public class TreeReaderRegistry {
 		return getReader(format, true);
 	}
 
+	/**
+	 * Check the availability of the specified format.
+	 * 
+	 * @param format
+	 *            name of the format (eg. "json", "xml", etc.)
+	 * 
+	 * @return returns true, if the proper writer is installed
+	 */
+	public static final boolean isAvailable(String format) {
+		return getReader(format, false) != null;
+	}
+
 	// --- FACTORY FINDER METHOD ---
 
 	private static final TreeReader getReader(String format, boolean throwException) {
@@ -130,18 +144,23 @@ public class TreeReaderRegistry {
 			if (className == null || className.isEmpty()) {
 				className = PackageScanner.findByFormat(format, true);
 			}
+			if (className == null || className.isEmpty()) {
+				throw new IllegalArgumentException("System Property \"" + propertyName + "\" not found! "
+						+ "This property defines a custom reader class for the \"" + format + "\" format.");
+			}
 			reader = (TreeReader) Class.forName(className).newInstance();
 			readers.put(format, reader);
 			return reader;
 		} catch (Throwable cause) {
 			if (throwException) {
+				suggestDependency(format);
+				cause.printStackTrace();
 				throw new RuntimeException("Unable to create reader for format \"" + format + "\"! Set the -D"
 						+ propertyName + "=package.ReaderClass initial parameter to specify the proper reader class.",
 						cause);
 			}
-			cause.printStackTrace();
 		}
 		return new JsonBuiltin();
 	}
-	
+
 }
