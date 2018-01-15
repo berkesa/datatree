@@ -208,7 +208,7 @@ public class TreeWriterRegistry {
 		System.err.println(
 				"compile group: '" + samples[0] + "', name: '" + samples[1] + "', version: '" + samples[2] + "'");
 		System.err.println();
-		System.out.println("...or download the JAR from https://mvnrepository.com/artifact/" + samples[0] + "/" + samples[2]);
+		System.err.println("...or download the JAR from https://mvnrepository.com/artifact/" + samples[0] + "/" + samples[2]);
 		System.err.println();
 	}
 
