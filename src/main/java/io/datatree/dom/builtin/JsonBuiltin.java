@@ -472,34 +472,10 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			c = src.chars[from];
 			if (c == '\\') {
 				from++;
-				c = chars[from];
+				c = src.chars[from];					
 				if (c != 'u') {
-					switch (c) {
-					case 'n':
-						chars[to++] = '\n';
-						break;
-					case 'b':
-						chars[to++] = '\b';
-						break;
-					case '/':
-						chars[to++] = '/';
-						break;
-					case 'f':
-						chars[to++] = '\f';
-						break;
-					case 'r':
-						chars[to++] = '\r';
-						break;
-					case 't':
-						chars[to++] = '\t';
-						break;
-					case '\\':
-						chars[to++] = '\\';
-						break;
-					case '"':
-						chars[to++] = '"';
-						break;
-					}
+					chars[to++] = '\\';
+					chars[to++] = c;
 				} else {
 					if (from + 4 < to) {
 						String hex = new String(chars, from + 1, 4);
@@ -511,7 +487,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			} else {
 				chars[to++] = c;
 			}
-			if (to >= chars.length) {
+			if (from >= src.idx - 1) {
 				break;
 			}
 			from++;
