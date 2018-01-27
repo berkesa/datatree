@@ -36,7 +36,7 @@ import java.util.jar.JarFile;
  * 
  * @author Andras Berkes [andras.berkes@programmer.net]
  */
-final class PackageScanner {
+public final class PackageScanner {
 
 	// --- SCAN PACKAGES ---
 
@@ -157,6 +157,24 @@ final class PackageScanner {
 		packageName = packageName.replace('.', '/');
 		URL packageURL = classLoader.getResource(packageName);
 		if (packageURL == null) {
+			String classPath = System.getProperty("java.class.path");
+			String separator = System.getProperty("path.separator");
+			if (classPath != null && separator != null) {
+				String[] paths = classPath.split(separator);
+				for (String path : paths) {
+					if (path.toLowerCase().endsWith(".jar")) {
+						scanJar(path, packageName, names);
+					} else {
+						File folder = new File(path, packageName);
+						if (folder.isDirectory()) {
+							scanDir(folder, names);
+						}
+					}
+					if (!names.isEmpty()) {
+						return names;
+					}					
+				}
+			}
 			return names;
 		}
 		if (packageURL.getProtocol().equals("jar")) {
@@ -184,19 +202,45 @@ final class PackageScanner {
 		} else {
 
 			URI uri = new URI(packageURL.toString());
-			File folder = new File(uri.getPath());
-			File[] files = folder.listFiles();
-			String entryName;
-			for (File actual : files) {
-				entryName = actual.getName();
-				if (entryName.endsWith(".class")) {
-					entryName = entryName.substring(0, entryName.lastIndexOf('.'));
-					names.add(entryName);
-				}
-			}
+			scanDir(new File(uri.getPath()), names);
 
 		}
 		return names;
+	}
+
+	private static final void scanDir(File folder, LinkedList<String> names) {
+		File[] files = folder.listFiles();
+		String entryName;
+		for (File actual : files) {
+			entryName = actual.getName();
+			if (entryName.endsWith(".class")) {
+				entryName = entryName.substring(0, entryName.lastIndexOf('.'));
+				names.add(entryName);
+			}
+		}		
+	}
+	
+	private static final void scanJar(String jarFileName, String packageName, LinkedList<String> names) {
+		JarFile jar = null;
+		try {
+			jar = new JarFile(jarFileName);
+			Enumeration<JarEntry> jarEntries = jar.entries();
+			while (jarEntries.hasMoreElements()) {
+				String entryName = jarEntries.nextElement().getName();
+				if (entryName.startsWith(packageName) && entryName.endsWith(".class")) {
+					entryName = entryName.substring(packageName.length() + 1, entryName.lastIndexOf('.'));
+					names.add(entryName);
+				}
+			}
+		} catch (Exception ignored) {
+		} finally {
+			if (jar != null) {
+				try {
+					jar.close();
+				} catch (Exception ignored) {
+				}
+			}
+		}
 	}
 
 }
