@@ -119,6 +119,18 @@ public class TreeReaderRegistry {
 	public static final Set<String> getSupportedFormats() {
 		return Collections.unmodifiableSet(readers.keySet());
 	}
+
+	/**
+	 * Get detected serializers by format name.
+	 * 
+	 * @param format
+	 *            name of the format (eg. "json", "xml", etc.)
+	 *            
+	 * @return Set of class names (eg. "io.datatree.dom.builtin.JsonBuiltin")
+	 */
+	public static final Set<String> getReadersByFormat(String format) {
+		return PackageScanner.getReadersByFormat(format);
+	}
 	
 	// --- FACTORY FINDER METHOD ---
 

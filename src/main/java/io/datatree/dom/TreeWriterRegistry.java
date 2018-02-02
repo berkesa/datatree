@@ -119,6 +119,18 @@ public class TreeWriterRegistry {
 		return Collections.unmodifiableSet(writers.keySet());
 	}
 	
+	/**
+	 * Get detected deserializers by format name.
+	 * 
+	 * @param format
+	 *            name of the format (eg. "json", "xml", etc.)
+	 *            
+	 * @return Set of class names (eg. "io.datatree.dom.builtin.JsonBuiltin")
+	 */
+	public static final Set<String> getWritersByFormat(String format) {
+		return PackageScanner.getWritersByFormat(format);
+	}
+	
 	// --- FACTORY FINDER METHOD ---
 
 	private static final TreeWriter getWriter(String format, boolean throwException) {
