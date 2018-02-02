@@ -95,7 +95,7 @@ public final class PackageScanner {
 			} else {
 
 				// Try to load default adapters
-				tryToLoadAll("io.datatree.dom.builtin", "DebugBuiltin", "JavaBuiltin");
+				tryToLoadAll("io.datatree.dom.builtin", "DebugBuiltin", "JavaBuiltin", "JsonBuiltin");
 				tryToLoadAll("io.datatree.dom.adapters", "BsonJackson", "CborJackson", "CsvOpenCSV", "IonIon",
 						"JsonBoon", "JsonBson", "JsonDSL", "JsonFast", "JsonFlex", "JsonGenson", "JsonGson", "JsonIon",
 						"JsonJackson", "JsonJodd", "JsonJohnzon", "JsonJsonIO", "JsonNano", "JsonSimple", "JsonSmart",
