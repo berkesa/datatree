@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -58,7 +59,6 @@ import org.bson.types.ObjectId;
 import org.bson.types.Symbol;
 import org.junit.Test;
 
-import io.datatree.Tree;
 import io.datatree.dom.Config;
 import io.datatree.dom.TreeWriterRegistry;
 import junit.framework.TestCase;
@@ -98,8 +98,15 @@ public class TreeTest extends TestCase {
 	public void testConstructor() throws Exception {
 		isEmptyTree(new Tree());
 		isEmptyTree(new Tree((String) null));
+		isEmptyTree(new Tree((byte[]) null));
+		isEmptyTree(new Tree((Object) null, (Object) null));
 		isEmptyTree(new Tree(""));
+		isEmptyTree(new Tree((String) null, (String) null));
 		isEmptyTree(new Tree("{}"));
+		isEmptyTree(new Tree("{}".getBytes()));
+		isEmptyTree(new Tree(new HashMap<String, Object>()));
+		isEmptyTree(new Tree(new byte[0]));
+		isEmptyTree(new Tree(new byte[1]));
 	}
 
 	private final void isEmptyTree(Tree t) throws Exception {
