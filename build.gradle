@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'com.bmuschko.nexus'
+apply plugin: 'jacoco'
 
 buildscript {
     repositories {
@@ -27,6 +28,15 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.mongodb/bson
 	compile group: 'org.mongodb', name: 'bson', version: '3.6.1'
 
+}
+
+// --- JACOCO ---
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
 }
 
 sourceCompatibility = 1.8
