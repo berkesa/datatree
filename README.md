@@ -1,8 +1,7 @@
 [![Build Status](https://travis-ci.org/berkesa/datatree.svg?branch=master)](https://travis-ci.org/berkesa/datatree)
 [![codecov](https://codecov.io/gh/berkesa/datatree/branch/master/graph/badge.svg)](https://codecov.io/gh/berkesa/datatree)
 [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/berkesa/datatree/master/LICENSE)
-[![Javadocs](https://www.javadoc.io/badge/com.github.berkesa/datatree-core.svg)](https://www.javadoc.io/doc/com.github.berkesa/datatree-core)
-[![Twitter](https://img.shields.io/twitter/url/https/github.com/berkesa/datatree.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
+[![Javadocs](https://www.javadoc.io/badge/com.github.berkesa/datatree-core.png?color=green)](https://www.javadoc.io/doc/com.github.berkesa/datatree-core)
 
 # DataTree Core API
 
