@@ -58,7 +58,7 @@ The [datatree-adapters](https://berkesa.github.io/datatree-adapters/) artifact c
 
 [...or download the JARs directly from the Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.berkesa%22)
 
-## Features:
+## Features
 
 * DataTree API supports 18 popular [JSON implementations](https://berkesa.github.io/datatree-adapters/) (Jackson, Gson, Boon, Jodd, FastJson, etc.)
 * DataTree API supports 10 other (non-JSON) [formats](https://berkesa.github.io/datatree-adapters/) (YAML, ION, BSON, MessagePack, etc.)
@@ -75,10 +75,10 @@ The [datatree-adapters](https://berkesa.github.io/datatree-adapters/) artifact c
 * Documents have an optional metadata container (`tree.getMeta().put("name", "value")`)
 * Pretty printing (`String json = tree.toString(true / false)`)
 
-## Requirements:
+## Requirements
 
 The DataTree API requires Java 8.
 
-## License:
+## License
 
 DataTree is licensed under the Apache License V2, you can use it in your commercial products for free.
