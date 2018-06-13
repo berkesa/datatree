@@ -61,11 +61,15 @@ public class JsonBuiltin extends AbstractTextAdapter {
 
 	// --- CONSTANTS ---
 
-	protected static final char[] APOS = "\\\"".toCharArray();
 	protected static final char[] CR_LF = "\r\n".toCharArray();
 	protected static final char[] INDENT = "  ".toCharArray();
 	protected static final char[] NULL = "null".toCharArray();
 
+	protected static final char[] APOS = "\\\"".toCharArray();
+	protected static final char[] CR = "\\r".toCharArray();
+	protected static final char[] LF = "\\n".toCharArray();
+	protected static final char[] TAB = "\\t".toCharArray();
+	
 	// --- BUILDER CACHE ---
 
 	public Queue<StringBuilder> builders = new ConcurrentLinkedQueue<>();
@@ -232,9 +236,20 @@ public class JsonBuiltin extends AbstractTextAdapter {
 		builder.append('"');
 		char[] chars = txt.toCharArray();
 		for (char c : chars) {
-			if (c == '"') {
+			switch (c) {
+			case '"':
 				builder.append(APOS);
-			} else {
+				continue;
+			case '\r':
+				builder.append(CR);
+				continue;
+			case '\n':
+				builder.append(LF);
+				continue;
+			case '\t':
+				builder.append(TAB);
+				continue;				
+			default:
 				builder.append(c);
 			}
 		}
@@ -472,10 +487,34 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			c = src.chars[from];
 			if (c == '\\') {
 				from++;
-				c = src.chars[from];					
+				c = src.chars[from];
 				if (c != 'u') {
-					chars[to++] = '\\';
-					chars[to++] = c;
+					switch (c) {
+					case 't':
+						chars[to++] = '\t';
+						break;
+					case 'b':
+						chars[to++] = '\b';
+						break;
+					case 'n':
+						chars[to++] = '\n';
+						break;
+					case 'r':
+						chars[to++] = '\r';
+						break;
+					case 'f':
+						chars[to++] = '\f';
+						break;
+					case '\'':
+						chars[to++] = '\'';
+						break;
+					case '"':
+						chars[to++] = '"';
+						break;
+					case '\\':
+						chars[to++] = '\\';
+						break;
+					}
 				} else {
 					if (from + 4 < to) {
 						String hex = new String(chars, from + 1, 4);

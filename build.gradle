@@ -48,8 +48,8 @@ targetCompatibility = 1.8
 
 group = 'com.github.berkesa'
 
-// version = '1.0.5-SNAPSHOT'
-version = '1.0.5'
+version = '1.0.6-SNAPSHOT'
+// version = '1.0.6'
 
 modifyPom {
     project {

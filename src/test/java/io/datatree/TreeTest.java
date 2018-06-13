@@ -2092,6 +2092,23 @@ public class TreeTest extends TestCase {
 		assertEquals("var a=3;", t.get("g", "-"));
 
 	}
+
+	// --- ESCAPE TEST ---
+	
+	@Test
+	public void testEscape() throws Exception {
+		Tree t = new Tree();
+		String val = "\t\t-- - \n--\t-----\r\n--\r----1234--\"--";
+		t.put("a", val);
+		String json = t.toString("json", true, true);
+		
+		Tree v = new Tree(json);
+		assertEquals(val, v.get("a").asString());
+		
+		json = t.toString("json", true, true);
+		v = new Tree(json);
+		assertEquals(val, v.get("a").asString());
+	}
 	
 	// --- NULLPOINTER (NUMBER/BOOLEAN) TEST ---
 	
