@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>datatree</name>
-	<comment>Project qnode created by Buildship.</comment>
+	<comment>Extensible Java Library for reading, manipulating and writing hierarchical data structures from/to various formats.</comment>
 	<projects>
 	</projects>
 	<buildSpec>

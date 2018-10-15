@@ -19,9 +19,7 @@ package io.datatree.dom;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.StampedLock;
 
 /**
  * Simple and fast memory cache.
@@ -30,24 +28,17 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class Cache<KEY, VALUE> {
 
-	private final Lock readerLock;
-	private final Lock writerLock;
+	protected final StampedLock lock = new StampedLock();
 
-	private final WeakHashMap<KEY, VALUE> weakCache;
-	private final LinkedHashMap<KEY, VALUE> hardCache;
+	protected final LinkedHashMap<KEY, VALUE> map;
 
 	public Cache(final int capacity, final boolean fair) {
-		ReentrantReadWriteLock lock = new ReentrantReadWriteLock(fair);
-		readerLock = lock.readLock();
-		writerLock = lock.writeLock();
-		weakCache = new WeakHashMap<KEY, VALUE>(capacity);
-		hardCache = new LinkedHashMap<KEY, VALUE>(capacity + 1, 1.0f, true) {
+		map = new LinkedHashMap<KEY, VALUE>(capacity + 1, 1.0f, false) {
 
 			private static final long serialVersionUID = 5994447707758047152L;
 
 			protected final boolean removeEldestEntry(Map.Entry<KEY, VALUE> entry) {
 				if (this.size() > capacity) {
-					weakCache.put(entry.getKey(), entry.getValue());
 					return true;
 				}
 				return false;
@@ -56,56 +47,68 @@ public class Cache<KEY, VALUE> {
 	}
 
 	public VALUE get(KEY key) {
-		readerLock.lock();
-		VALUE value;
-		try {
-			value = hardCache.get(key);
-			if (value != null) {
-				return value;
+		VALUE value = null;
+		long stamp = lock.tryOptimisticRead();
+		if (stamp != 0) {
+			try {
+				value = map.get(key);
+			} catch (Exception modified) {
+				stamp = 0;
 			}
-			return weakCache.get(key);
-		} finally {
-			readerLock.unlock();
 		}
+		if (!lock.validate(stamp) || stamp == 0) {
+			stamp = lock.readLock();
+			try {
+				value = map.get(key);
+			} finally {
+				lock.unlockRead(stamp);
+			}
+		}
+		return value;
 	}
 
 	public void put(KEY key, VALUE value) {
-		writerLock.lock();
+		final long stamp = lock.writeLock();
 		try {
-			weakCache.remove(key);
-			hardCache.put(key, value);
+			map.put(key, value);
 		} finally {
-			writerLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
 	public void remove(KEY key) {
-		writerLock.lock();
+		final long stamp = lock.writeLock();
 		try {
-			weakCache.remove(key);
-			hardCache.remove(key);
+			map.remove(key);
 		} finally {
-			writerLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
 	public void clear() {
-		writerLock.lock();
+		final long stamp = lock.writeLock();
 		try {
-			weakCache.clear();
-			hardCache.clear();
+			map.clear();
 		} finally {
-			writerLock.unlock();
+			lock.unlockWrite(stamp);
 		}
 	}
 
 	public int size() {
-		readerLock.lock();
-		try {
-			return hardCache.size() + weakCache.size();
-		} finally {
-			readerLock.unlock();
+		int count = 0;
+		long stamp = lock.tryOptimisticRead();
+		if (stamp != 0) {
+			count = map.size();
 		}
+		if (!lock.validate(stamp) || stamp == 0) {
+			stamp = lock.readLock();
+			try {
+				count = map.size();
+			} finally {
+				lock.unlockRead(stamp);
+			}
+		}
+		return count;
 	}
 
 }
