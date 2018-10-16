@@ -241,6 +241,7 @@ abstract class AbstractConverterSet {
 		if (from instanceof Number) {
 			return toInetAddress(((Number) from).longValue());
 		}
+		Object key = from;
 		if (from instanceof Map) {
 			Map<?, ?> map = (Map<?, ?>) from;
 			for (Map.Entry<?, ?> entry : map.entrySet()) {
@@ -250,14 +251,14 @@ abstract class AbstractConverterSet {
 					if (test.toLowerCase().contains("hostname")) {
 						object = entry.getValue();
 						if (object != null) {
-							from = object;
+							key = object;
 							break;
 						}
 					}
 				}
 			}
 		}
-		String ipOrHost = String.valueOf(from);
+		String ipOrHost = String.valueOf(key);
 		int i = ipOrHost.indexOf('/');
 		if (i > -1 && i < ipOrHost.length() - 1) {
 			ipOrHost = ipOrHost.substring(0, i);

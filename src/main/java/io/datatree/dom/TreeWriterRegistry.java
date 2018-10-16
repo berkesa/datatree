@@ -63,9 +63,9 @@ public class TreeWriterRegistry {
 	 *            TreeWriter instance for generating the specified format
 	 */
 	public static final void setWriter(String format, TreeWriter writer) {
-		format = format.toLowerCase();
-		writers.put(format, writer);
-		if (JSON.equals(format)) {
+		String key = format.toLowerCase();
+		writers.put(key, writer);
+		if (JSON.equals(key)) {
 			cachedJsonWriter = writer;
 		}
 	}
@@ -79,11 +79,11 @@ public class TreeWriterRegistry {
 	 *            name of the format (eg. "custom", "csv", etc.)
 	 */
 	public static final void removeWriter(String format) {
-		format = format.toLowerCase();
-		if (format.equals(JSON)) {
+		String key = format.toLowerCase();
+		if (JSON.equals(key)) {
 			throw new IllegalArgumentException("Unable to delete the default JSON writer!");
 		}
-		writers.remove(format);
+		writers.remove(key);
 	}
 
 	// --- GET WRITER BY FORMAT NAME ---
@@ -142,11 +142,11 @@ public class TreeWriterRegistry {
 		if (format == null) {
 			writer = cachedJsonWriter;
 		} else {
-			format = format.toLowerCase();
-			if (JSON.equals(format)) {
+			String key = format.toLowerCase();
+			if (JSON.equals(key)) {
 				writer = cachedJsonWriter;
 			} else {
-				writer = writers.get(format);
+				writer = writers.get(key);
 			}
 		}
 		if (writer != null) {

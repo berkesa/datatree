@@ -47,7 +47,7 @@ public final class PackageScanner {
 	private static final HashMap<String, LinkedHashSet<String>> readers = new HashMap<>();
 	private static final HashMap<String, LinkedHashSet<String>> writers = new HashMap<>();
 
-	static final Set<String> getReadersByFormat(String format) {
+	protected static final Set<String> getReadersByFormat(String format) {
 		LinkedHashSet<String> set = readers.get(format);
 		if (set == null) {
 			return Collections.emptySet();
@@ -55,7 +55,7 @@ public final class PackageScanner {
 		return Collections.unmodifiableSet(set);
 	}
 
-	static final Set<String> getWritersByFormat(String format) {
+	protected static final Set<String> getWritersByFormat(String format) {
 		LinkedHashSet<String> set = writers.get(format);
 		if (set == null) {
 			return Collections.emptySet();
@@ -63,7 +63,7 @@ public final class PackageScanner {
 		return Collections.unmodifiableSet(set);
 	}
 
-	static synchronized final String findByFormat(String format, boolean isReader) {
+	protected static synchronized final String findByFormat(String format, boolean isReader) {
 		if (scanned.compareAndSet(false, true)) {
 
 			// Get scanned packages
@@ -193,8 +193,8 @@ public final class PackageScanner {
 	public static final LinkedList<String> scan(String packageName) throws Exception {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		LinkedList<String> names = new LinkedList<>();
-		packageName = packageName.replace('.', '/');
-		URL packageURL = classLoader.getResource(packageName);
+		String name = packageName.replace('.', '/');
+		URL packageURL = classLoader.getResource(name);
 		if (packageURL == null) {
 			String classPath = System.getProperty("java.class.path");
 			String separator = System.getProperty("path.separator");
@@ -202,9 +202,9 @@ public final class PackageScanner {
 				String[] paths = classPath.split(separator);
 				for (String path : paths) {
 					if (path.toLowerCase().endsWith(".jar")) {
-						scanJar(path, packageName, names);
+						scanJar(path, name, names);
 					} else {
-						File folder = new File(path, packageName);
+						File folder = new File(path, name);
 						if (folder.isDirectory()) {
 							scanDir(folder, names);
 						}
@@ -220,7 +220,7 @@ public final class PackageScanner {
 
 			String jarFileName = URLDecoder.decode(packageURL.getFile(), "UTF-8");
 			jarFileName = jarFileName.substring(5, jarFileName.indexOf("!"));
-			scanJar(jarFileName, packageName, names);
+			scanJar(jarFileName, name, names);
 
 		} else {
 

@@ -25,10 +25,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -60,7 +59,9 @@ import org.bson.types.Symbol;
 import org.junit.Test;
 
 import io.datatree.dom.Config;
+import io.datatree.dom.TreeReaderRegistry;
 import io.datatree.dom.TreeWriterRegistry;
+import io.datatree.dom.builtin.JsonBuiltin;
 import junit.framework.TestCase;
 
 /**
@@ -94,19 +95,18 @@ public class TreeTest extends TestCase {
 
 	// --- CREATE AN EMPTY DATA STRUCTURE ---
 
+	static {
+		JsonBuiltin impl = new JsonBuiltin();
+		TreeReaderRegistry.setReader("json", impl);
+		TreeWriterRegistry.setWriter("json", impl);
+	}
+
 	@Test
 	public void testConstructor() throws Exception {
 		isEmptyTree(new Tree());
 		isEmptyTree(new Tree((String) null));
-		isEmptyTree(new Tree((byte[]) null));
-		isEmptyTree(new Tree((Object) null, (Object) null));
 		isEmptyTree(new Tree(""));
-		isEmptyTree(new Tree((String) null, (String) null));
 		isEmptyTree(new Tree("{}"));
-		isEmptyTree(new Tree("{}".getBytes()));
-		isEmptyTree(new Tree(new HashMap<String, Object>()));
-		isEmptyTree(new Tree(new byte[0]));
-		isEmptyTree(new Tree(new byte[1]));
 	}
 
 	private final void isEmptyTree(Tree t) throws Exception {
@@ -196,16 +196,16 @@ public class TreeTest extends TestCase {
 		testConverter(InetAddress.getLocalHost(), String.class);
 		testConverter(UUID.randomUUID(), String.class);
 		testConverter(new Date(), String.class);
-
 	}
 
 	private void testConverter(Object value, Class<?> type) throws Exception {
+
 		Tree t = new Tree();
 
 		t.putObject("original", value);
 		t.putObject("converted", value);
 		Tree a = t.get("converted");
-		String expected = a.asString();
+		String expected = a.isPrimitive() ? a.asString() : a.toString(false);
 		a.setType(type);
 
 		if (type.isArray()) {
@@ -214,12 +214,18 @@ public class TreeTest extends TestCase {
 
 		String json = t.toString();
 
-		a.setType(value.getClass());
-		assertEquals(expected, a.asString());
+		Class<?> originalType = value instanceof Collection ? List.class : value.getClass();
+		a.setType(originalType);
+		assertJsonEquals(expected, a.isPrimitive() ? a.asString() : a.toString(false));
 
 		Tree copy = new Tree(json);
-		String v = copy.get("converted").setType(type).setType(value.getClass()).asString();
-		assertEquals(expected, v);
+		if (a.isPrimitive()) {
+			String v = copy.get("converted").setType(type).setType(originalType).asString();
+			assertJsonEquals(expected, v);
+		} else {
+			String v = copy.get("converted").setType(type).setType(originalType).toString(false);
+			assertJsonEquals(expected, v);
+		}
 	}
 
 	// --- NODE TYPE ---
@@ -572,7 +578,7 @@ public class TreeTest extends TestCase {
 		assertNotNull(t.getMeta(true));
 
 		String metaName = Config.META;
-		
+
 		Tree meta = t.getMeta();
 		assertEquals(meta, t.get(Config.META));
 
@@ -606,6 +612,7 @@ public class TreeTest extends TestCase {
 		assertJsonEquals("{\"a\":[2,3]}", t.toString(false));
 		t.get("a").getLastChild().remove();
 		assertJsonEquals("{\"a\":[2]}", t.toString(false));
+
 		t.put("a[3]", 4);
 		assertJsonEquals("{\"a\":[2,null,null,4]}", t.toString(false));
 
@@ -620,9 +627,17 @@ public class TreeTest extends TestCase {
 		assertJsonEquals("{\"a\":[2,3]}", t.toString(false));
 		t.get("a").getLastChild().remove();
 		assertJsonEquals("{\"a\":[2]}", t.toString(false));
+
 		t.put("a[3]", 4);
 		assertJsonEquals("{\"a\":[2,null,null,4]}", t.toString(false));
 
+		t.putObject("a", new int[] { 1, 2, 3 });
+		t.get("a").remove((child) -> {
+			return child.asInteger() == 2;
+		});
+		assertJsonEquals("{\"a\":[1,3]}", t.toString(false));
+
+		// Johnzon bug
 		t.putObject("a", new int[] { 1 });
 		t.put("a[3]", "b");
 		assertJsonEquals("{\"a\":[1,null,null,\"b\"]}", t.toString(false));
@@ -630,12 +645,6 @@ public class TreeTest extends TestCase {
 		t.putObject("a", new int[] { 1, 2, 3 });
 		t.get("a").add(true);
 		assertJsonEquals("{\"a\":[1,2,3,true]}", t.toString(false));
-
-		t.putObject("a", new int[] { 1, 2, 3 });
-		t.get("a").remove((child) -> {
-			return child.asInteger() == 2;
-		});
-		assertJsonEquals("{\"a\":[1,3]}", t.toString(false));
 
 		t.putMap("a").put("b", "c");
 		assertJsonEquals("{\"a\":{\"b\":\"c\"}}", t.toString(false));
@@ -1004,9 +1013,8 @@ public class TreeTest extends TestCase {
 	public void testToJSON() throws Exception {
 
 		// JSON test
-		testConvert(TreeWriterRegistry.JSON);
+		testConvert();
 
-		// Other JSON tests
 		Tree t = new Tree();
 		t.put("a", 1);
 		assertJsonEquals("{\"a\":1}", t.toString(false));
@@ -1031,11 +1039,14 @@ public class TreeTest extends TestCase {
 		assertEquals("d", j.get("map.c", "x"));
 	}
 
-	private Tree testConvert(String format) throws Exception {
+	private Tree testConvert() throws Exception {
 		Tree t = new Tree();
 		Date date = new Date();
 		InetAddress inet = InetAddress.getLocalHost();
 		UUID uuid = UUID.randomUUID();
+
+		// JSON-Simple doesn't support non-standard data types
+		String writerClass = TreeWriterRegistry.getWriter(TreeWriterRegistry.JSON).getClass().toString();
 
 		// Standard JSON types
 		t.put("null", (String) null);
@@ -1070,26 +1081,30 @@ public class TreeTest extends TestCase {
 		// Array
 		t.getMeta().putObject("m4", new String[] { "a", "b", "c" });
 
-		// Convert to String
+		// Print output format
+		System.out.println("-------------------- JSON --------------------");
+		System.out.println("Output of " + writerClass + " serializer (Standard and Cassandra types):");
 		String source;
 		try {
-			source = t.toString(format, true, true);
+			source = t.toString(TreeWriterRegistry.JSON, true, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
+		System.out.println();
+		System.out.println(source);
 
 		// Check formatting
 		assertTrue(source.contains("\r") || source.contains("\n"));
 		assertTrue(source.contains(" ") || source.contains("\t"));
 
-		Tree t2 = new Tree(source, format);
-		source = t2.toString(format, false, true);
+		Tree t2 = new Tree(source, TreeWriterRegistry.JSON);
+		source = t2.toString(TreeWriterRegistry.JSON, false, true);
 
-		// Check formatting (JSON)
+		// Check formatting
 		assertFalse(
 				(source.contains("\r") || source.contains("\n")) && (source.contains(" ") || source.contains("\t")));
-		t2 = new Tree(source, format);
+		t2 = new Tree(source, TreeWriterRegistry.JSON);
 
 		// Standard JSON types
 		assertNull(t2.get("null", (String) null));
@@ -1251,19 +1266,10 @@ public class TreeTest extends TestCase {
 		assertEquals("[1, 2, 3]", l.toString());
 
 		l = t.get("a.b.c.d").asList(Byte.class);
-		assertEquals(Byte.class, l.get(0).getClass());
 
-		l = t.get("a.b.c.d").asList(Integer.class);
-		assertEquals(Integer.class, l.get(0).getClass());
-
-		l = t.get("a.b.c.d").asList(Double.class);
-		assertEquals(Double.class, l.get(0).getClass());
-
-		l = t.get("a.b.c.d").asList(String.class);
-		assertEquals(String.class, l.get(0).getClass());
-
-		l = t.get("a.b.c.d").asList(Boolean.class);
-		assertEquals("[true, true, true]", l.toString());
+		assertEquals((byte) 1, l.get(0));
+		assertEquals((byte) 2, l.get(1));
+		assertEquals((byte) 3, l.get(2));
 	}
 
 	// --- COPY CHILDREN ---
@@ -1748,7 +1754,7 @@ public class TreeTest extends TestCase {
 	// --- EMPTY ARRAY TESTS ---
 
 	@Test
-	public void testQNodeArrays() throws Exception {
+	public void testTreeArrays() throws Exception {
 		Tree t = new Tree(JSON);
 		t.clear("a.b");
 
@@ -1886,7 +1892,7 @@ public class TreeTest extends TestCase {
 		try {
 			t = new Tree(json);
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		assertJsonEquals(json, t.toString(false));
 	}
@@ -1905,35 +1911,35 @@ public class TreeTest extends TestCase {
 		l.sort((n1, n2) -> {
 			return n1.asInteger() - n2.asInteger();
 		});
-		assertEquals("[0,1,2,3,4,5,6,7,8,9]", l.toString(false));
+		assertJsonEquals("[0,1,2,3,4,5,6,7,8,9]", l.toString(false));
 		l.sort((n1, n2) -> {
 			return n2.asInteger() - n1.asInteger();
 		});
-		assertEquals("[9,8,7,6,5,4,3,2,1,0]", l.toString(false));
+		assertJsonEquals("[9,8,7,6,5,4,3,2,1,0]", l.toString(false));
 
 		// Simple numeric sorting
 		l.sort();
-		assertEquals("[0,1,2,3,4,5,6,7,8,9]", l.toString(false));
+		assertJsonEquals("[0,1,2,3,4,5,6,7,8,9]", l.toString(false));
 
 		// Simple alphanumeric sorting
 		l.clear().add("e").add("d").add("c").add("b").add("a");
 		l.sort();
-		assertEquals("[\"a\",\"b\",\"c\",\"d\",\"e\"]", l.toString(false));
+		assertJsonEquals("[\"a\",\"b\",\"c\",\"d\",\"e\"]", l.toString(false));
 
 		// Sort map
 		Tree m = t.putMap("m");
 		for (int i = 1; i < 5; i++) {
 			m.put("v" + i, i);
 		}
-		assertEquals("{\"v1\":1,\"v2\":2,\"v3\":3,\"v4\":4}", m.toString(false));
+		assertJsonEquals("{\"v1\":1,\"v2\":2,\"v3\":3,\"v4\":4}", m.toString(false));
 		m.sort((n1, n2) -> {
 			return String.CASE_INSENSITIVE_ORDER.compare(n2.getName(), n1.getName());
 		});
-		assertEquals("{\"v4\":4,\"v3\":3,\"v2\":2,\"v1\":1}", m.toString(false));
+		assertJsonEquals("{\"v4\":4,\"v3\":3,\"v2\":2,\"v1\":1}", m.toString(false));
 
 		// Simple map sorting
 		m.sort();
-		assertEquals("{\"v1\":1,\"v2\":2,\"v3\":3,\"v4\":4}", m.toString(false));
+		assertJsonEquals("{\"v1\":1,\"v2\":2,\"v3\":3,\"v4\":4}", m.toString(false));
 
 		// Sort set
 		Tree s = t.putList("list");
@@ -1943,71 +1949,48 @@ public class TreeTest extends TestCase {
 		s.sort((n1, n2) -> {
 			return n1.asInteger() - n2.asInteger();
 		});
-		assertEquals("[0,1,2,3,4,5,6,7,8,9]", s.toString(false));
+		assertJsonEquals("[0,1,2,3,4,5,6,7,8,9]", s.toString(false));
 		s.sort((n1, n2) -> {
 			return n2.asInteger() - n1.asInteger();
 		});
-		assertEquals("[9,8,7,6,5,4,3,2,1,0]", s.toString(false));
+		assertJsonEquals("[9,8,7,6,5,4,3,2,1,0]", s.toString(false));
 
 		// Simple numeric sorting
 		s.sort();
-		assertEquals("[0,1,2,3,4,5,6,7,8,9]", s.toString(false));
+		assertJsonEquals("[0,1,2,3,4,5,6,7,8,9]", s.toString(false));
 
 		// Simple alphanumeric sorting
 		s.clear().add("e").add("d").add("c").add("b").add("a");
 		s.sort();
-		assertEquals("[\"a\",\"b\",\"c\",\"d\",\"e\"]", s.toString(false));
+		assertJsonEquals("[\"a\",\"b\",\"c\",\"d\",\"e\"]", s.toString(false));
 
 		// Array sorting
 		s.clear().setObject(new String[] { "e", "d", "c", "b", "a" });
 		s.sort();
-		assertEquals("[\"a\",\"b\",\"c\",\"d\",\"e\"]", s.toString(false));
+		assertJsonEquals("[\"a\",\"b\",\"c\",\"d\",\"e\"]", s.toString(false));
 
 		// Serialization and cloning
 		testSerializationAndCloning(t);
 	}
 
-	// --- TEST NULL DEFAULTS ---
-
-	@Test
-	public void testNullDefaults() throws Exception {	
-		Tree t = new Tree();
-		UUID uuid = UUID.randomUUID();
-		InetAddress inet = InetAddress.getLocalHost();
-		
-		t.put("array", "value1".getBytes());
-		t.put("string", "value2");
-		t.put("uuid", uuid);
-		t.put("inet", inet);
-		t.put("bi", BigDecimal.TEN);
-		t.put("bd", BigInteger.TEN);
-		
-		assertEquals("value1", new String(t.get("array", (byte[]) null)));
-		assertEquals("value2", t.get("string", (String) null));
-		assertEquals(uuid, t.get("uuid", (UUID) null));
-		assertEquals(inet, t.get("inet", (InetAddress) null));
-		assertEquals(BigDecimal.TEN, t.get("bi", (BigDecimal) null));
-		assertEquals(BigInteger.TEN, t.get("bd", (BigInteger) null));
-	}
-	
 	// --- TEST "PUT IF ABSENT" MODIFIER ---
 
 	@Test
-	public void testPutIfAbsent() throws Exception {			
+	public void testPutIfAbsent() throws Exception {
 		Tree rsp = new Tree();
-		
+
 		// Map
-		
+
 		Tree meta = rsp.getMeta();
 		Tree headers = meta.putMap("headers", true);
 		headers.put("a", 1);
 		headers.put("b", 2);
 		headers.put("c", 3);
-		
+
 		int size = rsp.getMeta().get("headers").size();
 		assertEquals(3, size);
 		assertEquals(2, rsp.getMeta().get("headers.b", -1));
-		
+
 		meta = rsp.getMeta();
 		headers = meta.putMap("headers", true);
 		headers.put("d", 4);
@@ -2016,7 +1999,7 @@ public class TreeTest extends TestCase {
 		assertEquals(4, size);
 		assertEquals(2, rsp.getMeta().get("headers.b", -1));
 		assertEquals(4, rsp.getMeta().get("headers.d", -1));
-		
+
 		meta = rsp.getMeta();
 		headers = meta.putMap("headers", false);
 		headers.put("d", 4);
@@ -2025,93 +2008,133 @@ public class TreeTest extends TestCase {
 		assertEquals(1, size);
 		assertEquals(-1, rsp.getMeta().get("headers.b", -1));
 		assertEquals(4, rsp.getMeta().get("headers.d", -1));
-		
+
 		// List
-		
+
 		Tree node = new Tree();
 
 		Tree list1 = node.putList("a.b.c");
 		list1.add(1).add(2).add(3);
-		
+
 		Tree list2 = node.putList("a.b.c", true);
 		list2.add(4).add(5).add(6);
-		
+
 		// The "list2" contains 1, 2, 3, 4, 5 and 6.
 		assertEquals(6, list2.size());
 		assertJsonEquals("[1,2,3,4,5,6]", list2.toString(false));
-		
+
 		Tree list3 = node.putList("a.b.c", false);
 		list3.add(7).add(8).add(9);
-		
+
 		assertEquals(3, list3.size());
 		assertJsonEquals("[7,8,9]", list3.toString(false));
-		
+
 		// Set
-		
+
 		node = new Tree();
 
 		Tree set1 = node.putSet("a.b.c");
 		set1.add(1).add(2).add(3);
-		
+
 		Tree set2 = node.putSet("a.b.c", true);
 		set2.add(4).add(5).add(6);
-		
+
 		// The "list2" contains 1, 2, 3, 4, 5 and 6.
 		assertEquals(6, set2.size());
 		assertJsonEquals("[1,2,3,4,5,6]", set2.toString(false));
-		
+
 		Tree set3 = node.putSet("a.b.c", false);
 		set3.add(7).add(8).add(9);
-		
+
 		assertEquals(3, set3.size());
 		assertJsonEquals("[7,8,9]", set3.toString(false));
 	}
-	
-	// --- TEST GETTING DATA FROM "EXTENDED JSON" ---
+
+	// --- TEST NULL DEFAULTS ---
 
 	@Test
-	public void testExtendedJSON() throws Exception {
+	public void testNullDefaults() throws Exception {
 		Tree t = new Tree();
-		
-		long now = System.currentTimeMillis(); 
-		
-		t.putMap("a").put("$date", now);	
-		t.putMap("b").put("$regex", "abc");
-		t.putMap("c").put("$oid", "5926c396121e2710341361da");
-		t.putMap("d").put("$numberLong", 123L);
-		t.putMap("e").put("$binary", "teszt".getBytes(), true);
-		t.putMap("f").put("$symbol", "X");
-		t.putMap("g").put("$code", "var a=3;");
-		
-		assertEquals(now, t.get("a", 1L));	
-		assertEquals("abc", t.get("b", "-"));
-		assertEquals("5926c396121e2710341361da", t.get("c", "x"));
-		assertEquals(123L, t.get("d", 1L));
-		assertEquals("teszt", new String(t.get("e").asBytes()));
-		assertEquals("X", t.get("f", "x"));
-		assertEquals("var a=3;", t.get("g", "-"));
+		UUID uuid = UUID.randomUUID();
+		InetAddress inet = InetAddress.getLocalHost();
 
+		t.put("array", "value1".getBytes());
+		t.put("string", "value2");
+		t.put("uuid", uuid);
+		t.put("inet", inet);
+		t.put("bi", BigDecimal.TEN);
+		t.put("bd", BigInteger.TEN);
+
+		assertEquals("value1", new String(t.get("array", (byte[]) null)));
+		assertEquals("value2", t.get("string", (String) null));
+		assertEquals(uuid, t.get("uuid", (UUID) null));
+		assertEquals(inet, t.get("inet", (InetAddress) null));
+		assertEquals(BigDecimal.TEN, t.get("bi", (BigDecimal) null));
+		assertEquals(BigInteger.TEN, t.get("bd", (BigInteger) null));
 	}
 
-	// --- ESCAPE TEST ---
-	
+	// --- TEST MONGO TYPES ---
+
 	@Test
-	public void testEscape() throws Exception {
-		Tree t = new Tree();
-		String val = "\t\t-- - \n--\t-----\r\n--\r----1234--\"--";
-		t.put("a", val);
-		String json = t.toString("json", true, true);
-		
-		Tree v = new Tree(json);
-		assertEquals(val, v.get("a").asString());
-		
-		json = t.toString("json", true, true);
-		v = new Tree(json);
-		assertEquals(val, v.get("a").asString());
+	public void testMongoTypes() throws Exception {
+
+		// JSON-Simple and JsonUtil aren't extendable APIs
+		String writerClass = TreeWriterRegistry.getWriter(TreeWriterRegistry.JSON).getClass().toString();
+
+		Document doc = new Document();
+		doc.put("BsonBoolean", new BsonBoolean(true));
+		long time = System.currentTimeMillis();
+		doc.put("BsonDateTime", new BsonDateTime(time));
+		doc.put("BsonDouble", new BsonDouble(123.456));
+		doc.put("BsonInt32", new BsonInt32(123));
+		doc.put("BsonInt64", new BsonInt64(123456));
+		doc.put("BsonNull", new BsonNull());
+		doc.put("BsonRegularExpression", new BsonRegularExpression("abc"));
+		doc.put("BsonString", new BsonString("abcdefgh"));
+		doc.put("BsonTimestamp", new BsonTimestamp(12, 23));
+		doc.put("BsonUndefined", new BsonUndefined());
+		doc.put("Binary", new Binary("abcdefgh".getBytes()));
+		doc.put("Code", new Code("var a = 5;"));
+		doc.put("Decimal128", new Decimal128(123456789));
+		ObjectId objectID = new ObjectId();
+		doc.put("ObjectId", objectID);
+		doc.put("Symbol", new Symbol("s"));
+
+		Tree t = new Tree(doc, null);
+		String json = t.toString();
+
+		System.out.println("-------------------- BSON --------------------");
+		System.out.println("Output of " + writerClass + " serializer (MongoDB types):");
+		System.out.println(json);
+
+		t = new Tree(json);
+
+		assertTrue(t.get("BsonBoolean", false));
+
+		Date date = t.get("BsonDateTime", new Date());
+		assertEquals(time / 1000L, date.getTime() / 1000L);
+
+		assertEquals(123.456, t.get("BsonDouble", 1d));
+		assertEquals(123, t.get("BsonInt32", 1));
+		assertEquals(123456L, t.get("BsonInt64", 1L));
+		assertNull(t.get("BsonNull", "?"));
+		assertEquals("abc", t.get("BsonRegularExpression", "?"));
+		assertEquals("abcdefgh", t.get("BsonString", "?"));
+
+		// String or Number
+		date = t.get("BsonTimestamp", new Date());
+		assertEquals(12000L, date.getTime());
+
+		assertNull(t.get("BsonUndefined", "?"));
+		assertEquals("abcdefgh", new String(t.get("Binary", "?".getBytes())));
+		assertEquals("var a = 5;", t.get("Code", "?"));
+		assertEquals(123456789L, t.get("Decimal128", 1L));
+		assertEquals(objectID.toHexString(), t.get("ObjectId", "?"));
+		assertEquals("s", t.get("Symbol", "?"));
 	}
-	
+
 	// --- NULLPOINTER (NUMBER/BOOLEAN) TEST ---
-	
+
 	@Test
 	public void testNullPointerNumbers() throws Exception {
 		Tree t = new Tree();
@@ -2124,66 +2147,7 @@ public class TreeTest extends TestCase {
 		assertFalse(t.get("c", false));
 		assertNull(t.get("d", "X"));
 	}
-	
-	// --- TEST MONGO TYPES ---
 
-	@Test
-	public void testMongoTypes() throws Exception {
-		Document doc = new Document();
-		doc.put("BsonBoolean", new BsonBoolean(true));
-		doc.put("BsonDateTime", new BsonDateTime(12345));
-		doc.put("BsonDouble", new BsonDouble(123.456));
-		doc.put("BsonInt32", new BsonInt32(123));
-		doc.put("BsonInt64", new BsonInt64(123456));
-		doc.put("BsonNull", new BsonNull());
-		doc.put("BsonRegularExpression", new BsonRegularExpression("abc"));
-		doc.put("BsonString", new BsonString("abcdefgh"));
-		doc.put("BsonTimestamp", new BsonTimestamp(12, 23));
-		doc.put("BsonUndefined", new BsonUndefined());
-		doc.put("Binary", new Binary("abcdefgh".getBytes()));
-		doc.put("Code", new Code("var a = 5;"));
-		doc.put("Decimal128", new Decimal128(123456789));
-		doc.put("ObjectId", new ObjectId());
-		doc.put("Symbol", new Symbol("s"));
-		
-		Document map = new Document();
-		map.put("a", "b");
-		map.put("c", 5);
-		doc.put("map", map);
-		
-		ArrayList<Object> list = new ArrayList<>();
-		list.add("c");
-		list.add("b");
-		list.add("a");
-		doc.put("list", list);
-		
-		Tree t = new Tree(doc, null);
-		String json = t.toString();
-		
-		String writerClass = TreeWriterRegistry.getWriter(TreeWriterRegistry.JSON).getClass().toString();
-		System.out.println("--------------------------------------------------------------");
-		System.out.println("Output of " + writerClass + " serializer:");
-		System.out.println(json);
-		
-		Tree t2 = new Tree(json);
-		
-		assertEquals(true, t2.get("BsonBoolean", false));
-		// assertEquals(12345, t2.get("BsonDateTime", -1));
-		assertEquals(123.456, t2.get("BsonDouble", 1d));
-		assertEquals(123, t2.get("BsonInt32", 345));
-		assertEquals(123456, t2.get("BsonInt64", 1));
-		assertNull(t2.get("BsonNull", "X"));
-		assertEquals("abc", t2.get("BsonRegularExpression", "xcf"));
-		assertEquals("abcdefgh", t2.get("BsonString", "fsdfasdf"));
-		// doc.put("BsonTimestamp", new BsonTimestamp(12, 23));
-		// doc.put("BsonUndefined", new BsonUndefined());
-		// doc.put("Binary", new Binary("abcdefgh".getBytes()));
-		// doc.put("Code", new Code("var a = 5;"));
-		// doc.put("Decimal128", new Decimal128(123456789));
-		// doc.put("ObjectId", new ObjectId());
-		// doc.put("Symbol", new Symbol("s"));
-	}
-	
 	// --- SERIALIZATION / DESERIALIZATION / CLONE ---
 
 	private final void testSerializationAndCloning(Tree node) throws Exception {
@@ -2232,6 +2196,91 @@ public class TreeTest extends TestCase {
 
 	private static final String removeFormatting(String txt) {
 		return txt.replace("\t", " ").replace("\r", " ").replace("\n", " ").replace(" ", "").replace(".0", "");
+	}
+
+	// --- TEST GETTING DATA FROM "EXTENDED JSON" ---
+
+	@Test
+	public void testExtendedJSON() throws Exception {
+		Tree t = new Tree();
+
+		long now = System.currentTimeMillis();
+
+		t.putMap("a").put("$date", now);
+		t.putMap("b").put("$regex", "abc");
+		t.putMap("c").put("$oid", "5926c396121e2710341361da");
+		t.putMap("d").put("$numberLong", 123L);
+		t.putMap("e").put("$binary", "teszt".getBytes(), true);
+		t.putMap("f").put("$symbol", "X");
+		t.putMap("g").put("$code", "var a=3;");
+
+		assertEquals(now, t.get("a", 1L));
+		assertEquals("abc", t.get("b", "-"));
+		assertEquals("5926c396121e2710341361da", t.get("c", "x"));
+		assertEquals(123L, t.get("d", 1L));
+		assertEquals("teszt", new String(t.get("e").asBytes()));
+		assertEquals("X", t.get("f", "x"));
+		assertEquals("var a=3;", t.get("g", "-"));
+
+	}
+
+	// --- TEST LARGE NUMBERS ---
+
+	@Test
+	public void testLargeNumbers() throws Exception {
+		String readerClass = TreeReaderRegistry.getReader(TreeWriterRegistry.JSON).getClass().toString();
+
+		try {
+			Tree t = new Tree();
+			Integer i = Integer.MAX_VALUE;
+			t.put("i", i);
+			t = new Tree(t.toString("JsonBuiltin"));
+			Integer i2 = t.get("i").asInteger();
+			assertEquals(i, i2);
+			System.out.println(readerClass + " can deserialize large numbers as Integers.");
+		} catch (Throwable e) {
+			System.out.println(readerClass + " does NOT able to deserialize large numbers as Integers!");
+		}
+
+		try {
+			Tree t = new Tree();
+			Long l = Long.MAX_VALUE;
+			t.put("l", l);
+			t = new Tree(t.toString("JsonBuiltin"));
+			Long l2 = t.get("l").asLong();
+			assertEquals(l, l2);
+			System.out.println(readerClass + " can deserialize large numbers as Longs.");
+		} catch (Throwable e) {
+			System.out.println(readerClass + " does NOT able to deserialize large numbers as Longs!");
+		}
+
+		try {
+			Tree t = new Tree();
+			BigInteger bi = new BigInteger(Long.toString(Long.MAX_VALUE));
+			bi = bi.add(BigInteger.TEN);
+			t.put("bi", bi);
+			t = new Tree(t.toString("JsonBuiltin"));
+			BigInteger bi2 = t.get("bi").asBigInteger();
+			assertEquals(bi, bi2);
+			System.out.println(readerClass + " can deserialize large numbers as BigIntegers.");
+		} catch (Throwable e) {
+			System.out.println(readerClass + " does NOT able to deserialize large numbers as BigIntegers!");
+		}
+
+		try {
+			Tree t = new Tree();
+			BigDecimal bd = new BigDecimal(Long.toString(Long.MAX_VALUE) + ".123");
+			bd = bd.add(BigDecimal.TEN);
+			t.put("bd", bd);
+			t = new Tree(t.toString("JsonBuiltin"));
+			BigDecimal bd2 = t.get("bd").asBigDecimal();
+			assertEquals(bd, bd2);
+			System.out.println(readerClass + " can deserialize large numbers as BigDecimals.");
+		} catch (Throwable e) {
+			System.out.println(readerClass + " does NOT able to deserialize large numbers as BigDecimals!");
+			e.printStackTrace();
+		}
+
 	}
 
 }

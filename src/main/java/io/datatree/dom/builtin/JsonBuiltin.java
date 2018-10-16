@@ -255,6 +255,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 				break;				
 			default:
 				builder.append(c);
+				break;
 			}
 		}
 		builder.append('"');

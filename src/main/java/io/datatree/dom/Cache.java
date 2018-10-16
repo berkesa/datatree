@@ -1,7 +1,7 @@
 /**
  * This software is licensed under the Apache 2 license, quoted below.<br>
  * <br>
- * Copyright 2017 Andras Berkes [andras.berkes@programmer.net]<br>
+ * Copyright 2018 Andras Berkes [andras.berkes@programmer.net]<br>
  * <br>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ import java.util.Map;
 import java.util.concurrent.locks.StampedLock;
 
 /**
- * Simple and fast memory cache.
+ * Simple and fast memory cache. This implementation uses optimistic locking for
+ * the maximum performance.
  * 
  * @param <K>
  *            Type (class) of cache keys
@@ -33,9 +34,13 @@ import java.util.concurrent.locks.StampedLock;
  */
 public class Cache<K, V> {
 
+	// --- INTERNAL VARIABLES ---
+
 	protected final StampedLock lock = new StampedLock();
 
 	protected final LinkedHashMap<K, V> map;
+
+	// --- CONSTRUCTORS ---
 
 	/**
 	 * Creates a cache.
@@ -44,14 +49,16 @@ public class Cache<K, V> {
 	 *            maximum capacity of the cache
 	 * @param fair
 	 *            unused parameter
-	 * @deprecated
+	 * 
+	 * @deprecated do not use the "fair" parameter (it's an unnecessary
+	 *             parameter)
 	 */
 	public Cache(int capacity, boolean fair) {
 		this(capacity);
 	}
 
 	/**
-	 * Creates a cache.
+	 * Creates a cache with the specified capacity.
 	 * 
 	 * @param capacity
 	 *            maximum capacity of the cache
@@ -68,6 +75,8 @@ public class Cache<K, V> {
 			};
 		};
 	}
+
+	// --- GET / PUT / ETC ---
 
 	public V get(K key) {
 		V value = null;

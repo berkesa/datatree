@@ -60,9 +60,9 @@ public class TreeReaderRegistry {
 	 *            TreeReader instance for parsing the specified format
 	 */
 	public static final void setReader(String format, TreeReader reader) {
-		format = format.toLowerCase();
-		readers.put(format, reader);
-		if (JSON.equals(format)) {
+		String key = format.toLowerCase();
+		readers.put(key, reader);
+		if (JSON.equals(key)) {
 			cachedJsonReader = reader;
 		}
 	}
@@ -76,11 +76,11 @@ public class TreeReaderRegistry {
 	 *            name of the format (eg. "custom", "csv", etc.)
 	 */
 	public static final void removeReader(String format) {
-		format = format.toLowerCase();
-		if (format.equals(JSON)) {
+		String key = format.toLowerCase();
+		if (key.equals(JSON)) {
 			throw new IllegalArgumentException("Unable to delete the default JSON reader!");
 		}
-		readers.remove(format);
+		readers.remove(key);
 	}
 
 	// --- GET READER BY FORMAT NAME ---
@@ -139,11 +139,11 @@ public class TreeReaderRegistry {
 		if (format == null) {
 			reader = cachedJsonReader;
 		} else {
-			format = format.toLowerCase();
-			if (JSON.equals(format)) {
+			String key = format.toLowerCase();
+			if (JSON.equals(key)) {
 				reader = cachedJsonReader;
 			} else {
-				reader = readers.get(format);
+				reader = readers.get(key);
 			}
 		}
 		if (reader != null) {
