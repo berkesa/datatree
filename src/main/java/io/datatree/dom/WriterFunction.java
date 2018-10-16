@@ -20,10 +20,13 @@ package io.datatree.dom;
 /**
  * WriterFunction function with an optional exception.
  * 
+ * @param <I> Input type
+ * @param <O> Output type
+ * 
  * @author Andras Berkes [andras.berkes@programmer.net]
  */
 @FunctionalInterface
-public interface WriterFunction<IN, OUT> {
+public interface WriterFunction<I, O> {
 
 	/**
 	 * Applies this function to the given argument.
@@ -36,6 +39,6 @@ public interface WriterFunction<IN, OUT> {
 	 * @throws Exception
 	 *             any mapping Exception
 	 */
-	OUT apply(IN input) throws Exception;
+	O apply(I input) throws Exception;
 
 }

@@ -18,17 +18,17 @@
 package io.datatree.dom.converters;
 
 /**
- * Functional Interface for FROM -&gt; TO object converters.
+ * Functional Interface for F ("from" class) -&gt; T ("to" class) object converters.
  *
- * @param <TO>
+ * @param <T>
  *            target class
- * @param <FROM>
+ * @param <F>
  *            source class
  * 
  * @author Andras Berkes [andras.berkes@programmer.net]
  */
 @FunctionalInterface
-public interface DataConverter<TO, FROM> {
+public interface DataConverter<T, F> {
 
 	/**
 	 * Converts "FROM" Object to "TO" format / class.
@@ -38,6 +38,6 @@ public interface DataConverter<TO, FROM> {
 	 * 
 	 * @return converted object
 	 */
-	public TO convert(FROM from);
+	public T convert(F from);
 
 }

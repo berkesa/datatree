@@ -18,25 +18,25 @@
 package io.datatree.dom.converters;
 
 /**
- * Map key for FROM -> TO object converters.
+ * Map key for F ("from" class) -&gt; T ("to" class) object converters.
  *
- * @param <TO>
+ * @param <T>
  *            target class
- * @param <FROM>
+ * @param <F>
  *            source class
  * 
  * @author Andras Berkes [andras.berkes@programmer.net]
  */
-final class DataConverterKey<TO, FROM> {
+final class DataConverterKey<T, F> {
 
-	private final Class<TO> to;
-	private final Class<FROM> from;
+	private final Class<T> to;
+	private final Class<F> from;
 
 	private final int hashCode;
 
 	// --- CONSTRUCTOR ---
 
-	DataConverterKey(Class<TO> to, Class<FROM> from) {
+	DataConverterKey(Class<T> to, Class<F> from) {
 		this.to = to;
 		this.from = from;
 		this.hashCode = from.hashCode() * to.hashCode();

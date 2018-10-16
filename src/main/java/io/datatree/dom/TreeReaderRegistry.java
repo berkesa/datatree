@@ -36,14 +36,18 @@ public class TreeReaderRegistry {
 
 	public static final String JSON = "json";
 
+	// --- READER REGISTRY ---
+
+	private static final ConcurrentHashMap<String, TreeReader> readers = new ConcurrentHashMap<>();
+
+	// --- DEFAULT JSON READER ---
+
+	private static TreeReader cachedJsonReader = getReader(JSON, false);
+
 	// --- PRIVATE CONSTRUCTOR ---
 
 	private TreeReaderRegistry() {
 	}
-
-	// --- READER REGISTRY ---
-
-	private static final ConcurrentHashMap<String, TreeReader> readers = new ConcurrentHashMap<>();
 
 	// --- SET THE DEFAULT READER ---
 
@@ -78,10 +82,6 @@ public class TreeReaderRegistry {
 		}
 		readers.remove(format);
 	}
-
-	// --- DEFAULT JSON READER ---
-
-	private static TreeReader cachedJsonReader = getReader(JSON, false);
 
 	// --- GET READER BY FORMAT NAME ---
 
@@ -180,7 +180,7 @@ public class TreeReaderRegistry {
 			if (throwException) {
 				suggestDependency(format);
 				cause.printStackTrace();
-				throw new RuntimeException("Unable to create reader for format \"" + format + "\"! Set the -D"
+				throw new IllegalArgumentException("Unable to create reader for format \"" + format + "\"! Set the -D"
 						+ propertyName + "=package.ReaderClass initial parameter to specify the proper reader class.",
 						cause);
 			}

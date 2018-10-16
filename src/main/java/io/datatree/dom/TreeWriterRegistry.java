@@ -35,14 +35,22 @@ public class TreeWriterRegistry {
 
 	public static final String JSON = "json";
 
+	// --- WRITER REGISTRY ---
+
+	private static final ConcurrentHashMap<String, TreeWriter> writers = new ConcurrentHashMap<String, TreeWriter>();
+
+	// --- DEPENDENCY SAMPLES ---
+
+	private static final HashMap<String, String[]> dependencySamples = new HashMap<>();
+
+	// --- DEFAULT JSON WRITER ---
+
+	private static TreeWriter cachedJsonWriter = getWriter(JSON, false);
+
 	// --- PRIVATE CONSTRUCTOR ---
 
 	private TreeWriterRegistry() {
 	}
-
-	// --- WRITER REGISTRY ---
-
-	private static final ConcurrentHashMap<String, TreeWriter> writers = new ConcurrentHashMap<String, TreeWriter>();
 
 	// --- SET THE DEFAULT WRITER FOR FORMAT ---
 
@@ -77,10 +85,6 @@ public class TreeWriterRegistry {
 		}
 		writers.remove(format);
 	}
-
-	// --- DEFAULT JSON WRITER ---
-
-	private static TreeWriter cachedJsonWriter = getWriter(JSON, false);
 
 	// --- GET WRITER BY FORMAT NAME ---
 
@@ -179,7 +183,7 @@ public class TreeWriterRegistry {
 			if (throwException) {
 				suggestDependency(format);
 				cause.printStackTrace();
-				throw new RuntimeException("Unable to create writer for format \"" + format + "\"! Set the -D"
+				throw new IllegalArgumentException("Unable to create writer for format \"" + format + "\"! Set the -D"
 						+ propertyName + "=package.WriterClass initial parameter to specify the proper writer class.",
 						cause);
 			}
@@ -188,8 +192,6 @@ public class TreeWriterRegistry {
 	}
 
 	// --- DEPENDENCY HELPER ---
-
-	private static final HashMap<String, String[]> dependencySamples = new HashMap<>();
 
 	static {
 		addSample("yaml", "org.yaml", "snakeyaml", "1.19");
@@ -212,10 +214,7 @@ public class TreeWriterRegistry {
 		if (format == null || format.isEmpty()) {
 			return;
 		}
-		if (format.contains("pack")) {
-			format = "msgpack";
-		}
-		String[] samples = dependencySamples.get(format);
+		String[] samples = dependencySamples.get(format.contains("pack") ? "msgpack" : format);
 		if (samples == null) {
 			return;
 		}

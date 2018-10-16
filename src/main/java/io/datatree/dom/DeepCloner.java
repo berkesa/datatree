@@ -43,22 +43,22 @@ import java.util.Map;
  */
 public class DeepCloner {
 
-	// --- PRIVATE CONSTRUCTOR ---
-
-	private DeepCloner() {
-	}
-
 	// --- IMMUTABLE CLASSES ---
 
 	/**
 	 * List of immutable objects (Long, Integer, String, etc.).
 	 */
-	private static final HashSet<Class<?>> IMMUTABLE_CLASSES = new HashSet<>(32);
+	private static final HashSet<Class<?>> immutableClasses = new HashSet<>(64);
 
 	static {
 		addImmutableClass(String.class, Boolean.class, BigDecimal.class, BigInteger.class, InetAddress.class,
 				Inet4Address.class, Inet6Address.class, Long.class, Double.class, Float.class, Short.class, Byte.class,
 				Integer.class);
+	}
+
+	// --- PRIVATE CONSTRUCTOR ---
+
+	private DeepCloner() {
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class DeepCloner {
 	 *            classes
 	 */
 	public static final void addImmutableClass(Class<?>... immutableClass) {
-		IMMUTABLE_CLASSES.addAll(Arrays.asList(immutableClass));
+		immutableClasses.addAll(Arrays.asList(immutableClass));
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class DeepCloner {
 	 *            classes
 	 */
 	public static final void removeImmutableClass(Class<?>... mutableClass) {
-		IMMUTABLE_CLASSES.removeAll(Arrays.asList(mutableClass));
+		immutableClasses.removeAll(Arrays.asList(mutableClass));
 	}
 
 	// --- VALUE / MAP / LIST / SET CLONER ---
@@ -115,7 +115,7 @@ public class DeepCloner {
 		}
 
 		// "Cloning" immutable objects
-		if (IMMUTABLE_CLASSES.contains(from.getClass())) {
+		if (immutableClasses.contains(from.getClass())) {
 			return from;
 		}
 

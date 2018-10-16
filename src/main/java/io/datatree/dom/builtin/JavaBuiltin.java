@@ -35,7 +35,8 @@ import io.datatree.dom.TreeWriterRegistry;
 /**
  * <b>BUILT-IN JAVA OBJECT SERIALIZATOR ADAPTER</b><br>
  * <br>
- * Description: Built-in binary reader / writer. Based on Java Object Serialization.<br>
+ * Description: Built-in binary reader / writer. Based on Java Object
+ * Serialization.<br>
  * <br>
  * <b>Set as default (using Java System Properties):</b><br>
  * <br>
@@ -134,8 +135,7 @@ public class JavaBuiltin extends AbstractAdapter {
 		}
 
 		// Read content as JSON
-		bytes = Arrays.copyOfRange(bytes, 1, bytes.length);
-		String json = new String(bytes, StandardCharsets.UTF_8);
+		String json = new String(Arrays.copyOfRange(bytes, 1, bytes.length), StandardCharsets.UTF_8);
 		return TreeReaderRegistry.getReader(null).parse(json);
 	}
 

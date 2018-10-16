@@ -151,9 +151,10 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 			moveMeta();
 		}
 	}
-	
+
 	/**
-	 * Constructs a Tree containing the elements of the specified Collection (eg. List or Set).
+	 * Constructs a Tree containing the elements of the specified Collection
+	 * (eg. List or Set).
 	 * 
 	 * @param value
 	 *            the map whose elements are to be placed into this Collection.
@@ -164,7 +165,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		} else {
 			this.value = value;
 		}
-	}	
+	}
 
 	// --- PUBLIC CONSTRUCTORS / TEXT SOURCE ---
 
@@ -2049,7 +2050,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	public Tree putList(String path) {
 		return putObjectInternal(path, new LinkedList<Object>(), false);
 	}
-	
+
 	/**
 	 * Associates the specified List (~= JSON array) container with the
 	 * specified path. If the structure previously contained a mapping for the
@@ -2077,7 +2078,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	public Tree putList(String path, boolean putIfAbsent) {
 		return putObjectInternal(path, new LinkedList<Object>(), putIfAbsent);
 	}
-	
+
 	/**
 	 * Associates the specified Set container with the specified path. If the
 	 * structure previously contained a mapping for the path, the old value is
@@ -2119,13 +2120,13 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 *            if true and the specified key is not already associated with a
 	 *            value associates it with the given value and returns the new
 	 *            Set, else returns the previous Set
-	 *            
+	 * 
 	 * @return Tree of the new Set
 	 */
 	public Tree putSet(String path, boolean putIfAbsent) {
 		return putObjectInternal(path, new LinkedHashSet<Object>(), putIfAbsent);
 	}
-	
+
 	/**
 	 * Puts a node with the specified value into the specified path.
 	 * 
@@ -2157,7 +2158,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	public Tree putObject(String path, Object value, boolean putIfAbsent) {
 		return putObjectInternal(path, getNodeValue(value), false);
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Tree putObjectInternal(String path, Object value, boolean putIfAbsent) {
 		Tree parent = getChild(path, true);
@@ -3390,106 +3391,109 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		if (value != null) {
 
 			// Map iterator
-			if (isMap()) {
-
-				final Tree self = this;
-
-				return new Iterator<Tree>() {
-
-					@SuppressWarnings("rawtypes")
-					private final Iterator children = ((Map) value).entrySet().iterator();
-
-					@Override
-					public final boolean hasNext() {
-						return children.hasNext();
-					}
-
-					@Override
-					@SuppressWarnings("rawtypes")
-					public final Tree next() {
-						Map.Entry entry = (Map.Entry) children.next();
-						return new Tree(self, entry.getKey(), entry.getValue());
-					}
-
-					@Override
-					public final void remove() {
-						children.remove();
-					}
-
-				};
+			if (value instanceof Map) {
+				return mapIterator();
 			}
 
-			// Collection (List or Set) iterator
+			// Collection (eg. List or Set) iterator
 			if (value instanceof Collection) {
+				return collectionIterator();
+			}
 
-				final Tree self = this;
-
-				return new Iterator<Tree>() {
-
-					@SuppressWarnings("rawtypes")
-					private final Iterator children = ((Collection) value).iterator();
-
-					private int counter = 0;
-
-					@Override
-					public final boolean hasNext() {
-						return children.hasNext();
-					}
-
-					@Override
-					public final Tree next() {
-						return new Tree(self, counter++, children.next());
-					}
-
-					@Override
-					public final void remove() {
-						children.remove();
-						counter--;
-					}
-
-				};
+			// Array iterator
+			if (value.getClass().isArray()) {
+				return arrayIterator();
 			}
 		}
 
-		// Array iterator
-		if (isArray()) {
-
-			final Tree self = this;
-
-			return new Iterator<Tree>() {
-
-				private int index = 0;
-				private int len = Array.getLength(value);
-
-				@Override
-				public final boolean hasNext() {
-					return index < len;
-				}
-
-				@Override
-				public final Tree next() {
-					return new Tree(self, index, Array.get(value, index++));
-				}
-
-				@Override
-				public final void remove() {
-					Object[] copy = new Object[len - 1];
-					int i = 0;
-					for (int n = 0; n < len; n++) {
-						if (n != index - 1) {
-							copy[i] = Array.get(value, n);
-							i++;
-						}
-					}
-					self.setObjectInternal(copy);
-					index--;
-				}
-
-			};
-		}
-
-		// Not a List, Map or Set
+		// Not a List, Map, array or Set
 		return Collections.singleton(this).iterator();
+	}
+
+	protected Iterator<Tree> mapIterator() {
+		final Tree self = this;
+		return new Iterator<Tree>() {
+
+			@SuppressWarnings("rawtypes")
+			private final Iterator children = ((Map) value).entrySet().iterator();
+
+			@Override
+			public final boolean hasNext() {
+				return children.hasNext();
+			}
+
+			@Override
+			@SuppressWarnings("rawtypes")
+			public final Tree next() {
+				Map.Entry entry = (Map.Entry) children.next();
+				return new Tree(self, entry.getKey(), entry.getValue());
+			}
+
+			@Override
+			public final void remove() {
+				children.remove();
+			}
+		};
+	}
+
+	protected Iterator<Tree> collectionIterator() {
+		final Tree self = this;
+		return new Iterator<Tree>() {
+
+			@SuppressWarnings("rawtypes")
+			private final Iterator children = ((Collection) value).iterator();
+
+			private int counter = 0;
+
+			@Override
+			public final boolean hasNext() {
+				return children.hasNext();
+			}
+
+			@Override
+			public final Tree next() {
+				return new Tree(self, counter++, children.next());
+			}
+
+			@Override
+			public final void remove() {
+				children.remove();
+				counter--;
+			}
+		};
+	}
+
+	protected Iterator<Tree> arrayIterator() {
+		final Tree self = this;
+		return new Iterator<Tree>() {
+
+			private int index = 0;
+			private int len = Array.getLength(value);
+
+			@Override
+			public final boolean hasNext() {
+				return index < len;
+			}
+
+			@Override
+			public final Tree next() {
+				return new Tree(self, index, Array.get(value, index++));
+			}
+
+			@Override
+			public final void remove() {
+				Object[] copy = new Object[len - 1];
+				int i = 0;
+				for (int n = 0; n < len; n++) {
+					if (n != index - 1) {
+						copy[i] = Array.get(value, n);
+						i++;
+					}
+				}
+				self.setObjectInternal(copy);
+				index--;
+			}
+		};
 	}
 
 	// --- ASSIGN FUNCTION ---
@@ -3976,11 +3980,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 *         value
 	 */
 	protected static final boolean isStructure(Object value) {
-		if (value != null && (value instanceof Map || value instanceof List || value instanceof Set
-				|| value.getClass().isArray())) {
-			return true;
-		}
-		return false;
+		return value != null && (value instanceof Map || value instanceof Collection || value.getClass().isArray());
 	}
 
 	/**
@@ -3989,7 +3989,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return {@code true} if the value is a List
 	 */
 	public boolean isEnumeration() {
-		return isList() || isSet() || isArray();
+		return value != null && (value instanceof Collection || value.getClass().isArray());
 	}
 
 	/**
@@ -4050,13 +4050,13 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		if (value == null) {
 			return 0;
 		}
-		if (isMap()) {
+		if (value instanceof Map) {
 			return ((Map) value).size();
 		}
 		if (value instanceof Collection) {
 			return ((Collection) value).size();
 		}
-		if (isArray()) {
+		if (value.getClass().isArray()) {
 			return Array.getLength(value);
 		}
 		return 1;

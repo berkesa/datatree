@@ -53,9 +53,9 @@ import io.datatree.dom.DeepCloner;
  */
 final class BsonConverterSet extends AbstractConverterSet {
 
-	// --- PRIVATE CONSTRUCTOR ---
+	// --- HIDDEN CONSTRUCTOR ---
 
-	private BsonConverterSet() {
+	BsonConverterSet() {
 	}
 
 	// --- INIT MONGODB / BSON CONVERTERS ---
@@ -576,7 +576,7 @@ final class BsonConverterSet extends AbstractConverterSet {
 				return false;
 			}
 			txt = toNumericString(String.valueOf(txt), true);
-			return !(txt.isEmpty() || txt.equals("0") || txt.contains("-"));
+			return !(txt.isEmpty() || "0".equals(txt) || txt.indexOf('-') > -1);
 		});
 		register(Boolean.class, BsonTimestamp.class, (from) -> {
 			return numberStringToBoolean(Integer.toString(from.getTime()));

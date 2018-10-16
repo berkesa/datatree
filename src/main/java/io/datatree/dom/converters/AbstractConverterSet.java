@@ -74,8 +74,8 @@ abstract class AbstractConverterSet {
 	static {
 
 		// Init "Date to String" and "String to Date" caches
-		objectToDateCache = new Cache<>(Config.CACHE_SIZE, false);
-		dateToStringCache = new Cache<>(Config.CACHE_SIZE, false);
+		objectToDateCache = new Cache<>(Config.CACHE_SIZE);
+		dateToStringCache = new Cache<>(Config.CACHE_SIZE);
 	}
 
 	// --- PROTECTED CONSTRUCTOR ---
@@ -86,10 +86,12 @@ abstract class AbstractConverterSet {
 	// --- UTILITY METHODS ---
 
 	protected static final UUID byteArrayToUUID(byte[] from) {
+		ByteBuffer b12;
 		if (from.length != 16) {
-			from = Arrays.copyOf(from, 16);
+			b12 = ByteBuffer.wrap(Arrays.copyOf(from, 16));
+		} else {
+			b12 = ByteBuffer.wrap(from);
 		}
-		ByteBuffer b12 = ByteBuffer.wrap(from);
 		long msb = b12.getLong();
 		long lsb = b12.getLong();
 		return new UUID(msb, lsb);
@@ -112,7 +114,7 @@ abstract class AbstractConverterSet {
 
 	protected static final boolean numberStringToBoolean(String number) {
 		String num = toNumericString(number, true);
-		return !(num.isEmpty() || num.equals("0") || num.equals("0.0") || num.contains("-"));
+		return !(num.isEmpty() || "0".equals(num) || "0.0".equals(num) || num.indexOf('-') > -1);
 	}
 
 	protected static final byte[] numberStringToBytes(String number) {
@@ -163,7 +165,7 @@ abstract class AbstractConverterSet {
 			}
 		}
 		String number = tmp.toString();
-		if (number.isEmpty() || number.equals("0")) {
+		if (number.isEmpty() || "0".equals(number)) {
 			return "0";
 		} else if (str.startsWith("-")) {
 			return "-" + number;

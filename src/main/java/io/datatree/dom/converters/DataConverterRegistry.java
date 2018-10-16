@@ -41,38 +41,17 @@ import java.util.Map;
  */
 public class DataConverterRegistry extends AbstractConverterSet {
 
-	// --- PRIVATE CONSTRUCTOR ---
-
-	private DataConverterRegistry() {
-	}
-
 	// --- FROM -> TO CONVERTER MAP ---
 
 	private static final HashMap<DataConverterKey<?, ?>, DataConverter<?, ?>> converters = new HashMap<>(512);
 
-	public static final <TO, FROM> void register(Class<TO> to, Class<FROM> from, DataConverter<TO, FROM> converter) {
-		converters.put(new DataConverterKey<TO, FROM>(to, from), converter);
-	}
-
 	// --- ANY -> TO CONVERTER MAP ---
 
-	private static HashMap<Class<?>, DataConverter<?, ?>> defaultConverters = new HashMap<>(128);
-
-	public static final <TO, FROM> void register(Class<TO> to, DataConverter<TO, ?> converter) {
-		defaultConverters.put(to, converter);
-	}
+	private static final HashMap<Class<?>, DataConverter<?, ?>> defaultConverters = new HashMap<>(128);
 
 	// --- UNQUOTED TYPES ---
 
-	private static HashSet<Class<?>> unquotedClasses = new HashSet<>(64);
-
-	public static final void addUnquotedClass(Class<?>... objectClass) {
-		unquotedClasses.addAll(Arrays.asList(objectClass));
-	}
-
-	public static final boolean isUnquotedClass(Class<?> objectClass) {
-		return unquotedClasses.contains(objectClass);
-	}
+	private static final HashSet<Class<?>> unquotedClasses = new HashSet<>(64);
 
 	// --- LOAD CONVERTER SETS ---
 
@@ -89,6 +68,31 @@ public class DataConverterRegistry extends AbstractConverterSet {
 			Class.forName("io.datatree.dom.converters.BsonConverterSet");
 		} catch (Throwable ignored) {
 		}
+	}
+	
+	// --- PRIVATE CONSTRUCTOR ---
+
+	private DataConverterRegistry() {
+	}
+
+	// --- REGISTER CONVERTER ---
+
+	public static final <TO, FROM> void register(Class<TO> to, Class<FROM> from, DataConverter<TO, FROM> converter) {
+		converters.put(new DataConverterKey<TO, FROM>(to, from), converter);
+	}
+
+	public static final <TO, FROM> void register(Class<TO> to, DataConverter<TO, ?> converter) {
+		defaultConverters.put(to, converter);
+	}
+
+	// --- UNQUOTED TYPES ---
+
+	public static final void addUnquotedClass(Class<?>... objectClass) {
+		unquotedClasses.addAll(Arrays.asList(objectClass));
+	}
+
+	public static final boolean isUnquotedClass(Class<?> objectClass) {
+		return unquotedClasses.contains(objectClass);
 	}
 
 	// --- VALUE CONVERTER ---

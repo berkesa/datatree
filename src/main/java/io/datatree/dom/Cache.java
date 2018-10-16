@@ -24,30 +24,53 @@ import java.util.concurrent.locks.StampedLock;
 /**
  * Simple and fast memory cache.
  * 
+ * @param <K>
+ *            Type (class) of cache keys
+ * @param <V>
+ *            Type (class) of cached values
+ * 
  * @author Andras Berkes [andras.berkes@programmer.net]
  */
-public class Cache<KEY, VALUE> {
+public class Cache<K, V> {
 
 	protected final StampedLock lock = new StampedLock();
 
-	protected final LinkedHashMap<KEY, VALUE> map;
+	protected final LinkedHashMap<K, V> map;
 
-	public Cache(final int capacity, final boolean fair) {
-		map = new LinkedHashMap<KEY, VALUE>(capacity + 1, 1.0f, false) {
+	/**
+	 * Creates a cache.
+	 * 
+	 * @param capacity
+	 *            maximum capacity of the cache
+	 * @param fair
+	 *            unused parameter
+	 * @deprecated
+	 */
+	public Cache(int capacity, boolean fair) {
+		this(capacity);
+	}
+
+	/**
+	 * Creates a cache.
+	 * 
+	 * @param capacity
+	 *            maximum capacity of the cache
+	 */
+	public Cache(int capacity) {
+
+		// Insertion-order is thread safe, access-order is not
+		map = new LinkedHashMap<K, V>(capacity, 1.0f, false) {
 
 			private static final long serialVersionUID = 5994447707758047152L;
 
-			protected final boolean removeEldestEntry(Map.Entry<KEY, VALUE> entry) {
-				if (this.size() > capacity) {
-					return true;
-				}
-				return false;
+			protected final boolean removeEldestEntry(Map.Entry<K, V> entry) {
+				return size() > capacity;
 			};
 		};
 	}
 
-	public VALUE get(KEY key) {
-		VALUE value = null;
+	public V get(K key) {
+		V value = null;
 		long stamp = lock.tryOptimisticRead();
 		if (stamp != 0) {
 			try {
@@ -67,7 +90,7 @@ public class Cache<KEY, VALUE> {
 		return value;
 	}
 
-	public void put(KEY key, VALUE value) {
+	public void put(K key, V value) {
 		final long stamp = lock.writeLock();
 		try {
 			map.put(key, value);
@@ -76,7 +99,7 @@ public class Cache<KEY, VALUE> {
 		}
 	}
 
-	public void remove(KEY key) {
+	public void remove(K key) {
 		final long stamp = lock.writeLock();
 		try {
 			map.remove(key);

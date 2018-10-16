@@ -74,6 +74,10 @@ public class JsonBuiltin extends AbstractTextAdapter {
 
 	public Queue<StringBuilder> builders = new ConcurrentLinkedQueue<>();
 
+	// --- SOURCE CACHE ---
+
+	public Queue<Source> sources = new ConcurrentLinkedQueue<>();
+
 	// --- STATIC WRITER METHOD ---
 
 	protected static final JsonBuiltin instance = new JsonBuiltin();
@@ -239,16 +243,16 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			switch (c) {
 			case '"':
 				builder.append(APOS);
-				continue;
+				break;
 			case '\r':
 				builder.append(CR);
-				continue;
+				break;
 			case '\n':
 				builder.append(LF);
-				continue;
+				break;
 			case '\t':
 				builder.append(TAB);
-				continue;				
+				break;				
 			default:
 				builder.append(c);
 			}
@@ -283,10 +287,6 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			this.idx = 0;
 		}
 	}
-
-	// --- SOURCE CACHE ---
-
-	public Queue<Source> sources = new ConcurrentLinkedQueue<>();
 
 	// --- IMPLEMENTED PARSER METHODS ---
 
@@ -434,10 +434,9 @@ public class JsonBuiltin extends AbstractTextAdapter {
 						"Expecting a ',' or a ']', " + " but got ch character of  %s " + " on array idx of %s!",
 						(int) c, list.size()));
 			}
+		} catch (IOException ioCause) {
+			throw ioCause;
 		} catch (Exception cause) {
-			if (cause instanceof IOException) {
-				throw cause;
-			}
 			throw new IOException("Issue parsing JSON array!", cause);
 		}
 		if (!foundEnd) {
@@ -514,6 +513,8 @@ public class JsonBuiltin extends AbstractTextAdapter {
 					case '\\':
 						chars[to++] = '\\';
 						break;
+					default:
+						chars[to++] = c;
 					}
 				} else {
 					if (from + 4 < to) {

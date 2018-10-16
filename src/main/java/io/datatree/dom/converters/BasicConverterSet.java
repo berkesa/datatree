@@ -49,9 +49,9 @@ import io.datatree.dom.Config;
  */
 final class BasicConverterSet extends AbstractConverterSet {
 
-	// --- PRIVATE CONSTRUCTOR ---
+	// --- HIDDEN CONSTRUCTOR ---
 
-	private BasicConverterSet() {
+	BasicConverterSet() {
 	}
 
 	// --- INIT DEFAULT CONVERTERS ---
@@ -424,7 +424,7 @@ final class BasicConverterSet extends AbstractConverterSet {
 				return false;
 			}
 			from = toNumericString(String.valueOf(from), true);
-			return !(from.isEmpty() || from.equals("0") || from.contains("-"));
+			return !(from.isEmpty() || "0".equals(from) || from.indexOf('-') > -1);
 		});
 		register(Boolean.class, Date.class, (from) -> {
 			return from.getTime() > 0;
