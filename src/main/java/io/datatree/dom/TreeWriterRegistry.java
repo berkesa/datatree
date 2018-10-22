@@ -194,15 +194,15 @@ public class TreeWriterRegistry {
 	// --- DEPENDENCY HELPER ---
 
 	static {
-		addSample("yaml", "org.yaml", "snakeyaml", "1.19");
+		addSample("yaml", "org.yaml", "snakeyaml", "1.23");
 		addSample("csv", "net.sf.opencsv", "opencsv", "2.3");
 		addSample("xstream", "xstream", "xstream", "1.2.2");
 		addSample("toml", "com.moandjiezana.toml", "toml4j", "0.7.2");
-		addSample("smile", "com.fasterxml.jackson.dataformat", "jackson-dataformat-smile", "2.9.3");
-		addSample("cbor", "com.fasterxml.jackson.dataformat", "jackson-dataformat-cbor", "2.9.3");
+		addSample("smile", "com.fasterxml.jackson.dataformat", "jackson-dataformat-smile", "2.9.7");
+		addSample("cbor", "com.fasterxml.jackson.dataformat", "jackson-dataformat-cbor", "2.9.7");
 		addSample("bson", "de.undercouch", "bson4jackson", "2.9.0");
 		addSample("msgpack", "org.msgpack", "msgpack", "0.6.12");
-		addSample("ion", "software.amazon.ion", "ion-java", "1.0.3");
+		addSample("ion", "software.amazon.ion", "ion-java", "1.2.0");
 		addSample("kryo", "com.esotericsoftware", "kryo", "4.0.1");
 	}
 
