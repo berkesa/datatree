@@ -52,7 +52,7 @@ The [datatree-adapters](https://berkesa.github.io/datatree-adapters/) artifact c
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
 </dependency>
 ```
 
