@@ -30,7 +30,7 @@ dependencies {
     // --- MONGODB DATA TYPES ---
 
 	// https://mvnrepository.com/artifact/org.mongodb/bson
-	compile group: 'org.mongodb', name: 'bson', version: '3.8.2'
+	compile group: 'org.mongodb', name: 'bson', version: '3.9.1'
 
 }
 
@@ -48,8 +48,8 @@ targetCompatibility = 1.8
 
 group = 'com.github.berkesa'
 
-// version = '1.0.8-SNAPSHOT'
-version = '1.0.8'
+// version = '1.0.9-SNAPSHOT'
+version = '1.0.9'
 
 modifyPom {
     project {

@@ -69,6 +69,9 @@ public class JsonBuiltin extends AbstractTextAdapter {
 	protected static final char[] CR = "\\r".toCharArray();
 	protected static final char[] LF = "\\n".toCharArray();
 	protected static final char[] TAB = "\\t".toCharArray();
+	protected static final char[] BACK = "\\b".toCharArray();
+	protected static final char[] FF = "\\f".toCharArray();
+	protected static final char[] BS = "\\\\".toCharArray();
 	
 	// --- BUILDER CACHE ---
 
@@ -253,6 +256,15 @@ public class JsonBuiltin extends AbstractTextAdapter {
 			case '\t':
 				builder.append(TAB);
 				break;				
+			case '\b':			
+				builder.append(BACK);
+				break;
+			case '\f':
+				builder.append(FF);
+				break;
+			case '\\':
+				builder.append(BS);
+				break;
 			default:
 				builder.append(c);
 				break;

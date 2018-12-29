@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -102,11 +103,31 @@ public class TreeTest extends TestCase {
 	}
 
 	@Test
+	public void testSpecChars() throws Exception {
+	  String test = "_\"_\r_\n_\t_\b_\f_\\_";
+	  Tree t = new Tree();
+	  t.put("test", test);
+	  Tree t2 = new Tree(t.toString());
+	  assertEquals(t, t2);
+	  String test2 = t2.get("test", "");
+	  assertEquals(test, test2);
+	}
+	
+	@Test
 	public void testConstructor() throws Exception {
 		isEmptyTree(new Tree());
 		isEmptyTree(new Tree((String) null));
 		isEmptyTree(new Tree(""));
 		isEmptyTree(new Tree("{}"));
+		isEmptyTree(new Tree("{}".getBytes()));
+		isEmptyTree(new Tree("{}".getBytes(), "json"));
+		isEmptyTree(new Tree(new HashMap<String, Object>()));
+		isEmptyTree(new Tree((Map<String, Object>) null));
+		isEmptyTree(new Tree((String) null, "json"));
+		isEmptyTree(new Tree((Object) null, (Object) null));
+		isEmptyTree(new Tree("", "json"));
+		isEmptyTree(new Tree((byte[]) null, "json"));
+		isEmptyTree(new Tree(new byte[0], "json"));
 	}
 
 	private final void isEmptyTree(Tree t) throws Exception {
@@ -119,6 +140,43 @@ public class TreeTest extends TestCase {
 		assertFalse(t.isPrimitive());
 		assertEquals(0, t.size());
 		assertJsonEquals("{}", t.toString(false));
+	}
+
+	// --- GET PATH ---
+
+	@Test
+	public void testGetPath() throws Exception {
+		Tree t = new Tree();
+		t.put("abc", 1);
+		String p = t.getFirstChild().getPath();
+		assertEquals("abc", p);
+		t.put("a.b.c", 2);
+		p = t.get("a.b.c").getPath();
+		assertEquals("a.b.c", p);
+	}
+
+	// --- GET NEXT / PREV ---
+
+	@Test
+	public void testSiblings() throws Exception {
+		Tree t = new Tree();
+		t.put("a", 1);
+		t.put("b", 2);
+		t.put("c", 3);
+		Tree x = t.getFirstChild();
+		assertEquals(1, (int) x.asInteger());
+		x = x.getNextSibling();
+		assertEquals(2, (int) x.asInteger());
+		x = x.getNextSibling();
+		assertEquals(3, (int) x.asInteger());
+		x = x.getPreviousSibling();
+		assertEquals(2, (int) x.asInteger());
+		x = x.getPreviousSibling();
+		assertEquals(1, (int) x.asInteger());
+		assertEquals(1, (int) t.removeFirst().asInteger());
+		assertEquals(3, (int) t.removeLast().asInteger());
+		assertEquals(1, t.size());
+		assertEquals(2, (int) t.get(0).asInteger());
 	}
 
 	// --- CREATE DATA STRUCTURE BY JSON OR XML SOURCE ---
@@ -144,6 +202,15 @@ public class TreeTest extends TestCase {
 		String j1 = "{\"x\":{\"d\":[1,2,3]}}";
 		String j2 = t.get("a.b").toString(false);
 		assertJsonEquals(j1, j2);
+		String j3 = t.get("a.b").toString("json", false);
+		assertJsonEquals(j1, j3);
+		
+		byte[] j4 = t.get("a.b").toBinary();
+		assertJsonEquals(j1, new String(j4));
+		byte[] j5 = t.get("a.b").toBinary("json");
+		assertJsonEquals(j1, new String(j5));
+		byte[] j6 = t.get("a.b").toBinary("json", false);
+		assertJsonEquals(j1, new String(j6));			
 	}
 
 	// --- TEST BINARY CONVERTER ----
