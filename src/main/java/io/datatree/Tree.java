@@ -300,8 +300,8 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 			createEmptyNode();
 		} else {
 			this.value = value;
-			this.meta = meta;
 		}
+		this.meta = meta;
 	}
 
 	// --- NAME OF THIS NODE ----
