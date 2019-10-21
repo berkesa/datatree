@@ -3544,7 +3544,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return this node
 	 */
 	public Tree copyFrom(Tree source, boolean overwriteExisting) {
-		return copyFrom(source, (child) -> {
+		return copyFrom(source, child -> {
 			if (!overwriteExisting) {
 				if (isMap()) {
 					return !isExists(child.getName());
@@ -3556,6 +3556,30 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 				}
 			}
 			return true;
+		});
+	}
+
+	/**
+	 * Appends the specified sub-nodes from the specified source node into this node.
+	 * 
+	 * @param source
+	 *            source node
+	 * @param fields
+	 *            names of the nodes to be copied
+	 * 
+	 * @return this node
+	 */
+	public Tree copyFrom(Tree source, String... fields) {
+		if (fields == null || fields.length == 0) {
+			return copyFrom(source);
+		}
+		return copyFrom(source, child -> {
+			for (String field: fields) {
+				if (field != null && field.equals(child.getName())) {
+					return true;
+				}
+			}
+			return false;
 		});
 	}
 
@@ -3595,7 +3619,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		}
 		return this;
 	}
-
+	
 	// --- JAVA 8 STREAMS ---
 
 	/**

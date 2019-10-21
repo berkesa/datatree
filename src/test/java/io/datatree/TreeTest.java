@@ -103,6 +103,21 @@ public class TreeTest extends TestCase {
 	}
 
 	@Test
+	public void testCopyFrom() throws Exception {
+		Tree s = new Tree();
+		for (int i = 0; i < 10; i++) {
+			s.put("k" + i, "v" + i);
+		}
+		Tree d = new Tree();
+		d.copyFrom(s, "k1", "k3", "k6", "k11");
+		assertEquals(3, d.size());
+		assertTrue(d.isMap());
+		assertEquals("v1", d.get("k1", ""));
+		assertEquals("v3", d.get("k3", ""));
+		assertEquals("v6", d.get("k6", ""));
+	}
+	
+	@Test
 	public void testSpecChars() throws Exception {
 	  String test = "_\"_\r_\n_\t_\b_\f_\\_";
 	  Tree t = new Tree();
