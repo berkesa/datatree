@@ -111,6 +111,7 @@ Supported binary formats:
 
 - MessagePack
 - BSON (binary JSON)
+- Kryo
 - CBOR
 - SMILE
 - Amazon Ion
