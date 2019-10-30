@@ -46,16 +46,6 @@ The DataTree Core API contains the complete Tree toolkit, and one built-in JSON 
 </dependency>
 ```
 
-The [datatree-adapters](https://berkesa.github.io/datatree-adapters/) artifact contains lot of text (JSON, XML, YAML, TOML, CSV, TSV, Properties) and binary (BSON, ION, CBOR, SMILE, MessagePack) adapters. If you'd like to use these formats, add the following dependency instead of the "datatree-core":
-
-```xml
-<dependency>
-    <groupId>com.github.berkesa</groupId>
-    <artifactId>datatree-adapters</artifactId>
-    <version>1.0.12</version>
-</dependency>
-```
-
 [...or download the JARs directly from the Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.berkesa%22)
 
 ## Features
@@ -74,6 +64,57 @@ The [datatree-adapters](https://berkesa.github.io/datatree-adapters/) artifact c
 * Method chaining (`tree.put("name1", "value1").put("name2", "value2")`);
 * Documents have an optional metadata container (`tree.getMeta().put("name", "value")`)
 * Pretty printing (`String json = tree.toString(true / false)`)
+
+## Supported formats and APIs
+
+The [datatree-adapters](https://berkesa.github.io/datatree-adapters/) artifact contains lot of text (JSON, XML, YAML, TOML, CSV, TSV, Properties) and binary (BSON, ION, CBOR, SMILE, MessagePack) adapters. If you'd like to use these formats, add the following dependency instead of the "datatree-core":
+
+```xml
+<dependency>
+    <groupId>com.github.berkesa</groupId>
+    <artifactId>datatree-adapters</artifactId>
+    <version>1.0.12</version>
+</dependency>
+```
+
+Supported JSON APIs:
+
+- Apache Jackson
+- Boon JSON API
+- FastJson
+- JsonIO
+- Google Gson
+- BSON ("extended JSON")
+- DSLJson
+- Flexjson
+- Genson
+- Jodd Json
+- Apache Johnzon
+- NanoJson
+- JSON.simple
+- Json-smart
+- SOJO
+- JsonUtil
+- Amazon Ion
+
+Supported non-JSON text formats:
+
+- XML
+- YAML
+- TOML
+- Java Properties
+- CSV
+- TSV
+- XML-RPC
+
+Supported binary formats:
+
+- MessagePack
+- BSON (binary JSON)
+- CBOR
+- SMILE
+- Amazon Ion
+- Java Object Serializaton
 
 ## Requirements
 
