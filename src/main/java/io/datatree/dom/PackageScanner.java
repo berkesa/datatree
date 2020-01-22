@@ -101,7 +101,8 @@ public final class PackageScanner {
 						"JsonJackson", "JsonJodd", "JsonJohnzon", "JsonJsonIO", "JsonNano", "JsonSimple", "JsonSmart",
 						"JsonSojo", "JsonUtil", "KryoKryo", "MsgPackJackson", "MsgPackOrg", "PropertiesBuiltin",
 						"PropertiesJackson", "SmileJackson", "TomlJtoml", "TomlJtoml2", "TomlToml4j", "TsvOpenCSV",
-						"XmlBuiltin", "XmlJackson", "XmlRpcSojo", "XmlXStream", "YamlJackson", "YamlSnakeYaml");
+						"XmlBuiltin", "XmlJackson", "XmlRpcSojo", "XmlXStream", "YamlJackson", "YamlSnakeYaml",
+						"JsonJsoniter");
 			}
 
 			// Sort reader and writers by priority
