@@ -42,11 +42,11 @@ The DataTree Core API contains the complete Tree toolkit, and one built-in JSON 
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-core</artifactId>
-    <version>1.0.11</version>
+    <version>1.0.12</version>
 </dependency>
 ```
 
-[...or download the JARs directly from the Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.berkesa%22)
+[...or download the JARs directly from the Maven Central](https://search.maven.org/artifact/com.github.berkesa/datatree-core)
 
 ## Features
 
