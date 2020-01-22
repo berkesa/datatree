@@ -34,13 +34,13 @@ dependencies {
 
     // ============= COMPILATION =============
 
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 	ecj 'org.eclipse.jdt.core.compiler:ecj:4.4.2'
 
     // ============= MONGO TYPES =============
     
 	// https://mvnrepository.com/artifact/org.mongodb/bson
-	compile group: 'org.mongodb', name: 'bson', version: '3.11.1'
+	implementation group: 'org.mongodb', name: 'bson', version: '3.12.1'
 
 }
 

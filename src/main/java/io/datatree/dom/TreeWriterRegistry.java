@@ -210,7 +210,7 @@ public class TreeWriterRegistry {
 		dependencySamples.put(format, new String[] { group, name, version });
 	}
 
-	static final void suggestDependency(String format) {
+	protected static final void suggestDependency(String format) {
 		if (format == null || format.isEmpty()) {
 			return;
 		}

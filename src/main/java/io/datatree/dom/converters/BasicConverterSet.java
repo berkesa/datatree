@@ -49,11 +49,6 @@ import io.datatree.dom.Config;
  */
 final class BasicConverterSet extends AbstractConverterSet {
 
-	// --- HIDDEN CONSTRUCTOR ---
-
-	BasicConverterSet() {
-	}
-
 	// --- INIT DEFAULT CONVERTERS ---
 
 	static {

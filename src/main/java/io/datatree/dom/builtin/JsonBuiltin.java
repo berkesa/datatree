@@ -528,6 +528,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 						break;
 					default:
 						chars[to++] = c;
+						break;
 					}
 				} else {
 					if (from + 4 < to) {

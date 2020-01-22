@@ -53,11 +53,6 @@ import io.datatree.dom.DeepCloner;
  */
 final class BsonConverterSet extends AbstractConverterSet {
 
-	// --- HIDDEN CONSTRUCTOR ---
-
-	BsonConverterSet() {
-	}
-
 	// --- INIT MONGODB / BSON CONVERTERS ---
 
 	static {
