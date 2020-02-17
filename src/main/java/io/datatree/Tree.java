@@ -192,7 +192,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	/**
 	 * Creates a hierarchial structure by a String. Sample:<br>
 	 * <br>
-	 * Tree node = new Tree(yamlString, "toml");<br>
+	 * Tree node = new Tree(yamlString, "yaml");<br>
 	 * 
 	 * @param source
 	 *            source

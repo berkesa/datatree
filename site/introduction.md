@@ -14,7 +14,7 @@ to manipulate (put, get, remove, insert, sort, find, stream, etc.) the content o
 
 ## Usage
 
-```javascript
+```java
 import io.datatree.Tree;
 
 Tree document = new Tree();

@@ -1,7 +1,7 @@
 module.exports = {
 
 	theme: '@vuepress/theme-default',
-	title: 'DataTree API',
+	title: 'DataTree Tools',
 	description: 'Java Library for manipulating hierarchical data structures',
 	base: '/datatree/',
 	dest: '../docs',
@@ -13,17 +13,6 @@ module.exports = {
         [
             '@vuepress/google-analytics', {'ga': 'UA-156080046-2'}
         ],
-		[
-			'vuepress-plugin-medium-zoom',
-			{
-				selector: '.zoom',
-				delay: 1000,
-				options: {
-					margin: 24,
-					scrollOffset: 0
-				}
-			}
-		],
         [
             'robots',
             {
@@ -64,10 +53,55 @@ module.exports = {
 		],
 		sidebar: [
 			{
-				title: 'Getting started',
+				title: 'DataTree Core API',
 				sidebarDepth: 2,
 				children: [
-					['introduction', 'Introduction']
+					['introduction', 'Introduction'],
+					['manipulation', 'Data Manipulation']
+				]
+			},
+			{
+				title: 'Text-based formats',
+				sidebarDepth: 2,
+				children: [
+					['format-json',       'JSON'],
+					['format-xml',        'XML'],
+					['format-yaml',       'YAML'],
+					['format-toml',       'TOML'],
+					['format-properties', 'Java Properties'],
+					['format-csv',        'CSV'],
+					['format-tsv',        'TSV']
+				]
+			},
+			{
+				title: 'Binary formats',
+				sidebarDepth: 2,
+				children: [
+					['format-cbor',        'CBOR'],
+					['format-bson',        'BSON'],
+					['format-smile',       'SMILE'],
+					['format-ion',         'Amazon ION'],
+					['format-msgpack',     'MessagePack'],
+					['format-java',        'Java Serialization'],
+					['format-kryo',        'Kryo'],
+					['performance-binary', 'Performance of binary APIs']
+				]
+			},
+			{
+				title: 'DataTree template engine',
+				sidebarDepth: 2,
+				children: [
+					['template-introduction', 'Introduction'],
+					['template-usage',        'Usage of the Engine'],
+					['template-syntax',       'Syntax of templates']
+				]
+			},
+			{
+				title: 'Asynchronous data processing',
+				sidebarDepth: 2,
+				children: [
+					['promise-introduction', 'Introduction'],
+					['promise-usage',        'Usage of the Promises']
 				]
 			}
 		]
