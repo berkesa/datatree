@@ -49,7 +49,8 @@ module.exports = {
 		lastUpdated:  'Last Updated',		
 		nav: [
 			{ text: 'Home', link: '/' },
-			{ text: 'Documentation', link: 'introduction' }
+			{ text: 'Documentation', link: 'introduction' },
+			{ text: 'Donate', link: 'https://www.patreon.com/berkesa' }
 		],
 		sidebar: [
 			{

@@ -1,7 +1,7 @@
-## Promise for Java
+## About DataTree Promise
 
-ES6-like Promise, based on the Java8's CompletableFuture API. A Promise is an
-object that may produce a single value some time in the future: either a
+DataTree Promise is an ES6-like Promise, based on the Java8's CompletableFuture API.
+A Promise is an object that may produce a single value some time in the future: either a
 resolved value, or a reason that it's not resolved (e.g., a network error
 occurred). Promise users can attach callbacks to handle the fulfilled value
 or the reason for rejection.
