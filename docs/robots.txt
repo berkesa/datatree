@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+Sitemap: https:/berkesa.github.io/datatree/sitemap.xml
+Host: https://berkesa.github.io
