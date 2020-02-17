@@ -14,7 +14,7 @@ Even though the JSON format is the default, DataTree supports other formats, suc
 
 ## Documentation
 
-[![Documentation](https://raw.githubusercontent.com/berkesa/datatree/master/docs/docs-button.png)](https://berkesa.github.io/datatree/)
+[![Documentation](https://raw.githubusercontent.com/berkesa/datatree/master/docs/docs-button.png)](https://berkesa.github.io/datatree/introduction.html#datatree-api)
 
 ## License
 
