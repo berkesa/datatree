@@ -24,7 +24,18 @@ document.put("path.to.item", true);
 String properties = document.toString("properties");
 ``` 
 
-If you would like to use the Jackson's Java Property reader/writer add the proper dependency (see the table below) to the application's classpath.
+If there is more than one Promerties implementation on classpath, the preferred
+implementation is adjustable with the following System Properties:
+
+```
+// Using Jackson API:
+-Ddatatree.properties.reader=io.datatree.dom.adapters.PropertiesJackson
+-Ddatatree.properties.writer=io.datatree.dom.adapters.PropertiesJackson
+
+// Using built-in API:
+-Ddatatree.properties.reader=io.datatree.dom.adapters.PropertiesBuiltin
+-Ddatatree.properties.writer=io.datatree.dom.adapters.PropertiesBuiltin
+```
 
 ## Required dependencies of Java Property adapters
 

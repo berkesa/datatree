@@ -47,6 +47,19 @@ document.clear("listOfItems");
 String yaml = document.toString("yaml");
 ```
 
+If there is more than one YAML implementation on classpath, the preferred
+implementation is adjustable with the following System Properties:
+
+```
+// Using SnakeYAML API:
+-Ddatatree.yaml.reader=io.datatree.dom.adapters.YamlSnakeYaml
+-Ddatatree.yaml.writer=io.datatree.dom.adapters.YamlSnakeYaml
+
+// Using Jackson YAML API:
+-Ddatatree.yaml.reader=io.datatree.dom.adapters.YamlJackson
+-Ddatatree.yaml.writer=io.datatree.dom.adapters.YamlJackson
+```
+
 ## Required dependencies of YAML adapters
 
 | API Name            | Adapter Class | Dependency |

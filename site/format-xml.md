@@ -35,8 +35,17 @@ If there is more than one XML implementation on classpath, the preferred
 implementation is adjustable with the following System Properties:
 
 ```
+// Using XMLStream API:
 -Ddatatree.xml.reader=io.datatree.dom.adapters.XmlXStream
 -Ddatatree.xml.writer=io.datatree.dom.adapters.XmlXStream
+
+// Using Jackson XML API:
+-Ddatatree.xml.reader=io.datatree.dom.adapters.XmlJackson
+-Ddatatree.xml.writer=io.datatree.dom.adapters.XmlJackson
+
+// Using Builting XML API:
+-Ddatatree.xml.reader=io.datatree.dom.adapters.XmlBuiltin
+-Ddatatree.xml.writer=io.datatree.dom.adapters.XmlBuiltin
 ```
 
 ## Required dependencies of XML adapters

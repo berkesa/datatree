@@ -44,6 +44,23 @@ document.putList("newList").add(1).add(2).add(3);
 String toml = document.toString("toml");
 ```
 
+If there is more than one TOML implementation on classpath, the preferred
+implementation is adjustable with the following System Properties:
+
+```
+// Using JToml API:
+-Ddatatree.toml.reader=io.datatree.dom.adapters.TomlJtoml
+-Ddatatree.toml.writer=io.datatree.dom.adapters.TomlJtoml
+
+// Using JToml2 API:
+-Ddatatree.toml.reader=io.datatree.dom.adapters.TomlJtoml2
+-Ddatatree.toml.writer=io.datatree.dom.adapters.TomlJtoml2
+
+// Using Toml4j API:
+-Ddatatree.toml.reader=io.datatree.dom.adapters.TomlToml4j
+-Ddatatree.toml.writer=io.datatree.dom.adapters.TomlToml4j
+```
+
 ## Required dependencies of TOML adapters
 
 | API Name            | Adapter Class | Dependency |
