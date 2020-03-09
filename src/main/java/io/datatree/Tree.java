@@ -2965,7 +2965,10 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	@SuppressWarnings("unchecked")
 	public <TO> TO getObject(String path, TO defaultValue) {
 		Tree child = getChild(path, false);
-		if (child != null && defaultValue != null) {
+		if (child != null) {
+			if (defaultValue == null) {
+				return (TO) child.value;
+			}
 			TO converted = DataConverterRegistry.convert((Class<TO>) defaultValue.getClass(), child.value);
 			if (converted == null && (defaultValue instanceof Number || defaultValue instanceof Boolean)) {
 				return defaultValue;

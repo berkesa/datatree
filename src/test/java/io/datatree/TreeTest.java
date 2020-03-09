@@ -103,6 +103,14 @@ public class TreeTest extends TestCase {
 	}
 
 	@Test
+	public void testGetObjectWithNullDefault() throws Exception {
+		Tree t = new Tree();
+		t.put("xyz", "abc");
+		Object o = t.getObject("xyz", null);
+		assertEquals("abc", o);
+	}
+	
+	@Test
 	public void testCopyFrom() throws Exception {
 		Tree s = new Tree();
 		for (int i = 0; i < 10; i++) {
