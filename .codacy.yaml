@@ -1,3 +1,5 @@
 exclude_paths:
  - '**/*Test.java'
- - tests/**  
+ - 'tests/**'  
+ - 'docs/**'
+ - 'site/**'
