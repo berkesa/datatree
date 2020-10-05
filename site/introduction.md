@@ -38,7 +38,7 @@ The DataTree Core API contains the complete Tree toolkit, and one built-in JSON 
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-core</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
 </dependency>
 ```
 
