@@ -52,6 +52,6 @@ implementation is adjustable with the following System Properties:
 
 | API Name            | Adapter Class | Dependency |
 | ------------------- | ------------- | ---------- |
-| Jackson XML | XmlJackson  | [group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.10.1'](https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml) |
+| Jackson XML | XmlJackson  | [group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.11.3'](https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml) |
 | XMLStream | XmlXStream | [group: 'xstream', name: 'xstream', version: '1.2.2'](https://mvnrepository.com/artifact/xstream/xstream) |
 | Built-in XML | XmlBuiltin | - | 

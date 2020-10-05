@@ -19,14 +19,14 @@ DataTree will use SnakeYAML API to read/write YAML documents.
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.13</version>
+    <version>1.0.14</version>
 </dependency>
 
 <!-- SNAKEYAML API -->
 <dependency>
     <groupId>org.yaml</groupId>
     <artifactId>snakeyaml</artifactId>
-    <version>1.25</version>
+    <version>1.27</version>
 </dependency>
 ```
 
@@ -64,6 +64,6 @@ implementation is adjustable with the following System Properties:
 
 | API Name            | Adapter Class | Dependency |
 | ------------------- | ------------- | ---------- |
-| Jackson YAML | YamlJackson  | [group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.1'](https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml) |
-| SnakeYAML | YamlSnakeYaml | [compile group: 'org.yaml', name: 'snakeyaml', version: '1.25'](https://mvnrepository.com/artifact/org.yaml/snakeyaml) |
+| Jackson YAML | YamlJackson  | [group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.11.3'](https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml) |
+| SnakeYAML | YamlSnakeYaml | [compile group: 'org.yaml', name: 'snakeyaml', version: '1.27'](https://mvnrepository.com/artifact/org.yaml/snakeyaml) |
  

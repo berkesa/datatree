@@ -194,16 +194,16 @@ public class TreeWriterRegistry {
 	// --- DEPENDENCY HELPER ---
 
 	static {
-		addSample("yaml", "org.yaml", "snakeyaml", "1.25");
-		addSample("csv", "com.opencsv", "opencsv", "5.0");
+		addSample("yaml", "org.yaml", "snakeyaml", "1.27");
+		addSample("csv", "com.opencsv", "opencsv", "5.2");
 		addSample("xstream", "xstream", "xstream", "1.2.2");
 		addSample("toml", "com.moandjiezana.toml", "toml4j", "0.7.2");
-		addSample("smile", "com.fasterxml.jackson.dataformat", "jackson-dataformat-smile", "2.10.1");
-		addSample("cbor", "com.fasterxml.jackson.dataformat", "jackson-dataformat-cbor", "2.10.1");
-		addSample("bson", "de.undercouch", "bson4jackson", "2.9.2");
+		addSample("smile", "com.fasterxml.jackson.dataformat", "jackson-dataformat-smile", "2.11.3");
+		addSample("cbor", "com.fasterxml.jackson.dataformat", "jackson-dataformat-cbor", "2.11.3");
+		addSample("bson", "de.undercouch", "bson4jackson", "2.11.0");
 		addSample("msgpack", "org.msgpack", "msgpack", "0.6.12");
 		addSample("ion", "software.amazon.ion", "ion-java", "1.5.1");
-		addSample("kryo", "com.esotericsoftware", "kryo", "5.0.0-RC4");
+		addSample("kryo", "com.esotericsoftware", "kryo", "5.0.0-RC9");
 	}
 
 	private static final void addSample(String format, String group, String name, String version) {

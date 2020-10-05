@@ -41,5 +41,5 @@ implementation is adjustable with the following System Properties:
 
 | API Name            | Adapter Class | Dependency |
 | ------------------- | ------------- | ---------- |
-| Jackson Properties | PropertiesJackson  | [group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.10.1'](https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-properties) |
+| Jackson Properties | PropertiesJackson  | [group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.11.3'](https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-properties) |
 | Built-in Properties | PropertiesBuiltin | - | 

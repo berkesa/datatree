@@ -12,14 +12,14 @@ DataTree will use Jackson's Object Mapper to read/write JSON documents.
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.13</version>
+    <version>1.0.14</version>
 </dependency>
 
 <!-- JACKSON JSON API -->
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
-    <version>2.10.1</version>
+    <version>2.11.3</version>
 </dependency>
 ``` 
 
@@ -134,7 +134,7 @@ static {
 
 ::: warning FastJson dependencies
 To use FastJson JSON API, add the following dependency to the build script:  
-[group: 'com.alibaba', name: 'fastjson', version: '1.2.62'](https://mvnrepository.com/artifact/com.alibaba/fastjson)
+[group: 'com.alibaba', name: 'fastjson', version: '1.2.73'](https://mvnrepository.com/artifact/com.alibaba/fastjson)
 :::
 
 ### Using Flexjson API
@@ -241,7 +241,7 @@ static {
 
 ::: warning Jackson dependencies
 To use Jackson JSON API, add the following dependency to the build script:  
-[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind)
+[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind)
 :::
 
 ### Using Jodd JSON API
@@ -267,7 +267,7 @@ static {
 
 ::: warning Jodd dependencies
 To use Jodd JSON API, add the following dependency to the build script:  
-[group: 'org.jodd', name: 'jodd-json', version: '5.0.13'](https://mvnrepository.com/artifact/org.jodd/jodd-json)
+[group: 'org.jodd', name: 'jodd-json', version: '6.0.1'](https://mvnrepository.com/artifact/org.jodd/jodd-json)
 :::
 
 ### Using Apache Johnzon API
@@ -295,7 +295,7 @@ static {
 
 ::: warning Johnzon dependencies
 To use Johnzon JSON API, add the following dependency to the build script:  
-[group: 'org.apache.johnzon', name: 'johnzon-mapper', version: '1.2.2'](https://mvnrepository.com/artifact/org.apache.johnzon/johnzon-mapper)
+[group: 'org.apache.johnzon', name: 'johnzon-mapper', version: '1.2.8'](https://mvnrepository.com/artifact/org.apache.johnzon/johnzon-mapper)
 :::
 
 ### Using JsonIO API
@@ -346,7 +346,7 @@ static {
 
 ::: warning NanoJson dependencies
 To use NanoJson JSON API, add the following dependency to the build script:  
-[group: 'com.grack', name: 'nanojson', version: '1.4'](https://mvnrepository.com/artifact/com.grack/nanojson)
+[group: 'com.grack', name: 'nanojson', version: '1.6'](https://mvnrepository.com/artifact/com.grack/nanojson)
 :::
 
 ### Using JSON.simple API
@@ -554,7 +554,7 @@ Add Boon and Jackson to your pom.xml:
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
-    <version>2.10.1</version>
+    <version>2.11.3</version>
 </dependency>
 
 <!-- BOON JSON API -->

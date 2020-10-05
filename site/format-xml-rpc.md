@@ -13,14 +13,14 @@ To use XML-RPC format add DataTree Adapters and XML-RPC JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.13</version>
+    <version>1.0.14</version>
 </dependency>
 
 <!-- SOJO XML-RPC API -->
 <dependency>
     <groupId>net.sf.sojo</groupId>
     <artifactId>sojo</artifactId>
-    <version>1.0.13</version>
+    <version>1.0.14</version>
 </dependency>
 ```
 
