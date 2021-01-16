@@ -17,14 +17,24 @@
  */
 package io.datatree;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -181,12 +191,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 *             any JSON format exception
 	 */
 	public Tree(String source) throws Exception {
-		if (source == null || source.isEmpty()) {
-			createEmptyNode();
-		} else {
-			value = TreeReaderRegistry.getReader(null).parse(source);
-			moveMeta();
-		}
+		initFromString(source, null);
 	}
 
 	/**
@@ -195,7 +200,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * Tree node = new Tree(yamlString, "yaml");<br>
 	 * 
 	 * @param source
-	 *            source
+	 *            source in the specified format (JSON, YAML, etc.)
 	 * @param format
 	 *            name of the format (eg. "json", "xml", "csv", "yaml",
 	 *            "properties", "toml", or the name of the reader's class, for
@@ -205,15 +210,254 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 *             any data format exception
 	 */
 	public Tree(String source, String format) throws Exception {
-		if (source == null || source.isEmpty()) {
-			createEmptyNode();
-		} else {
-			value = TreeReaderRegistry.getReader(format).parse(source);
-			moveMeta();
+		initFromString(source, format);
+	}
+
+	// --- PUBLIC CONSTRUCTORS / FILE SOURCE ---
+
+	/**
+	 * Loads a hierarchial structure from the specified File. The constructor
+	 * tries to guess the file format based on its extension (for example,
+	 * "file.json" will be in JSON format, "file.bson" will be in BSON format).
+	 * If it fails to figure out the format, it will use the JSON format.
+	 * Sample:<br>
+	 * <br>
+	 * Tree node = new Tree(new File("/path/to/source.json"));<br>
+	 * or<br>
+	 * Tree node = new Tree(new File("/path/to/source.msgpack"));<br>
+	 * 
+	 * @param source
+	 *            source File in a supported format (JSON, YAML, etc.)
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(File source) throws Exception {
+		this(source, getFormatByExtension(source));
+	}
+
+	/**
+	 * Loads a hierarchial structure by the specified File and format. Sample:
+	 * <br>
+	 * <br>
+	 * Tree node = new Tree(new File("/path/to/source.data"), "json");<br>
+	 * or<br>
+	 * Tree node = new Tree(new File("/path/to/source.data"), "msgpack");<br>
+	 * 
+	 * @param source
+	 *            source File in the specified format (JSON, YAML, etc.)
+	 * @param format
+	 *            name of the format (eg. "json", "xml", "csv", "yaml",
+	 *            "properties", "toml", or the name of the reader's class, for
+	 *            example "JsonJackson")
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(File source, String format) throws Exception {
+		this(new FileInputStream(source), format, true);
+	}
+
+	// --- PUBLIC CONSTRUCTORS / URL SOURCE ---
+
+	/**
+	 * Loads a hierarchial structure from the specified URL. The method tries to
+	 * guess the file format based on its extension (for example, "file.json"
+	 * will be in JSON format, "file.bson" will be in BSON format). If it fails
+	 * to figure out the format, it will use the JSON format. Sample:<br>
+	 * <br>
+	 * Tree node = new Tree(new URL("http://server/source.json"));<br>
+	 * or<br>
+	 * Tree node = new Tree(new URL("http://server/source.msgpack"));<br>
+	 * 
+	 * @param source
+	 *            URL of the source
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(URL source) throws Exception {
+		this(source, getFormatByExtension(source));
+	}
+
+	/**
+	 * Loads a hierarchial structure by the specified URL and format. Sample:
+	 * <br>
+	 * <br>
+	 * Tree node = new Tree(new URL("http://server/source.data"), "json");<br>
+	 * or<br>
+	 * Tree node = new Tree(new URL("http://server/source.data"), "msgpack");
+	 * <br>
+	 * 
+	 * @param source
+	 *            source URL
+	 * @param format
+	 *            name of the format (eg. "json", "xml", "csv", "yaml",
+	 *            "properties", "toml", or the name of the reader's class, for
+	 *            example "JsonJackson")
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(URL source, String format) throws Exception {
+		this(source.openStream(), format);
+	}
+
+	// --- PUBLIC CONSTRUCTORS / BYTE CHANNEL SOURCE ---
+
+	/**
+	 * Loads a hierarchial structure from the specified ReadableByteChannel, in
+	 * JSON format. Closes the source Channel. Sample: <br>
+	 * <br>
+	 * Tree node = new Tree(source);<br>
+	 * 
+	 * @param source
+	 *            source Channel
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(ReadableByteChannel source) throws Exception {
+		this(source, null, true);
+	}
+
+	/**
+	 * Loads a hierarchial structure from the specified ReadableByteChannel, in
+	 * the specified format. Closes the source Channel. Sample: <br>
+	 * <br>
+	 * Tree node = new Tree(source, "json");<br>
+	 * 
+	 * @param source
+	 *            source Channel
+	 * @param format
+	 *            name of the format (eg. "json", "xml", "csv", "yaml",
+	 *            "properties", "toml", or the name of the reader's class, for
+	 *            example "JsonJackson")
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(ReadableByteChannel source, String format) throws Exception {
+		this(source, format, true);
+	}
+
+	/**
+	 * Loads a hierarchial structure from the specified ReadableByteChannel, in
+	 * the specified format. Sample: <br>
+	 * <br>
+	 * Tree node = new Tree(source, "json", true);<br>
+	 * 
+	 * @param source
+	 *            source Channel
+	 * @param format
+	 *            name of the format (eg. "json", "xml", "csv", "yaml",
+	 *            "properties", "toml", or the name of the reader's class, for
+	 *            example "JsonJackson")
+	 * @param closeSource
+	 *            close the source Channel (true = close)
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(ReadableByteChannel source, String format, boolean closeSource) throws Exception {
+		try {
+			ByteBuffer packet = ByteBuffer.allocate(4096);
+			ByteArrayOutputStream buffer = new ByteArrayOutputStream(4096);
+			int count;
+			while ((count = source.read(packet)) != -1) {
+				buffer.write(packet.array(), 0, count);
+				packet.rewind();
+			}
+			initFromBytes(buffer.toByteArray(), format);
+		} finally {
+			if (closeSource && source != null) {
+				try {
+					source.close();
+				} catch (Exception ignored) {
+				}
+			}
 		}
 	}
 
-	// --- PUBLIC CONSTRUCTORS / BINARY SOURCE ---
+	// --- PUBLIC CONSTRUCTORS / STREAM SOURCE ---
+
+	/**
+	 * Loads a hierarchial structure from the specified InputStream, in JSON
+	 * format. Closes the source Stream. Sample: <br>
+	 * <br>
+	 * Tree node = new Tree(source);<br>
+	 * 
+	 * @param source
+	 *            source Stream
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(InputStream source) throws Exception {
+		this(source, null, true);
+	}
+
+	/**
+	 * Loads a hierarchial structure from the specified InputStream, in the
+	 * specified format. Closes the source Stream. Sample: <br>
+	 * <br>
+	 * Tree node = new Tree(source, "json");<br>
+	 * 
+	 * @param source
+	 *            source Stream
+	 * @param format
+	 *            name of the format (eg. "json", "xml", "csv", "yaml",
+	 *            "properties", "toml", or the name of the reader's class, for
+	 *            example "JsonJackson")
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(InputStream source, String format) throws Exception {
+		this(source, format, true);
+	}
+
+	/**
+	 * Loads a hierarchial structure from the specified InputStream, in the
+	 * specified format. Sample: <br>
+	 * <br>
+	 * Tree node = new Tree(source, "json", true);<br>
+	 * 
+	 * @param source
+	 *            source Stream
+	 * @param format
+	 *            name of the format (eg. "json", "xml", "csv", "yaml",
+	 *            "properties", "toml", or the name of the reader's class, for
+	 *            example "JsonJackson")
+	 * @param closeSource
+	 *            close the source Stream (true = close)
+	 * 
+	 * @throws Exception
+	 *             any data format exception
+	 */
+	public Tree(InputStream source, String format, boolean closeStream) throws Exception {
+		try {
+			byte[] bytes = new byte[0];
+			byte[] packet = new byte[4096];
+			int count;
+			while ((count = source.read(packet)) != -1) {
+				byte[] resized = new byte[bytes.length + count];
+				System.arraycopy(bytes, 0, resized, 0, bytes.length);
+				System.arraycopy(packet, 0, resized, bytes.length, count);
+				bytes = resized;
+			}
+			initFromBytes(bytes, format);
+		} finally {
+			if (closeStream && source != null) {
+				try {
+					source.close();
+				} catch (Exception ignored) {
+				}
+			}
+		}
+	}
+
+	// --- PUBLIC CONSTRUCTORS / BINARY ARRAY SOURCE ---
 
 	/**
 	 * Creates a hierarchial structure by a JSON byte array. Sample:<br>
@@ -228,12 +472,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 *             any JSON format exception
 	 */
 	public Tree(byte[] source) throws Exception {
-		if (source == null || source.length < 2) {
-			createEmptyNode();
-		} else {
-			value = TreeReaderRegistry.getReader(null).parse(source);
-			moveMeta();
-		}
+		initFromBytes(source, null);
 	}
 
 	/**
@@ -254,6 +493,19 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 *             any format exception
 	 */
 	public Tree(byte[] source, String format) throws Exception {
+		initFromBytes(source, format);
+	}
+
+	protected void initFromString(String source, String format) throws Exception {
+		if (source == null || source.isEmpty()) {
+			createEmptyNode();
+		} else {
+			value = TreeReaderRegistry.getReader(format).parse(source);
+			moveMeta();
+		}
+	}
+
+	protected void initFromBytes(byte[] source, String format) throws Exception {
 		if (source == null || source.length == 0) {
 			createEmptyNode();
 		} else {
@@ -277,6 +529,41 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		if (isMap()) {
 			meta = ((Map) value).remove(Config.META);
 		}
+	}
+
+	protected static String getFormatByExtension(URL url) {
+		if (url != null) {
+			String path = url.toString();
+			int i = path.lastIndexOf('?');
+			if (i > -1) {
+				path = path.substring(0, i);
+			}
+			return getFormatByExtension(path);
+		}
+		return null;
+	}
+
+	protected static String getFormatByExtension(File file) {
+		if (file != null) {
+			return getFormatByExtension(file.getName());
+		}
+		return null;
+	}
+
+	protected static String getFormatByExtension(String path) {
+		if (path != null) {
+			int i = path.lastIndexOf('.');
+			if (i > -1 && i < path.length() - 1) {
+				String ext = path.substring(i + 1).toLowerCase();
+				if ("yml".equals(ext)) {
+					ext = "yaml";
+				}
+				if (TreeReaderRegistry.isAvailable(ext)) {
+					return ext;
+				}
+			}
+		}
+		return null;
 	}
 
 	// --- PROTECTED CONSTRUCTORS ---
@@ -3563,7 +3850,8 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	}
 
 	/**
-	 * Appends the specified sub-nodes from the specified source node into this node.
+	 * Appends the specified sub-nodes from the specified source node into this
+	 * node.
 	 * 
 	 * @param source
 	 *            source node
@@ -3577,7 +3865,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 			return copyFrom(source);
 		}
 		return copyFrom(source, child -> {
-			for (String field: fields) {
+			for (String field : fields) {
 				if (field != null && field.equals(child.getName())) {
 					return true;
 				}
@@ -3622,7 +3910,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 		}
 		return this;
 	}
-	
+
 	// --- JAVA 8 STREAMS ---
 
 	/**
@@ -3824,6 +4112,207 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 */
 	public byte[] toBinary(String format, boolean insertMeta) {
 		return TreeWriterRegistry.getWriter(format).toBinary(value, meta, insertMeta);
+	}
+
+	// --- WRITE TO FILE ---
+
+	/**
+	 * Writes the contents of the Tree (without meta) to the specified File. The
+	 * method tries to guess the file format based on its extension (for
+	 * example, "file.json" will be in JSON format, "file.bson" will be in BSON
+	 * format). If it fails to figure out the format, it will use the JSON
+	 * format. Sample code:<br>
+	 * <br>
+	 * Tree tree = new Tree();<br>
+	 * tree.put("key", "value");<br>
+	 * tree.writeTo("/path/to/file.json");<br>
+	 * 
+	 * @param destinationFilePath
+	 *            path of the destination File
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(String destinationFilePath) throws IOException {
+		writeTo(new File(destinationFilePath));
+	}
+
+	/**
+	 * Writes the contents of the Tree (without meta) to the specified File. The
+	 * method tries to guess the file format based on its extension (for
+	 * example, "file.json" will be in JSON format, "file.bson" will be in BSON
+	 * format). If it fails to figure out the format, it will use the JSON
+	 * format.
+	 * 
+	 * @param destination
+	 *            the destination File
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(File destination) throws IOException {
+		writeTo(destination, getFormatByExtension(destination));
+	}
+
+	/**
+	 * Writes the contents of the Tree (without meta) to the specified File in
+	 * the specified format.
+	 * 
+	 * @param destination
+	 *            the destination File
+	 * @param format
+	 *            name of the format (eg. "json", "yaml", "csv", "toml", etc.)
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(File destination, String format) throws IOException {
+		writeTo(destination, format, false);
+	}
+
+	/**
+	 * Writes the contents of the Tree to the specified File in the specified
+	 * format.
+	 * 
+	 * @param destination
+	 *            the destination File
+	 * @param format
+	 *            name of the format (eg. "msgpack", "bson", "cbor", etc.)
+	 * @param insertMeta
+	 *            serialize the meta structure or not
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(File destination, String format, boolean insertMeta) throws IOException {
+		writeTo(new FileOutputStream(destination), format, insertMeta, true);
+	}
+
+	// --- WRITE TO CHANNEL ---
+
+	/**
+	 * Writes the contents of the Tree (without meta) to the specified Channel
+	 * in JSON format. This method closes the Channel after writing.
+	 * 
+	 * @param destination
+	 *            the destination WritableByteChannel
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(WritableByteChannel destination) throws IOException {
+		writeTo(destination, null);
+	}
+
+	/**
+	 * Writes the contents of the Tree (without meta) to the specified Channel
+	 * in the specified format. This method closes the Channel after writing.
+	 * 
+	 * @param destination
+	 *            the destination WritableByteChannel
+	 * @param format
+	 *            name of the format (eg. "json", "yaml", "csv", "toml", etc.)
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(WritableByteChannel destination, String format) throws IOException {
+		writeTo(destination, format, false, true);
+	}
+
+	/**
+	 * Writes the contents of the Tree to the specified Channel in the specified
+	 * format.
+	 * 
+	 * @param destination
+	 *            the destination WritableByteChannel
+	 * @param format
+	 *            name of the format (eg. "msgpack", "bson", "cbor", etc.)
+	 * @param insertMeta
+	 *            serialize the meta structure or not
+	 * @param closeDestination
+	 *            close the Channel after writing
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(WritableByteChannel destination, String format, boolean insertMeta, boolean closeDestination)
+			throws IOException {
+		try {
+			ByteBuffer buffer = ByteBuffer.wrap(toBinary(format, insertMeta));
+			while (buffer.hasRemaining()) {
+				destination.write(buffer);
+			}
+		} finally {
+			if (closeDestination && destination != null) {
+				try {
+					destination.close();
+				} catch (Exception ignored) {
+				}
+			}
+		}
+	}
+
+	// --- WRITE TO OUTPUT STREAM ---
+
+	/**
+	 * Writes the contents of the Tree (without meta) to the specified Stream in
+	 * JSON format. This method closes the Stream after writing.
+	 * 
+	 * @param destination
+	 *            the destination OutputStream
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(OutputStream destination) throws IOException {
+		writeTo(destination, null);
+	}
+
+	/**
+	 * Writes the contents of the Tree (without meta) to the specified Stream in
+	 * the specified format. This method closes the Stream after writing.
+	 * 
+	 * @param destination
+	 *            the destination OutputStream
+	 * @param format
+	 *            name of the format (eg. "json", "yaml", "smile", "cbor", etc.)
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(OutputStream destination, String format) throws IOException {
+		writeTo(destination, format, false, true);
+	}
+
+	/**
+	 * Writes the contents of the Tree to the specified Stream in the specified
+	 * format.
+	 * 
+	 * @param destination
+	 *            the destination OutputStream
+	 * @param format
+	 *            name of the format (eg. "json", "yaml", "smile", "cbor", etc.)
+	 * @param insertMeta
+	 *            serialize the meta structure or not
+	 * @param closeDestination
+	 *            close the OutputStream after writing
+	 * 
+	 * @throws IOException
+	 *             Any I/O Exception
+	 */
+	public void writeTo(OutputStream destination, String format, boolean insertMeta, boolean closeDestination)
+			throws IOException {
+		try {
+			destination.write(toBinary(format, insertMeta));
+		} finally {
+			if (closeDestination && destination != null) {
+				try {
+					destination.close();
+				} catch (Exception ignored) {
+				}
+			}
+		}
 	}
 
 	// --- SORT SUB-NODES ---

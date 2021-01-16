@@ -19,6 +19,9 @@ package io.datatree;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
@@ -102,6 +105,67 @@ public class TreeTest extends TestCase {
 		TreeWriterRegistry.setWriter("json", impl);
 	}
 
+	@SuppressWarnings("resource")
+	@Test
+	public void testFileConstructors() throws Exception {
+		File f = null;
+		try {
+			Tree t1 = new Tree();
+			t1.put("a", 1).put("b", "2").put("c", true);
+
+			f = File.createTempFile("tmp", ".json");
+			t1.writeTo(f);
+			
+			assertEquals(t1, new Tree(f));
+			assertEquals(t1, new Tree(f, "json"));
+			
+			assertEquals(t1, new Tree(new FileInputStream(f)));
+			assertEquals(t1, new Tree(new FileInputStream(f), "json"));
+			assertEquals(t1, new Tree(new FileInputStream(f), "json", true));
+			
+			assertEquals(t1, new Tree(new FileInputStream(f).getChannel()));
+			assertEquals(t1, new Tree(new FileInputStream(f).getChannel(), "json"));
+			assertEquals(t1, new Tree(new FileInputStream(f).getChannel(), "json", true));
+
+			t1.getMeta().put("x", "y");
+			
+			f.delete();
+			t1.writeTo(new FileOutputStream(f));
+			assertEquals(t1, new Tree(f));
+			t1.writeTo(new FileOutputStream(f), "json");
+			Tree t3 = new Tree(f);
+			assertFalse(t3.hasMeta());
+			assertNull(t3.getMeta().get("x", (String) null));
+			assertEquals(t1, t3);
+			t1.writeTo(new FileOutputStream(f), "json", true, true);
+			Tree t2 = new Tree(f);
+			assertEquals("y", t2.getMeta().get("x", ""));
+			assertEquals(t1, t2);
+			
+			f.delete();
+			t1.writeTo(new FileOutputStream(f).getChannel());
+			assertEquals(t1, new Tree(f));
+			t1.writeTo(new FileOutputStream(f).getChannel(), "json");
+			Tree t4 = new Tree(f);
+			assertFalse(t4.hasMeta());
+			assertNull(t4.getMeta().get("x", (String) null));
+			assertEquals(t1, t4);
+			t1.writeTo(new FileOutputStream(f).getChannel(), null, true, true);
+			Tree t5 = new Tree(f);
+			assertEquals("y", t5.getMeta().get("x", ""));
+			assertEquals(t1, t2);
+			
+			f.delete();
+			t1.writeTo(f.getAbsolutePath());
+			assertEquals(t1, new Tree(f));
+			
+		} finally {
+			if (f != null) {
+				f.delete();
+			}
+		}
+	}
+	
 	@Test
 	public void testGetObjectWithNullDefault() throws Exception {
 		Tree t = new Tree();
