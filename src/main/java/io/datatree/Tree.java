@@ -435,7 +435,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @throws Exception
 	 *             any data format exception
 	 */
-	public Tree(InputStream source, String format, boolean closeStream) throws Exception {
+	public Tree(InputStream source, String format, boolean closeSource) throws Exception {
 		try {
 			byte[] bytes = new byte[0];
 			byte[] packet = new byte[4096];
@@ -448,7 +448,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 			}
 			initFromBytes(bytes, format);
 		} finally {
-			if (closeStream && source != null) {
+			if (closeSource && source != null) {
 				try {
 					source.close();
 				} catch (Exception ignored) {
