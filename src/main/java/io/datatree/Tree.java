@@ -2443,7 +2443,7 @@ public class Tree implements Iterable<Tree>, Cloneable, Serializable {
 	 * @return container node
 	 */
 	public Tree putObject(String path, Object value, boolean putIfAbsent) {
-		return putObjectInternal(path, getNodeValue(value), false);
+		return putObjectInternal(path, getNodeValue(value), putIfAbsent);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
