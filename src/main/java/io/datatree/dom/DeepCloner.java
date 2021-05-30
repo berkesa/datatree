@@ -96,7 +96,7 @@ public class DeepCloner {
 		// Cloning Maps
 		if (from instanceof Map) {
 			Map<Object, Object> fromMap = (Map<Object, Object>) from;
-			Map<Object, Object> toMap = new LinkedHashMap<Object, Object>(fromMap.size() + 1, 1);
+			Map<Object, Object> toMap = new LinkedHashMap<>(fromMap.size() + 1, 1);
 			for (Map.Entry<Object, Object> entry : fromMap.entrySet()) {
 				toMap.put(entry.getKey(), clone(entry.getValue()));
 			}

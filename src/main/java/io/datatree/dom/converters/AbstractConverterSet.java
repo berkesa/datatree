@@ -174,7 +174,7 @@ abstract class AbstractConverterSet {
 	}
 
 	protected static final LinkedHashMap<Object, Object> toMap(Object from) {
-		LinkedHashMap<Object, Object> map = new LinkedHashMap<Object, Object>();
+		LinkedHashMap<Object, Object> map = new LinkedHashMap<>();
 		if (from instanceof Collection) {
 			int count = 0;
 			for (Object value : (Collection<?>) from) {

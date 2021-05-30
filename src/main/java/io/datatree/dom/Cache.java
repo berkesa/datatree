@@ -53,7 +53,7 @@ public class Cache<K, V> {
 	 */
 	public Cache(int capacity) {
 
-		// Create Map
+		// Insertion-order is thread safe, access-order is not
 		map = new LinkedHashMap<K, V>(capacity, 1.0f, false) {
 
 			private static final long serialVersionUID = 5994447707758047152L;
@@ -91,6 +91,20 @@ public class Cache<K, V> {
 		}
 	}
 
+	public V putIfAbsent(K key, V value) {
+		V prev;
+		writeLock.lock();
+		try {
+			prev = map.putIfAbsent(key, value);
+		} finally {
+			writeLock.unlock();
+		}
+		if (prev == null) {
+			return value;
+		}
+		return prev;
+	}
+	
 	public void remove(K key) {
 		writeLock.lock();
 		try {

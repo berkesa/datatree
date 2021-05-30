@@ -372,7 +372,7 @@ public class JsonBuiltin extends AbstractTextAdapter {
 		if (src.ch == '{') {
 			src.idx++;
 		}
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		String childName;
 		for (; src.idx <= src.last; src.idx++) {
 			skipWhitespaces(src);
