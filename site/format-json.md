@@ -12,14 +12,14 @@ DataTree will use Jackson's Object Mapper to read/write JSON documents.
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
 </dependency>
 
 <!-- JACKSON JSON API -->
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
-    <version>2.11.3</version>
+    <version>2.12.3</version>
 </dependency>
 ``` 
 
@@ -84,7 +84,7 @@ static {
 
 ::: warning BSON dependencies
 To use BSON JSON API, add the following dependency to the build script:  
-[group: 'org.mongodb', name: 'bson', version: '3.12.1'](https://mvnrepository.com/artifact/org.mongodb/bson)
+[group: 'org.mongodb', name: 'bson', version: '4.2.3'](https://mvnrepository.com/artifact/org.mongodb/bson)
 :::
 
 ### Using DSLJson API
@@ -109,7 +109,7 @@ static {
 
 ::: warning DSLJson dependencies
 To use DSLJson JSON API, add the following dependency to the build script:  
-[group: 'com.dslplatform', name: 'dsl-json', version: '1.9.5'](https://mvnrepository.com/artifact/com.dslplatform/dsl-json)
+[group: 'com.dslplatform', name: 'dsl-json', version: '1.9.8'](https://mvnrepository.com/artifact/com.dslplatform/dsl-json)
 :::
 
 ### Using FastJson API
@@ -134,7 +134,7 @@ static {
 
 ::: warning FastJson dependencies
 To use FastJson JSON API, add the following dependency to the build script:  
-[group: 'com.alibaba', name: 'fastjson', version: '1.2.73'](https://mvnrepository.com/artifact/com.alibaba/fastjson)
+[group: 'com.alibaba', name: 'fastjson', version: '1.2.76'](https://mvnrepository.com/artifact/com.alibaba/fastjson)
 :::
 
 ### Using Flexjson API
@@ -215,7 +215,7 @@ static {
 
 ::: warning Gson dependencies
 To use Gson JSON API, add the following dependency to the build script:  
-[group: 'com.google.code.gson', name: 'gson', version: '2.8.6'](https://mvnrepository.com/artifact/com.google.code.gson/gson)
+[group: 'com.google.code.gson', name: 'gson', version: '2.8.7'](https://mvnrepository.com/artifact/com.google.code.gson/gson)
 :::
 
 ### Using Jackson JSON API
@@ -241,7 +241,7 @@ static {
 
 ::: warning Jackson dependencies
 To use Jackson JSON API, add the following dependency to the build script:  
-[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind)
+[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind)
 :::
 
 ### Using Jodd JSON API
@@ -267,7 +267,7 @@ static {
 
 ::: warning Jodd dependencies
 To use Jodd JSON API, add the following dependency to the build script:  
-[group: 'org.jodd', name: 'jodd-json', version: '6.0.1'](https://mvnrepository.com/artifact/org.jodd/jodd-json)
+[group: 'org.jodd', name: 'jodd-json', version: '6.0.3'](https://mvnrepository.com/artifact/org.jodd/jodd-json)
 :::
 
 ### Using Apache Johnzon API
@@ -295,7 +295,7 @@ static {
 
 ::: warning Johnzon dependencies
 To use Johnzon JSON API, add the following dependency to the build script:  
-[group: 'org.apache.johnzon', name: 'johnzon-mapper', version: '1.2.8'](https://mvnrepository.com/artifact/org.apache.johnzon/johnzon-mapper)
+[group: 'org.apache.johnzon', name: 'johnzon-mapper', version: '1.2.12'](https://mvnrepository.com/artifact/org.apache.johnzon/johnzon-mapper)
 :::
 
 ### Using JsonIO API
@@ -346,7 +346,7 @@ static {
 
 ::: warning NanoJson dependencies
 To use NanoJson JSON API, add the following dependency to the build script:  
-[group: 'com.grack', name: 'nanojson', version: '1.6'](https://mvnrepository.com/artifact/com.grack/nanojson)
+[group: 'com.grack', name: 'nanojson', version: '1.7'](https://mvnrepository.com/artifact/com.grack/nanojson)
 :::
 
 ### Using JSON.simple API
@@ -397,7 +397,7 @@ static {
 
 ::: warning Json-smart dependencies
 To use Json-smart JSON API, add the following dependency to the build script:  
-[group: 'net.minidev', name: 'json-smart', version: '2.3'](https://mvnrepository.com/artifact/net.minidev/json-smart)
+[group: 'net.minidev', name: 'json-smart', version: '2.4.7'](https://mvnrepository.com/artifact/net.minidev/json-smart)
 :::
 
 ### Using SOJO JSON API
@@ -547,14 +547,14 @@ Add Boon and Jackson to your pom.xml:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.13</version>
+    <version>1.0.15</version>
 </dependency>
 
 <!-- JACKSON JSON API -->
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
-    <version>2.11.3</version>
+    <version>2.12.3</version>
 </dependency>
 
 <!-- BOON JSON API -->

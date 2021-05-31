@@ -14,7 +14,7 @@ If you use Maven, add the following dependency to your pom.xml:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-promise</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 </dependency>
 ```
 

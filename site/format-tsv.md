@@ -14,14 +14,14 @@ Add DataTree Adapters and OpenCSV JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
 </dependency>
 
 <!-- CSV API -->
 <dependency>
-    <groupId>net.sf.opencsv</groupId>
+    <groupId>com.opencsv</groupId>
     <artifactId>opencsv</artifactId>
-    <version>2.3</version>
+    <version>5.4</version>
 </dependency>
 ```
 

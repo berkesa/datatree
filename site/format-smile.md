@@ -13,14 +13,14 @@ Add DataTree Adapters and SMILE JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
 </dependency>
 
 <!-- SMILE API -->
 <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
     <artifactId>jackson-dataformat-smile</artifactId>
-    <version>2.11.3</version>
+    <version>2.12.3</version>
 </dependency>
 ```
 

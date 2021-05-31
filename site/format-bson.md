@@ -14,14 +14,14 @@ Add DataTree Adapters and BSON JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
 </dependency>
 
 <!-- BSON API -->
 <dependency>
     <groupId>de.undercouch</groupId>
     <artifactId>bson4jackson</artifactId>
-    <version>2.11.0</version>
+    <version>2.12.0</version>
 </dependency>
 ```
 

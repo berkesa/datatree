@@ -16,7 +16,7 @@ just add DataTree Adapters and MessagePack JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
 </dependency>
 
 <!-- MESSAGEPACK API -->
@@ -47,4 +47,4 @@ byte[] msgpack = document.toBinary("msgpack");
 | API Name            | Adapter Class | Dependency |
 | ------------------- | ------------- | ---------- |
 | MessagePack | MsgPackOrg | [group: 'org.msgpack', name: 'msgpack', version: '0.6.12'](https://mvnrepository.com/artifact/org.msgpack/msgpack) |
-| Jackson MsgPack | MsgPackJackson | [group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.8.21'](https://mvnrepository.com/artifact/org.msgpack/jackson-dataformat-msgpack) | 
+| Jackson MsgPack | MsgPackJackson | [group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.8.24'](https://mvnrepository.com/artifact/org.msgpack/jackson-dataformat-msgpack) | 

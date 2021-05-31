@@ -16,7 +16,7 @@ If DataTree detects Toml4j API on classpath, DataTree will use Toml4j API to rea
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
 </dependency>
 
 <!-- TOML4J API -->
