@@ -21,7 +21,6 @@ configurations {
     ecj
 }
 
-
 // --- REPOSITORIES ---
 
 repositories {
