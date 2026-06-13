@@ -1,4 +1,15 @@
+# Maven
+/target/
+
+# Legacy Gradle (kept ignored so stale caches/outputs never get committed)
 /build/
-/bin/
 /.gradle/
+
+# IDE / Eclipse
+/bin/
+.classpath
+.project
+.settings/
+
+# Docs
 /docs/pics/

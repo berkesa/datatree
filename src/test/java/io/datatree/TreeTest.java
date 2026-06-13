@@ -60,20 +60,25 @@ import org.bson.types.Code;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 import org.bson.types.Symbol;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 import io.datatree.dom.Config;
 import io.datatree.dom.TreeReaderRegistry;
 import io.datatree.dom.TreeWriterRegistry;
 import io.datatree.dom.builtin.JsonBuiltin;
-import junit.framework.TestCase;
 
 /**
  * Tree JUnit test cases.
- * 
+ *
  * @author Andras Berkes [andras.berkes@programmer.net]
  */
-public class TreeTest extends TestCase {
+public class TreeTest {
 
 	// --- SUPPORTED DATE / TIME FORMATS ---
 
@@ -116,48 +121,48 @@ public class TreeTest extends TestCase {
 			f = File.createTempFile("tmp", ".json");
 			t1.writeTo(f);
 			
-			assertEquals(t1, new Tree(f));
-			assertEquals(t1, new Tree(f, "json"));
+			assertTreeEquals(t1, new Tree(f));
+			assertTreeEquals(t1, new Tree(f, "json"));
 			
-			assertEquals(t1, new Tree(new FileInputStream(f)));
-			assertEquals(t1, new Tree(new FileInputStream(f), "json"));
-			assertEquals(t1, new Tree(new FileInputStream(f), "json", true));
+			assertTreeEquals(t1, new Tree(new FileInputStream(f)));
+			assertTreeEquals(t1, new Tree(new FileInputStream(f), "json"));
+			assertTreeEquals(t1, new Tree(new FileInputStream(f), "json", true));
 			
-			assertEquals(t1, new Tree(new FileInputStream(f).getChannel()));
-			assertEquals(t1, new Tree(new FileInputStream(f).getChannel(), "json"));
-			assertEquals(t1, new Tree(new FileInputStream(f).getChannel(), "json", true));
+			assertTreeEquals(t1, new Tree(new FileInputStream(f).getChannel()));
+			assertTreeEquals(t1, new Tree(new FileInputStream(f).getChannel(), "json"));
+			assertTreeEquals(t1, new Tree(new FileInputStream(f).getChannel(), "json", true));
 
 			t1.getMeta().put("x", "y");
 			
 			f.delete();
 			t1.writeTo(new FileOutputStream(f));
-			assertEquals(t1, new Tree(f));
+			assertTreeEquals(t1, new Tree(f));
 			t1.writeTo(new FileOutputStream(f), "json");
 			Tree t3 = new Tree(f);
 			assertFalse(t3.hasMeta());
 			assertNull(t3.getMeta().get("x", (String) null));
-			assertEquals(t1, t3);
+			assertTreeEquals(t1, t3);
 			t1.writeTo(new FileOutputStream(f), "json", true, true);
 			Tree t2 = new Tree(f);
 			assertEquals("y", t2.getMeta().get("x", ""));
-			assertEquals(t1, t2);
+			assertTreeEquals(t1, t2);
 			
 			f.delete();
 			t1.writeTo(new FileOutputStream(f).getChannel());
-			assertEquals(t1, new Tree(f));
+			assertTreeEquals(t1, new Tree(f));
 			t1.writeTo(new FileOutputStream(f).getChannel(), "json");
 			Tree t4 = new Tree(f);
 			assertFalse(t4.hasMeta());
 			assertNull(t4.getMeta().get("x", (String) null));
-			assertEquals(t1, t4);
+			assertTreeEquals(t1, t4);
 			t1.writeTo(new FileOutputStream(f).getChannel(), null, true, true);
 			Tree t5 = new Tree(f);
 			assertEquals("y", t5.getMeta().get("x", ""));
-			assertEquals(t1, t2);
+			assertTreeEquals(t1, t2);
 			
 			f.delete();
 			t1.writeTo(f.getAbsolutePath());
-			assertEquals(t1, new Tree(f));
+			assertTreeEquals(t1, new Tree(f));
 			
 		} finally {
 			if (f != null) {
@@ -195,7 +200,7 @@ public class TreeTest extends TestCase {
 	  Tree t = new Tree();
 	  t.put("test", test);
 	  Tree t2 = new Tree(t.toString());
-	  assertEquals(t, t2);
+	  assertTreeEquals(t, t2);
 	  String test2 = t2.get("test", "");
 	  assertEquals(test, test2);
 	}
@@ -752,6 +757,7 @@ public class TreeTest extends TestCase {
 
 	// --- VALUE SETTERS / GETTERS ---
 
+	@Test
 	public void testPutToArray() throws Exception {
 
 		Tree t = new Tree();
@@ -1329,7 +1335,7 @@ public class TreeTest extends TestCase {
 		t2.get("a").setType(Integer.class);
 		assertTrue(t1.equals(t2));
 
-		assertEquals(new Tree(JSON), new Tree(new Tree(JSON).toString()));
+		assertTreeEquals(new Tree(JSON), new Tree(new Tree(JSON).toString()));
 	}
 
 	@Test
@@ -2331,7 +2337,7 @@ public class TreeTest extends TestCase {
 
 	// --- TEST SIMILAR / SAME NODE ---
 
-	private final void assertEquals(Tree n1, Tree n2) {
+	private final void assertTreeEquals(Tree n1, Tree n2) {
 		assertEquals(n1.getName(), n2.getName());
 		String t1 = n1.toString("debug");
 		String t2 = n2.toString("debug");

@@ -1,0 +1,11 @@
+{
+	"java.configuration.updateBuildConfiguration": "automatic",
+	"java.compile.nullAnalysis.mode": "automatic",
+	"maven.executable.preferMavenWrapper": false,
+	"files.exclude": {
+		"**/target": true,
+		"**/.classpath": true,
+		"**/.project": true,
+		"**/.settings": true
+	}
+}

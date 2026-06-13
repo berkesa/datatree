@@ -17,17 +17,19 @@
  */
 package io.datatree;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
 
 import io.datatree.dom.Cache;
-import junit.framework.TestCase;
 
 /**
  * Memory cache tests.
- * 
+ *
  * @author Andras Berkes [andras.berkes@programmer.net]
  */
-public class CacheTest extends TestCase {
+public class CacheTest {
 
 	@Test
 	public void testCache() throws Exception {

@@ -17,18 +17,18 @@
  */
 package io.datatree.dom;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Set;
 
-import org.junit.Test;
-
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * PackageScanner JUnit test cases.
- * 
+ *
  * @author Andras Berkes [andras.berkes@programmer.net]
  */
-public class ScannerTest extends TestCase {
+public class ScannerTest {
 
 	@Test
 	public void testScanner() throws Exception {
