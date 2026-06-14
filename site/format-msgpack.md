@@ -7,23 +7,22 @@ and typical short strings require only one extra byte in addition to the strings
 
 ## Dependencies
 
-DataTree API supports 2 MessagePack implementations. For example,
-to use the official MessagePack API,
-just add DataTree Adapters and MessagePack JARs to the classpath: 
+To use the MessagePack format, just add DataTree Adapters and the
+Jackson MessagePack JARs to the classpath: 
 
 ```xml
 <!-- DATATREE API -->
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.15</version>
+    <version>2.0.0</version>
 </dependency>
 
 <!-- MESSAGEPACK API -->
 <dependency>
     <groupId>org.msgpack</groupId>
-    <artifactId>msgpack</artifactId>
-    <version>0.6.12</version>
+    <artifactId>jackson-dataformat-msgpack</artifactId>
+    <version>0.9.9</version>
 </dependency>
 ``` 
 
@@ -42,9 +41,8 @@ document.put("host", InetAddress.getLocalHost());
 byte[] msgpack = document.toBinary("msgpack");
 ```
 
-## Required dependencies of MessagePack adapters
+## Required dependencies of MessagePack adapter
 
 | API Name            | Adapter Class | Dependency |
 | ------------------- | ------------- | ---------- |
-| MessagePack | MsgPackOrg | [group: 'org.msgpack', name: 'msgpack', version: '0.6.12'](https://mvnrepository.com/artifact/org.msgpack/msgpack) |
-| Jackson MsgPack | MsgPackJackson | [group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.8.24'](https://mvnrepository.com/artifact/org.msgpack/jackson-dataformat-msgpack) | 
+| Jackson MsgPack | MsgPackJackson | [group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.9.9'](https://mvnrepository.com/artifact/org.msgpack/jackson-dataformat-msgpack) | 

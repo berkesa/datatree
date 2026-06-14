@@ -6,10 +6,10 @@ actionText: See the Documentation →
 actionLink: introduction.md
 tagline: Java Library for manipulating hierarchical data structures
 features:
-- title: Data Manipulation
-  details: DataTree supports more than 15 different data formats (JSON, YAML, XML, TOML, BSON, CSV and more).
-- title: Non-blocking API
-  details: DataTree lets you process data asynchronously in high-performance applications.
-- title: Template Engine
-  details: DataTree works as a small and fast template engine that can create html, xml and plain text files.
+- title: One universal type
+  details: Everything is a Tree node - no type casting. Build, read, merge, filter, iterate and clone hierarchical data with a single, consistent API.
+- title: Many formats
+  details: Read and write the same document as JSON, YAML, XML, TOML, CSV and Java Properties, or as binary CBOR, BSON, SMILE, MessagePack and more.
+- title: Pluggable backends
+  details: DataTree is not another JSON parser - it is an API layer over existing implementations, so you can swap the underlying engine without changing your code.
 ---

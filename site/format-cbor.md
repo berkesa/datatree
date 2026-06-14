@@ -16,14 +16,14 @@ Add DataTree Adapters and CBOR JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.15</version>
+    <version>2.0.0</version>
 </dependency>
 
 <!-- CBOR API -->
 <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
     <artifactId>jackson-dataformat-cbor</artifactId>
-    <version>2.12.3</version>
+    <version>2.19.0</version>
 </dependency>
 ``` 
 

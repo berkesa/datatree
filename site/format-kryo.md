@@ -16,14 +16,14 @@ To use the Kryo API, add Kryo Adapters and Kryo JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.15</version>
+    <version>2.0.0</version>
 </dependency>
 
 <!-- KRYO API -->
 <dependency>
     <groupId>com.esotericsoftware</groupId>
     <artifactId>kryo</artifactId>
-    <version>5.1.1</version>
+    <version>5.6.2</version>
 </dependency>
 ``` 
 

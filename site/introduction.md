@@ -38,7 +38,7 @@ The DataTree Core API contains the complete Tree toolkit, and one built-in JSON 
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-core</artifactId>
-    <version>1.1.2</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -46,8 +46,8 @@ The DataTree Core API contains the complete Tree toolkit, and one built-in JSON 
 
 ## Features
 
-- DataTree API supports 18 popular JSON implementations (Jackson, Gson, Boon, Jodd, FastJson, etc.)
-- DataTree API supports 10 other (non-JSON) formats (YAML, ION, BSON, MessagePack, etc.)
+- DataTree API supports several popular JSON implementations (Apache Jackson, Google Gson, and more)
+- DataTree API supports many other (non-JSON) formats (YAML, XML, TOML, CSV, ION, BSON, CBOR, MessagePack, etc.)
 - Single universal type (no type casting, everything is a `Tree`)
 - JSON path functions (`tree.get("cities[2].location")`)
 - Easy iteration over Java Collections and Maps (`for (Tree child: parent)`)
@@ -72,30 +72,23 @@ add the following dependency instead of the "datatree-core":
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.15</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 Supported JSON APIs:
 
 - Apache Jackson
-- Boon JSON API
-- FastJson
-- JsonIO
 - Google Gson
+- JsonIO
 - BSON ("extended JSON")
 - DSLJson
-- Flexjson
 - Genson
 - Jodd Json
 - Apache Johnzon
 - NanoJson
-- JSON.simple
 - Json-smart
-- SOJO
-- JsonUtil
 - Amazon Ion
-- Json-iterator
 
 Supported non-JSON text formats:
 
@@ -105,7 +98,6 @@ Supported non-JSON text formats:
 - Java Properties
 - CSV
 - TSV
-- XML-RPC
 
 Supported binary formats:
 
@@ -119,7 +111,7 @@ Supported binary formats:
 
 ## Requirements
 
-The DataTree API requires Java 8.
+The DataTree API requires Java 21.
 
 ## License
 

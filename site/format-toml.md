@@ -7,7 +7,7 @@ TOML is used in a number of software projects, and is implemented in a large num
 
 ## Dependencies
 
-DataTree API supports 3 TOML implementations.
+DataTree API supports 2 TOML implementations.
 For example, to use Toml4j's version, just add Toml4j JARs to the classpath.
 If DataTree detects Toml4j API on classpath, DataTree will use Toml4j API to read/write TOML documents.
 
@@ -16,7 +16,7 @@ If DataTree detects Toml4j API on classpath, DataTree will use Toml4j API to rea
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>1.0.15</version>
+    <version>2.0.0</version>
 </dependency>
 
 <!-- TOML4J API -->
@@ -49,10 +49,6 @@ implementation is adjustable with the following System Properties:
 
 ```
 // Using JToml API:
--Ddatatree.toml.reader=io.datatree.dom.adapters.TomlJtoml
--Ddatatree.toml.writer=io.datatree.dom.adapters.TomlJtoml
-
-// Using JToml2 API:
 -Ddatatree.toml.reader=io.datatree.dom.adapters.TomlJtoml2
 -Ddatatree.toml.writer=io.datatree.dom.adapters.TomlJtoml2
 
@@ -65,6 +61,5 @@ implementation is adjustable with the following System Properties:
 
 | API Name            | Adapter Class | Dependency |
 | ------------------- | ------------- | ---------- |
-| JToml | TomlJtoml | [group: 'me.grison', name: 'jtoml', version: '1.0.0'](https://mvnrepository.com/artifact/me.grison/jtoml) |
 | JToml | TomlJtoml2 | [group: 'io.ous', name: 'jtoml', version: '2.0.0'](https://mvnrepository.com/artifact/io.ous/jtoml) |
 | Toml4j | TomlToml4j | [group: 'com.moandjiezana.toml', name: 'toml4j', version: '0.7.2'](https://mvnrepository.com/artifact/com.moandjiezana.toml/toml4j) | 

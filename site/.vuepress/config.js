@@ -57,8 +57,11 @@ module.exports = {
 				title: 'DataTree Core API',
 				sidebarDepth: 2,
 				children: [
-					['introduction', 'Introduction'],
-					['manipulation', 'Data Manipulation']
+					['introduction',   'Introduction'],
+					['manipulation',   'Data Manipulation'],
+					['reading-values', 'Reading values'],
+					['collections',    'Maps, lists, sets & nested structures'],
+					['serialization',  'Serialization & I/O']
 				]
 			},
 			{
@@ -86,23 +89,6 @@ module.exports = {
 					['format-java',        'Java Serialization'],
 					['format-kryo',        'Kryo'],
 					['performance-binary', 'Performance of binary APIs']
-				]
-			},
-			{
-				title: 'DataTree template engine',
-				sidebarDepth: 2,
-				children: [
-					['template-introduction', 'Introduction'],
-					['template-usage',        'Usage of the Engine'],
-					['template-syntax',       'Syntax of templates']
-				]
-			},
-			{
-				title: 'Asynchronous data processing',
-				sidebarDepth: 2,
-				children: [
-					['promise-introduction', 'Introduction'],
-					['promise-usage',        'Usage of the Promises']
 				]
 			}
 		]
