@@ -10,7 +10,7 @@ This repo is the **core** artifact. It ships only the built-in adapters (JSON, J
 
 ## Build & Test
 
-Maven build (`pom.xml`), compiled with **`javac`** via `maven-compiler-plugin` targeting **Java 21** (`<maven.compiler.release>21</maven.compiler.release>`). The old Gradle 4.2 build and the forked **Eclipse JDT compiler (ECJ)** are gone. Version is `2.0.0` (`2.0.0-SNAPSHOT` while developing).
+Maven build (`pom.xml`), compiled with **`javac`** via `maven-compiler-plugin` targeting **Java 21** (`<maven.compiler.release>21</maven.compiler.release>`). Version is `2.0.0` (`2.0.0-SNAPSHOT` while developing).
 
 ```bash
 mvn clean verify             # compile + test + jar (the full check)
