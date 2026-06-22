@@ -445,6 +445,22 @@ final class BasicConverterSet extends AbstractConverterSet {
 			return false;
 		});
 
+		// --- VALUE TO CHARACTER CONVERTERS ---
+
+		register(Character.class, (from) -> {
+			if (from instanceof Number) {
+				return (char) ((Number) from).intValue();
+			}
+			String txt = String.valueOf(from);
+			return txt.isEmpty() ? (char) 0 : txt.charAt(0);
+		});
+		register(Character.class, String.class, (from) -> {
+			return from.isEmpty() ? (char) 0 : from.charAt(0);
+		});
+		register(Character.class, Boolean.class, (from) -> {
+			return from ? '1' : '0';
+		});
+
 		// --- VALUE TO DATE CONVERTERS ---
 
 		register(Date.class, (from) -> {

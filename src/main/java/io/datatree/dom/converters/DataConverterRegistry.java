@@ -53,6 +53,21 @@ public class DataConverterRegistry extends AbstractConverterSet {
 
 	private static final HashSet<Class<?>> unquotedClasses = new HashSet<>(64);
 
+	// --- PRIMITIVE -> WRAPPER MAP ---
+
+	private static final HashMap<Class<?>, Class<?>> primitiveWrappers = new HashMap<>(16);
+
+	static {
+		primitiveWrappers.put(Boolean.TYPE, Boolean.class);
+		primitiveWrappers.put(Byte.TYPE, Byte.class);
+		primitiveWrappers.put(Character.TYPE, Character.class);
+		primitiveWrappers.put(Short.TYPE, Short.class);
+		primitiveWrappers.put(Integer.TYPE, Integer.class);
+		primitiveWrappers.put(Long.TYPE, Long.class);
+		primitiveWrappers.put(Float.TYPE, Float.class);
+		primitiveWrappers.put(Double.TYPE, Double.class);
+	}
+
 	// --- LOAD CONVERTER SETS ---
 
 	static {
@@ -60,6 +75,12 @@ public class DataConverterRegistry extends AbstractConverterSet {
 		// Load converters for basic Java types
 		try {
 			Class.forName("io.datatree.dom.converters.BasicConverterSet");
+		} catch (Throwable ignored) {
+		}
+
+		// Load converters for java.time (JSR-310) object types
+		try {
+			Class.forName("io.datatree.dom.converters.TimeConverterSet");
 		} catch (Throwable ignored) {
 		}
 
@@ -122,6 +143,17 @@ public class DataConverterRegistry extends AbstractConverterSet {
 		// Convert "null" String to null
 		if ("null".equals(from)) {
 			return null;
+		}
+
+		// Normalize primitive target type to its wrapper class
+		// (converters are registered under wrapper classes, never under
+		// primitive "X.TYPE" classes)
+		if (to.isPrimitive()) {
+			@SuppressWarnings("unchecked")
+			Class<TO> wrapper = (Class<TO>) primitiveWrappers.get(to);
+			if (wrapper != null) {
+				to = wrapper;
+			}
 		}
 
 		// Class is same
