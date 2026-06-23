@@ -9,6 +9,13 @@ response with a metadata block) but modelled on real message shapes.
 If you need the underlying method reference, see [Data Manipulation](manipulation.html) (write side)
 and [Reading values](reading-values.html) (read side).
 
+```java
+import io.datatree.Tree;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.List;
+```
+
 > **Read this gotcha first.** `putList(path)` / `putMap(path)` / `putSet(path)` return the **new
 > child container**, not the document root. Keep a reference to the root (or call `getRoot()`) when
 > you want to serialize the whole structure:

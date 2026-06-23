@@ -12,6 +12,7 @@ parent and root. There is no separate typed-node hierarchy, so you never cast.
 
 ```java
 import io.datatree.Tree;
+import java.util.Comparator;
 ```
 
 ## Creating a Tree
@@ -378,6 +379,40 @@ System.out.println(original.get("user.name").asString());   // Alice
 System.out.println(copy.get("user.name").asString());       // Bob
 ```
 
+## Sorting
+
+`sort()` reorders the sub-nodes of the current node **in place**. For a list or set it sorts the
+**values** — numeric order when every element is a number, otherwise case-insensitive alphanumeric
+order:
+
+```java
+Tree node = new Tree();
+node.putList("scores").add(3).add(1).add(2);
+node.get("scores").sort();
+// { "scores":[1,2,3] }
+```
+
+For a map it sorts by **key name** (case-insensitive):
+
+```java
+Tree node = new Tree().put("c", 1).put("a", 1).put("b", 1);
+node.sort();
+// { "a":1, "b":1, "c":1 }
+```
+
+`sort(Comparator<Tree>)` sorts by a custom comparator — the usual way to order an array of objects by
+one of their fields:
+
+```java
+Tree root  = new Tree();
+Tree users = root.putList("users");
+users.addMap().put("name", "Bob").put("age", 30);
+users.addMap().put("name", "Alice").put("age", 25);
+
+root.get("users").sort(Comparator.comparingInt(user -> user.get("age", 0)));
+// { "users":[ { "name":"Alice","age":25 }, { "name":"Bob","age":30 } ] }
+```
+
 ## Quick reference — building &amp; modifying
 
 | Method | What it does |
@@ -401,5 +436,6 @@ System.out.println(copy.get("user.name").asString());       // Bob
 | `copyFrom(source[, …])` | Merge children from another node. |
 | `assign(source)` | Replace this node's value with a copy of another node's. |
 | `clone()` | Recursive deep copy. |
+| `sort()` / `sort(comparator)` | Reorder a list/set by value, or a map by key. |
 
 Continue with [Reading values](reading-values.html) to get data back out.

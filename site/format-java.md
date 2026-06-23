@@ -20,14 +20,32 @@ Add DataTree Adapters to the classpath:
 ## Reading and writing serialized data structures
 
 ```java
-// Reading serialized data structure
-byte[] bytes = " ... bytes of the document ... ";
-Tree document = new Tree(bytes, "java");
+import io.datatree.Tree;
 
-// Getting / setting values
-document.stream().limit(10).forEach(System.out::println);
-document.remove("path.to.subnode");
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Serialize Java Objects into byte array
-byte[] bytes = document.toBinary("java");
-``` 
+// Serialize the Tree with standard Java object serialization (binary):
+byte[] bytes = document.toBinary("java");   // 302 bytes
+
+// A byte array is not human-readable. To picture the structure, parse it
+// back and print it as JSON (the default text format):
+Tree reloaded = new Tree(bytes, "java");
+System.out.println(reloaded.toString(true));
+```
+
+The reparsed document as JSON:
+
+```json
+{
+  "name":"Alice",
+  "age":30,
+  "languages":[
+    "Java",
+    "Go"
+  ]
+}
+```

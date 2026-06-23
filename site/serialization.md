@@ -8,6 +8,12 @@ name and may require an extra dependency (see
 For building and reading the in-memory structure itself, see [Data Manipulation](manipulation.html)
 and [Reading values](reading-values.html).
 
+```java
+import io.datatree.Tree;
+import java.io.File;
+import java.net.URL;
+```
+
 ## To a String
 
 `toString()` (no arguments) produces **pretty-printed JSON, including the metadata block**:

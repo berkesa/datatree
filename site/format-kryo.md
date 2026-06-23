@@ -30,14 +30,32 @@ To use the Kryo API, add Kryo Adapters and Kryo JARs to the classpath:
 ## Reading and writing using Kryo adapter
 
 ```java
-// Parsing Kryo document
-byte[] bytes = " ... bytes of the Kryo document ... ";
-Tree document = new Tree(bytes, "kryo");
+import io.datatree.Tree;
 
-// Getting / setting values
-InetAddress value = document.get("host").asInetAddress();
-document.put("host", InetAddress.getLocalHost());
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating Kryo byte array from Tree
-byte[] bytes = document.toBinary("kryo");
+// Serialize the Tree to Kryo (binary):
+byte[] bytes = document.toBinary("kryo");   // 84 bytes
+
+// A byte array is not human-readable. To picture the structure, parse it
+// back and print it as JSON (the default text format):
+Tree reloaded = new Tree(bytes, "kryo");
+System.out.println(reloaded.toString(true));
+```
+
+The reparsed document as JSON:
+
+```json
+{
+  "name":"Alice",
+  "age":30,
+  "languages":[
+    "Java",
+    "Go"
+  ]
+}
 ```

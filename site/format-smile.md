@@ -27,14 +27,32 @@ Add DataTree Adapters and SMILE JARs to the classpath:
 ## Reading and writing SMILE documents
 
 ```java
-// Parsing SMILE document
-byte[] smile = " ... bytes of the SMILE document ... ";
-Tree document = new Tree(smile, "smile");
+import io.datatree.Tree;
 
-// Getting / setting values
-Date value = document.get("timestamp").asDate();
-document.put("timestamp", new Date());
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating SMILE byte array from Tree
-byte[] smile = document.toBinary("smile");
-``` 
+// Serialize the Tree to SMILE (binary):
+byte[] smile = document.toBinary("smile");   // 43 bytes
+
+// A byte array is not human-readable. To picture the structure, parse it
+// back and print it as JSON (the default text format):
+Tree reloaded = new Tree(smile, "smile");
+System.out.println(reloaded.toString(true));
+```
+
+The reparsed document as JSON:
+
+```json
+{
+  "name":"Alice",
+  "age":30,
+  "languages":[
+    "Java",
+    "Go"
+  ]
+}
+```

@@ -24,12 +24,38 @@ DataTree will use Jackson's Object Mapper to read/write JSON documents.
 ``` 
 
 ```java
-// Parsing JSON document using Jackson API
-String json = "{ ... json document ...}";
-Tree document = new Tree(json);
+import io.datatree.Tree;
 
-// Generating JSON string from Tree using Jackson API
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
+
+// Generate a JSON string from the Tree (Jackson, when it is on the classpath):
 String json = document.toString();
+System.out.println(json);
+```
+
+The printed output (JSON is the default format, so `toString()` with no arguments produces it):
+
+```json
+{
+  "name":"Alice",
+  "age":30,
+  "languages":[
+    "Java",
+    "Go"
+  ]
+}
+```
+
+Parsing a JSON string back into a `Tree` is just the constructor — no format name needed, JSON is
+the default:
+
+```java
+Tree parsed = new Tree(json);
+int age = parsed.get("age", 0);   // 30
 ```
 
 That is all. The table below shows the dependencies of the supported JSON implementations.
@@ -46,7 +72,14 @@ Set as default JSON API (using Java System Properties):
 -Ddatatree.json.writer=io.datatree.dom.adapters.JsonBson
 ```
 
-Set as default JSON API (using static methods):
+Set as default JSON API (using static methods). The registry classes and the adapters live in these
+packages (imports shown once for all the static-method examples below):
+
+```java
+import io.datatree.dom.TreeReaderRegistry;
+import io.datatree.dom.TreeWriterRegistry;
+import io.datatree.dom.adapters.JsonBson;   // ...or any other io.datatree.dom.adapters.* adapter
+```
 
 ```java
 static {
@@ -389,16 +422,16 @@ Add Gson and Jackson to your pom.xml:
 After that, DataTree will use Gson API for parsing, and Jackson for generating JSON strings.
 
 ```java
-// Parsing JSON document using Gson API
-String json = "{ ... json document ...}";
+// Parsing a JSON document (Gson reads it):
+String json = "{\"node\":{\"subnode\":{\"value\":7}}}";
 Tree document = new Tree(json);
 
-// Getting / setting values
-int number = document.get("node.subnode.subnode").asInteger();
-document.put("node.subnode.subnode", 5);
+// Getting / setting values:
+int value = document.get("node.subnode.value", 0);   // 7
+document.put("node.subnode.value", 5);
 
-// Generating JSON string from Tree using Jackson API
-String json = document.toString();
+// Generating a JSON string from the Tree (Jackson writes it):
+String out = document.toString();
 ``` 
 
 ## Performance of JSON APIs

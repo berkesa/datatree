@@ -30,14 +30,32 @@ Add DataTree Adapters and CBOR JARs to the classpath:
 ## Reading and writing CBOR documents
 
 ```java
-// Parsing CBOR document
-byte[] cbor = " ... bytes of the CBOR document ... ";
-Tree document = new Tree(cbor, "cbor");
+import io.datatree.Tree;
 
-// Getting / setting values
-int value = document.get("intValue").asInteger();
-document.put("intValue", 1);
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating CBOR byte array from Tree
-byte[] cbor = document.toBinary("cbor");
-``` 
+// Serialize the Tree to CBOR (binary):
+byte[] cbor = document.toBinary("cbor");   // 38 bytes
+
+// A byte array is not human-readable. To picture the structure, parse it
+// back and print it as JSON (the default text format):
+Tree reloaded = new Tree(cbor, "cbor");
+System.out.println(reloaded.toString(true));
+```
+
+The reparsed document as JSON:
+
+```json
+{
+  "name":"Alice",
+  "age":30,
+  "languages":[
+    "Java",
+    "Go"
+  ]
+}
+```

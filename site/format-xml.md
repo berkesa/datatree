@@ -17,16 +17,32 @@ The default (built-in) XML adapter has no dependencies.
 ## Reading and writing XML documents
 
 ```java
-// Parsing XML document
-String xml = "< ... XML document ...>";
-Tree document = new Tree(xml, "xml");
+import io.datatree.Tree;
 
-// Getting / setting values
-String value = document.get("node.subnode.subnode", "defaultValue");
-document.put("node.subnode.subnode", "newValue");
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating XML string from Tree
+// Convert the Tree to XML (the dependency-free built-in adapter is used
+// when no other XML library is on the classpath):
 String xml = document.toString("xml");
+System.out.println(xml);
+```
+
+The printed output:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<xml><name>Alice</name><age>30</age><languages><item>Java</item><item>Go</item></languages></xml>
+```
+
+Parse an XML string back into a `Tree` with the `"xml"` format name:
+
+```java
+Tree parsed = new Tree(xml, "xml");
+int age = parsed.get("age", 0);   // 30
 ```
 
 If you would like to use the Jackson or XMLStream reader/writer add the proper dependency

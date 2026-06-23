@@ -26,18 +26,40 @@ Add DataTree Adapters and OpenCSV JARs to the classpath:
  
 ## Reading and writing CSV documents
 
+CSV is **tabular**, so the document is a list of rows and each row is a list of cells (the first
+row is typically the header). Build one, then convert it to CSV text:
+
 ```java
-// Parsing CSV document
-String csv = " ... CSV document ... ";
-Tree document = new Tree(csv, "csv");
+import io.datatree.Tree;
 
-// Getting / setting values
-for (Tree row: document) {
-  for (Tree cell: row) {
-    ...
-  }
+// A table = a list of rows; each row = a list of cells. The root is a list:
+Tree table = new Tree().setList();
+table.addList().add("name").add("age").add("active");   // header row
+table.addList().add("Alice").add(30).add(true);
+table.addList().add("Bob").add(25).add(false);
+
+// Convert the Tree to CSV text:
+String csv = table.toString("csv");
+System.out.println(csv);
+```
+
+The printed output (OpenCSV quotes every field):
+
+```
+"name","age","active"
+"Alice","30","true"
+"Bob","25","false"
+```
+
+Parse a CSV string back into a `Tree`, then read a cell by row/column index, or iterate:
+
+```java
+Tree parsed = new Tree(csv, "csv");
+String cell = parsed.get(1).get(0).asString();   // "Alice" (row 1, column 0)
+
+for (Tree row : parsed) {
+    for (Tree value : row) {
+        // value.asString()
+    }
 }
-
-// Generating CSV string from Tree
-String csv = document.toString("csv");
-```  
+```

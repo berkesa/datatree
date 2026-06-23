@@ -29,16 +29,34 @@ Jackson MessagePack JARs to the classpath:
 ## Reading and writing using MessagePack adapter
 
 ```java
-// Parsing MessagePack document
-byte[] msgpack = " ... bytes of the MessagePack document ... ";
-Tree document = new Tree(msgpack, "msgpack");
+import io.datatree.Tree;
 
-// Getting / setting values
-InetAddress value = document.get("host").asInetAddress();
-document.put("host", InetAddress.getLocalHost());
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating MessagePack byte array from Tree
-byte[] msgpack = document.toBinary("msgpack");
+// Serialize the Tree to MessagePack (binary):
+byte[] msgpack = document.toBinary("msgpack");   // 36 bytes
+
+// A byte array is not human-readable. To picture the structure, parse it
+// back and print it as JSON (the default text format):
+Tree reloaded = new Tree(msgpack, "msgpack");
+System.out.println(reloaded.toString(true));
+```
+
+The reparsed document as JSON:
+
+```json
+{
+  "name":"Alice",
+  "age":30,
+  "languages":[
+    "Java",
+    "Go"
+  ]
+}
 ```
 
 ## Required dependencies of MessagePack adapter

@@ -30,18 +30,32 @@ If DataTree detects Toml4j API on classpath, DataTree will use Toml4j API to rea
 ## Reading and writing TOML documents
 
 ```java
-// Parsing TOML document
-String toml = " ... TOML document ... ";
-Tree document = new Tree(toml, "toml");
+import io.datatree.Tree;
 
-// Getting / setting values
-document.get("subObject").forEach((child) -> {
-  ...
-});
-document.putList("newList").add(1).add(2).add(3);
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating TOML string from Tree
+// Convert the Tree to TOML text (Toml4j, which provides the writer):
 String toml = document.toString("toml");
+System.out.println(toml);
+```
+
+The printed output:
+
+```toml
+name = "Alice"
+age = 30
+languages = ["Java", "Go"]
+```
+
+Parse a TOML string back into a `Tree` with the `"toml"` format name:
+
+```java
+Tree parsed = new Tree(toml, "toml");
+String name = parsed.get("name", "");   // "Alice"
 ```
 
 If there is more than one TOML implementation on classpath, the preferred

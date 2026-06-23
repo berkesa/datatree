@@ -8,6 +8,12 @@ shapes see [Maps, lists, sets &amp; nested structures](collections.html).
 The getters described here **never mutate** the node — they read the value and (when needed) convert
 a copy of it.
 
+```java
+import io.datatree.Tree;
+import java.util.List;
+import java.math.BigDecimal;
+```
+
 ## Raw vs. converted values
 
 `asObject()` returns the underlying Java value, untouched:
@@ -57,6 +63,48 @@ node.get("missing");   // null
 ```java
 node.isExists("a");        // true
 node.isExists("missing");  // false
+```
+
+Paths are JavaScript-like: a **dot** steps into an object, and **`[index]`** steps into an array.
+Mixing the two in a single expression is how you reach deep into a hierarchical document (these are
+the "JSON path" functions). Take an order with a nested `customer` object and an `items` array of
+objects:
+
+```java
+Tree order = new Tree();
+order.put("customer.name", "Alice");
+order.put("customer.city", "Phoenix");
+Tree items = order.putList("items");
+items.addMap().put("sku", "A-1").put("qty", 2);
+items.addMap().put("sku", "B-7").put("qty", 5);
+```
+
+```json
+{
+  "customer":{
+    "name":"Alice",
+    "city":"Phoenix"
+  },
+  "items":[
+    {
+      "sku":"A-1",
+      "qty":2
+    },
+    {
+      "sku":"B-7",
+      "qty":5
+    }
+  ]
+}
+```
+
+Any value is then one path expression away — combine object keys and array indices freely:
+
+```java
+order.get("customer.name").asString();   // "Alice"  — object navigation
+order.get("items[0].sku").asString();    // "A-1"    — array index + field
+order.get("items[1].qty").asInteger();   // 5
+order.get("items[0].qty", 0);            // 2        — null-safe read by path
 ```
 
 ### Null-safe defaults
@@ -158,6 +206,21 @@ Tree b = node.get("b");
 
 b.getPreviousSibling().getName();   // "a"
 b.getNextSibling().getName();       // "c"
+```
+
+## Finding a child
+
+`find(Predicate<Tree>)` walks the children and returns the **first** one that matches the predicate,
+or `null` if none do — the read-side counterpart of `remove(Predicate)`:
+
+```java
+Tree root  = new Tree();
+Tree users = root.putList("users");
+users.addMap().put("name", "Alice").put("role", "user");
+users.addMap().put("name", "Bob").put("role", "admin");
+
+Tree admin   = root.get("users").find(user -> "admin".equals(user.get("role", "")));
+String name  = admin == null ? "n/a" : admin.get("name").asString();   // "Bob"
 ```
 
 ## Inspecting the type

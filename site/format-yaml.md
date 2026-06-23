@@ -33,18 +33,34 @@ DataTree will use SnakeYAML API to read/write YAML documents.
 ## Reading and writing YAML documents
 
 ```java
-// Parsing YAML document
-String yaml = " ... YAML document ... ";
-Tree document = new Tree(yaml, "yaml");
+import io.datatree.Tree;
 
-// Getting / setting values
-for (Tree child: document.get("listOfItems")) {
-  ...
-}
-document.clear("listOfItems");
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating YAML string from Tree
+// Convert the Tree to YAML text (SnakeYAML, when it is on the classpath):
 String yaml = document.toString("yaml");
+System.out.println(yaml);
+```
+
+The printed output:
+
+```yaml
+name: Alice
+age: 30
+languages:
+- Java
+- Go
+```
+
+Parse a YAML string back into a `Tree` with the `"yaml"` format name:
+
+```java
+Tree parsed = new Tree(yaml, "yaml");
+String first = parsed.get("languages[0]", "");   // "Java"
 ```
 
 If there is more than one YAML implementation on classpath, the preferred

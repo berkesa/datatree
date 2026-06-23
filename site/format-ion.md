@@ -29,14 +29,32 @@ Add DataTree Adapters and ION JARs to the classpath:
 ## Reading and writing ION documents
 
 ```java
-// Parsing ION document
-byte[] ion = " ... bytes of the ION document ... ";
-Tree document = new Tree(ion, "ion");
+import io.datatree.Tree;
 
-// Getting / setting values
-UUID value = document.get("id").asUUID();
-document.put("id", UUID.randomUUID());
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating ION byte array from Tree
-byte[] ion = document.toBinary("ion");
-``` 
+// Serialize the Tree to ION (binary):
+byte[] ion = document.toBinary("ion");   // 49 bytes
+
+// A byte array is not human-readable. To picture the structure, parse it
+// back and print it as JSON (the default text format):
+Tree reloaded = new Tree(ion, "ion");
+System.out.println(reloaded.toString(true));
+```
+
+The reparsed document as JSON:
+
+```json
+{
+  "name":"Alice",
+  "age":30,
+  "languages":[
+    "Java",
+    "Go"
+  ]
+}
+```

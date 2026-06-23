@@ -28,14 +28,32 @@ Add DataTree Adapters and BSON JARs to the classpath:
 ## Reading and writing BSON documents
 
 ```java
-// Parsing BSON document
-byte[] bson = " ... bytes of the BSON document ... ";
-Tree document = new Tree(bson, "bson");
+import io.datatree.Tree;
 
-// Getting / setting values
-int value = document.get("intValue", 0);
-document.put("intValue", 1);
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating BSON byte array from Tree
-byte[] bson = document.toBinary("bson");
+// Serialize the Tree to BSON (binary):
+byte[] bson = document.toBinary("bson");   // 68 bytes
+
+// A byte array is not human-readable. To picture the structure, parse it
+// back and print it as JSON (the default text format):
+Tree reloaded = new Tree(bson, "bson");
+System.out.println(reloaded.toString(true));
+```
+
+The reparsed document as JSON:
+
+```json
+{
+  "name":"Alice",
+  "age":30,
+  "languages":[
+    "Java",
+    "Go"
+  ]
+}
 ```

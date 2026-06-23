@@ -12,17 +12,36 @@ DataTree API supports 2 Java Property reader/writer implementations.
 The default (built-in) Property adapter has no dependencies.
 
 ```java
-// Parsing Java Properties file
-String properties = "< ... properties ...>";
-Tree document = new Tree(properties, "properties");
+import io.datatree.Tree;
 
-// Getting / setting values
-boolean value = document.get("array[2].subItem.value", false);
-document.put("path.to.item", true);
+// Build a small document (an object with a nested array):
+Tree document = new Tree();
+document.put("name", "Alice");
+document.put("age", 30);
+document.putList("languages").add("Java").add("Go");
 
-// Generating Java Properties string from Tree
+// Convert the Tree to a Java Properties string (the dependency-free
+// built-in adapter is the default):
 String properties = document.toString("properties");
-``` 
+System.out.println(properties);
+```
+
+The printed output. The flat key/value model has no arrays, so list elements become numbered
+(1-based) keys:
+
+```properties
+name=Alice
+age=30
+languages.1=Java
+languages.2=Go
+```
+
+Parse a Java Properties string back into a `Tree` with the `"properties"` format name:
+
+```java
+Tree parsed = new Tree(properties, "properties");
+int age = parsed.get("age", 0);   // 30
+```
 
 If there is more than one Promerties implementation on classpath, the preferred
 implementation is adjustable with the following System Properties:

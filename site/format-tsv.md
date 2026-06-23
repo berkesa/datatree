@@ -27,18 +27,40 @@ Add DataTree Adapters and OpenCSV JARs to the classpath:
 
 ## Reading and writing TSV documents
 
+TSV is **tabular** and identical to CSV except the field separator is a tab character. The document
+is a list of rows and each row is a list of cells. Build one, then convert it to TSV text:
+
 ```java
-// Parsing TSV document
-String tsv = " ... TSV document ... ";
-Tree document = new Tree(tsv, "tsv");
+import io.datatree.Tree;
 
-// Getting / setting values
-for (Tree row: document) {
-  for (Tree cell: row) {
-    ...
-  }
+// A table = a list of rows; each row = a list of cells. The root is a list:
+Tree table = new Tree().setList();
+table.addList().add("name").add("age").add("active");   // header row
+table.addList().add("Alice").add(30).add(true);
+table.addList().add("Bob").add(25).add(false);
+
+// Convert the Tree to TSV text:
+String tsv = table.toString("tsv");
+System.out.println(tsv);
+```
+
+The printed output (columns separated by a tab character):
+
+```
+"name"	"age"	"active"
+"Alice"	"30"	"true"
+"Bob"	"25"	"false"
+```
+
+Parse a TSV string back into a `Tree`, then read a cell by row/column index, or iterate:
+
+```java
+Tree parsed = new Tree(tsv, "tsv");
+String cell = parsed.get(1).get(0).asString();   // "Alice" (row 1, column 0)
+
+for (Tree row : parsed) {
+    for (Tree value : row) {
+        // value.asString()
+    }
 }
-
-// Generating TSV string from Tree
-String tsv = document.toString("tsv");
-``` 
+```
