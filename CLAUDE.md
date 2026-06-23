@@ -10,7 +10,7 @@ This repo is the **core** artifact. It ships only the built-in adapters (JSON, J
 
 ## Build & Test
 
-Maven build (`pom.xml`), compiled with **`javac`** via `maven-compiler-plugin` targeting **Java 11** (`<maven.compiler.release>11</maven.compiler.release>`). Minimum consumer runtime: **JDK 11**. Build JDK: 17+ (JDK 25 in use). Version is `2.0.0` (`2.0.0-SNAPSHOT` while developing).
+Maven build (`pom.xml`), compiled with **`javac`** via `maven-compiler-plugin` targeting **Java 11** (`<maven.compiler.release>11</maven.compiler.release>`). Minimum consumer runtime: **JDK 11**. Build JDK: 17+ (JDK 25 in use). Version is `2.0.0`.
 
 ```bash
 mvn clean verify             # compile + test + jar (the full check)
