@@ -111,7 +111,7 @@ Supported binary formats:
 
 ## Requirements
 
-The DataTree API requires Java 21.
+The DataTree API requires Java 11.
 
 ## License
 

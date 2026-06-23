@@ -51,7 +51,7 @@ With the adapter pack on the classpath the same document serializes to any other
 
 ## Requirements
 
-DataTree requires **Java 21** or newer.
+DataTree requires **Java 11** or newer.
 
 ## License
 

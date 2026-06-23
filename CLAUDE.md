@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-DataTree Core API (`com.github.berkesa:datatree-core`) — an extensible Java 21 library for reading, manipulating, and writing hierarchical data. It is **not** a JSON parser; it is a top-level API layer that delegates serialization to pluggable third-party implementations, while providing a single universal node type (`Tree`) for in-memory manipulation. JSON is the default format; other formats (XML, YAML, TOML, BSON, CBOR, etc.) are supported through adapters.
+DataTree Core API (`com.github.berkesa:datatree-core`) — an extensible Java 11 library for reading, manipulating, and writing hierarchical data. It is **not** a JSON parser; it is a top-level API layer that delegates serialization to pluggable third-party implementations, while providing a single universal node type (`Tree`) for in-memory manipulation. JSON is the default format; other formats (XML, YAML, TOML, BSON, CBOR, etc.) are supported through adapters.
 
 This repo is the **core** artifact. It ships only the built-in adapters (JSON, Java serialization, debug). The ~30 third-party-backed adapters (Jackson, Gson, SnakeYAML, etc.) live in a *separate* `datatree-adapters` artifact under the package `io.datatree.dom.adapters` — that package is referenced here by name but its classes are not present in this source tree.
 
 ## Build & Test
 
-Maven build (`pom.xml`), compiled with **`javac`** via `maven-compiler-plugin` targeting **Java 21** (`<maven.compiler.release>21</maven.compiler.release>`). Version is `2.0.0` (`2.0.0-SNAPSHOT` while developing).
+Maven build (`pom.xml`), compiled with **`javac`** via `maven-compiler-plugin` targeting **Java 11** (`<maven.compiler.release>11</maven.compiler.release>`). Minimum consumer runtime: **JDK 11**. Build JDK: 17+ (JDK 25 in use). Version is `2.0.0` (`2.0.0-SNAPSHOT` while developing).
 
 ```bash
 mvn clean verify             # compile + test + jar (the full check)
