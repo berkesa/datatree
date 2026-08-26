@@ -16,7 +16,7 @@ To use the Kryo API, add Kryo Adapters and Kryo JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
 </dependency>
 
 <!-- KRYO API -->

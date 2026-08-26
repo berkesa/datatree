@@ -12,14 +12,14 @@ DataTree will use Jackson's Object Mapper to read/write JSON documents.
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
 </dependency>
 
 <!-- JACKSON JSON API -->
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
-    <version>2.19.0</version>
+    <version>2.22.2</version>
 </dependency>
 ``` 
 
@@ -91,7 +91,7 @@ static {
 
 ::: warning BSON dependencies
 To use BSON JSON API, add the following dependency to the build script:  
-[group: 'org.mongodb', name: 'bson', version: '5.8.0'](https://mvnrepository.com/artifact/org.mongodb/bson)
+[group: 'org.mongodb', name: 'bson', version: '5.10.0'](https://mvnrepository.com/artifact/org.mongodb/bson)
 :::
 
 ### Using DSLJson API
@@ -197,7 +197,7 @@ static {
 
 ::: warning Jackson dependencies
 To use Jackson JSON API, add the following dependency to the build script:  
-[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.19.0'](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind)
+[group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.22.2'](https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind)
 :::
 
 ### Using Jodd JSON API
@@ -251,7 +251,7 @@ static {
 
 ::: warning Johnzon dependencies
 To use Johnzon JSON API, add the following dependencies to the build script:  
-[group: 'org.apache.johnzon', name: 'johnzon-mapper', version: '2.1.0'](https://mvnrepository.com/artifact/org.apache.johnzon/johnzon-mapper)  
+[group: 'org.apache.johnzon', name: 'johnzon-mapper', version: '2.2.0'](https://mvnrepository.com/artifact/org.apache.johnzon/johnzon-mapper)  
 [group: 'jakarta.json', name: 'jakarta.json-api', version: '2.1.3'](https://mvnrepository.com/artifact/jakarta.json/jakarta.json-api)
 :::
 
@@ -278,7 +278,7 @@ static {
 
 ::: warning JsonIO dependencies
 To use JsonIO JSON API, add the following dependency to the build script:  
-[group: 'com.cedarsoftware', name: 'json-io', version: '4.56.0'](https://mvnrepository.com/artifact/com.cedarsoftware/json-io)
+[group: 'com.cedarsoftware', name: 'json-io', version: '4.110.0'](https://mvnrepository.com/artifact/com.cedarsoftware/json-io)
 :::
 
 ### Using NanoJson API
@@ -328,7 +328,7 @@ static {
 
 ::: warning Json-smart dependencies
 To use Json-smart JSON API, add the following dependency to the build script:  
-[group: 'net.minidev', name: 'json-smart', version: '2.5.2'](https://mvnrepository.com/artifact/net.minidev/json-smart)
+[group: 'net.minidev', name: 'json-smart', version: '2.6.0'](https://mvnrepository.com/artifact/net.minidev/json-smart)
 :::
 
 ### Using Amazon Ion API
@@ -360,7 +360,7 @@ static {
 
 ::: warning Ion dependencies
 To use Amazon Ion JSON API, add the following dependency to the build script:  
-[group: 'com.amazon.ion', name: 'ion-java', version: '1.11.10'](https://mvnrepository.com/artifact/com.amazon.ion/ion-java)
+[group: 'com.amazon.ion', name: 'ion-java', version: '1.12.0'](https://mvnrepository.com/artifact/com.amazon.ion/ion-java)
 :::
 
 ### Using Built-in parser
@@ -401,14 +401,14 @@ Add Gson and Jackson to your pom.xml:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
 </dependency>
 
 <!-- JACKSON JSON API -->
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
-    <version>2.19.0</version>
+    <version>2.22.2</version>
 </dependency>
 
 <!-- GSON JSON API -->

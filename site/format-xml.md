@@ -68,6 +68,6 @@ implementation is adjustable with the following System Properties:
 
 | API Name            | Adapter Class | Dependency |
 | ------------------- | ------------- | ---------- |
-| Jackson XML | XmlJackson  | [group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.19.0'](https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml) |
+| Jackson XML | XmlJackson  | [group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.22.2'](https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml) |
 | XMLStream | XmlXStream | [group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.21'](https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream) |
 | Built-in XML | XmlBuiltin | - | 

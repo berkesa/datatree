@@ -15,14 +15,14 @@ Add DataTree Adapters and ION JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
 </dependency>
 
 <!-- ION API -->
 <dependency>
     <groupId>com.amazon.ion</groupId>
     <artifactId>ion-java</artifactId>
-    <version>1.11.10</version>
+    <version>1.12.0</version>
 </dependency>
 ```
 

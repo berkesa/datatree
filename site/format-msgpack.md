@@ -15,14 +15,14 @@ Jackson MessagePack JARs to the classpath:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
 </dependency>
 
 <!-- MESSAGEPACK API -->
 <dependency>
     <groupId>org.msgpack</groupId>
     <artifactId>jackson-dataformat-msgpack</artifactId>
-    <version>0.9.9</version>
+    <version>0.9.12</version>
 </dependency>
 ``` 
 
@@ -63,4 +63,4 @@ The reparsed document as JSON:
 
 | API Name            | Adapter Class | Dependency |
 | ------------------- | ------------- | ---------- |
-| Jackson MsgPack | MsgPackJackson | [group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.9.9'](https://mvnrepository.com/artifact/org.msgpack/jackson-dataformat-msgpack) | 
+| Jackson MsgPack | MsgPackJackson | [group: 'org.msgpack', name: 'jackson-dataformat-msgpack', version: '0.9.12'](https://mvnrepository.com/artifact/org.msgpack/jackson-dataformat-msgpack) | 
