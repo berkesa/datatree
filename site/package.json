@@ -1,6 +1,6 @@
 {
   "name": "datatree-site",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
   "description": "Documentation website for the DataTree Core API",
   "scripts": {
