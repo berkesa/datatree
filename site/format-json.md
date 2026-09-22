@@ -12,7 +12,7 @@ DataTree will use Jackson's Object Mapper to read/write JSON documents.
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>2.1.1</version>
+    <version>2.2.0</version>
 </dependency>
 
 <!-- JACKSON JSON API -->
@@ -401,7 +401,7 @@ Add Gson and Jackson to your pom.xml:
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>2.1.1</version>
+    <version>2.2.0</version>
 </dependency>
 
 <!-- JACKSON JSON API -->

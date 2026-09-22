@@ -19,7 +19,7 @@ DataTree will use SnakeYAML API to read/write YAML documents.
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-adapters</artifactId>
-    <version>2.1.1</version>
+    <version>2.2.0</version>
 </dependency>
 
 <!-- SNAKEYAML API -->
