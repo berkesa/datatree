@@ -21,7 +21,7 @@ sort, find, stream, and more.
 <dependency>
     <groupId>com.github.berkesa</groupId>
     <artifactId>datatree-core</artifactId>
-    <version>2.1.1</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
